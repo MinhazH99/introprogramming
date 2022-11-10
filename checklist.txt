@@ -1,0 +1,36 @@
+user registration:
+- register
+- login
+-log out
+
+admin:
+- create new emergency plans
+  - type of emergency
+  - description
+  - geographical area affected
+  - start date
+
+- edit emergency plans
+   - close date
+   - close emergency plan
+   - see summary of related details
+      - number of refugees
+      - camp identification
+      - number of volunteers
+
+= administrative
+  - deactivate volunteer accounts
+  - reactive volunteer accountts
+  = delete volunteer accounts
+
+
+= volunteer
+  - edit their information
+    -name
+    -phone
+    =identiciation of their camp
+    -availability
+
+  =create emergency profile for refugees
+    - which camp they're in
+    = medical condition
