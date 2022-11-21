@@ -1,6 +1,6 @@
 user registration:
 - register
-- login
+- login (login admin, login volunteer)
 -log out
 
 admin:
