@@ -1,6 +1,9 @@
 user registration:
-- register
+- register:
+fix while loop when dealing with duplicate usernames
+deal with passwords and usernames
 - login (login admin, login volunteer)
+clean up login functions
 -log out
 
 admin:
@@ -9,6 +12,7 @@ admin:
   - description
   - geographical area affected
   - start date
+  Hamzah finished
 
 - edit emergency plans
    - close date
@@ -17,6 +21,7 @@ admin:
       - number of refugees
       - camp identification
       - number of volunteers
+      
 
 = administrative
   - deactivate volunteer accounts
@@ -30,7 +35,12 @@ admin:
     -phone
     =identiciation of their camp
     -availability
+  Daniel camp ID, availability
 
   =create emergency profile for refugees
     - which camp they're in
     = medical condition
+
+Yulu view all plan
+search plan
+delete plan
