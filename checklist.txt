@@ -1,9 +1,9 @@
 user registration:
 - register:
-fix while loop when dealing with duplicate usernames
-deal with passwords and usernames
+fix while loop when dealing with duplicate usernames (complete)
+deal with passwords and usernames (complete)
 - login (login admin, login volunteer)
-clean up login functions
+clean up login functions (complete)
 -log out
 
 admin:

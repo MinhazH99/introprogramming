@@ -1,3 +1,5 @@
+import pandas as pd
+import csv
 
 class User:
     def __init__(self,name,username,password):
@@ -9,94 +11,98 @@ class User:
 
 def home():
     print("[1] Register as volunter")
-    print("[2] Login as admin")
-    print("[3] Login as volunteer")
+    print("[2] Login")
 
+    while True:
+        user_input = int(input("Please select option: "))
 
-
-    user_input = int(input("Please select option: "))
-
-    if user_input == 1:
-        register()
-    elif user_input == 2:
-        login_admin()
-    elif user_input == 3:
-        login_volunteer()
+        if user_input == 1:
+            print("-------------------------------------------------------------------------------")
+            register()
+            break
+        elif user_input == 2:
+            print("-------------------------------------------------------------------------------")
+            login()
+            break
+        else:
+            print("Please enter a valid option")
 
 def register():
+    
+    usernames = []
    
+    while True:
+
+        user_input = input("Please enter a username: ")
+        with open("usernames_db.csv") as file:
+            reader = csv.reader(file,delimiter=",")
+            next(reader)
+            for row in reader:
+                usernames.append(row[0])
+
+        if user_input not in usernames:
+            break
+
+        else:
+            print("Username is taken. Please enter another username or login!")
     
-    # Check if user exist in data
+    while True:
 
-    log = True
-    while log == True:
-        username = input("Please enter a username: ")
-        with open("username_db.txt","r") as test:
-            for row in test:
-                data = row.split(",")
-                if username == data[0]:
-                    print("Username already exists")
+        password = input("Please enter a password: ")
+        confirm_pass = input("Please confirm password: ")
 
-                else:
-                    log = False
-        
-                
-            
+        if password == confirm_pass:
+            break
+        else:
+            print("Passwords do not match! Please re-enter password.")
 
-    password = input("Please enter a password: ")
-    confirm_pass = input("Please confirm password: ")
+    with open("usernames_db.csv","a") as test:
+        writer = csv.writer(test,delimiter=',',lineterminator='\n')
+        writer.writerow((user_input,password))
 
-    db = open("username_db.txt","a")
-    db.write(username + "," + password + "\n")
-    db.close
     print("Account successfully created")
+    print("-------------------------------------------------------------------------------")
+    home()
     
-    
-                   
-def login_admin():
-    login_user = input("Please enter your username: ")
-    login_pass = input("Please enter your password: ")
-
-    log = True
-    while log == True:
-        with open("username_db.txt","r") as info:
-            for row in info:
-                username,password = row.replace("\n","").split(",")
-
-            if login_user == username and login_pass == password:
-                log = True
-                break
-            else:
-                log = False
-                continue
-
-    if log == True:
-        print("Welcome!")
-        #login_admin()
-
-
 def login_volunteer():
-    login_user = input("Please enter your username: ")
-    login_pass = input("Please enter your password: ")
+    print("Logged in as volunteer")
 
-    log = True
-    while log == True:
-        with open("username_db.txt","r") as info:
-            for row in info:
-                username,password = row.replace("\n","").split(",")
-
-            if login_user == username and login_pass == password:
-                log = True
-                break
-            else:
-                log = False
-                continue
-
-    if log == True:
-        print("Welcome!")
-        #login_volunteer()
+def login_admin():
+    print("Logged in as admin")
     
-            
+def login():
+    print("[1] Login as admin")
+    print("[2] Login as volunteer")
+    while True:
+        login_input = int(input("Please select an option: "))
+
+        if login_input == 1:
+            if ValidateUser:
+                login_admin()
+            break
+        elif login_input ==2:
+            if ValidateUser():
+                login_volunteer()
+            break
+        else:
+            print("Please enter a valid option: [1] or [2]")
+
+
+def ValidateUser():
+    userData = pd.read_csv("usernames_db.csv")    
+    df = pd.DataFrame(userData)
+
+    while True:
+
+        user = input("Please enter your username: ")
+        password = input("Please enter your password: ")
+        
+        validateInput = (len(df[(df.usernames == user) & (df.password == password)]) > 0)
+
+        if validateInput:
+            return True
+        else:
+            print('Incorrect username or password')
 
 
 
