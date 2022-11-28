@@ -1,46 +1,44 @@
-user registration:
-- register:
-fix while loop when dealing with duplicate usernames (complete)
-deal with passwords and usernames (complete)
-- login (login admin, login volunteer)
-clean up login functions (complete)
--log out
 
-admin:
-- create new emergency plans
-  - type of emergency
-  - description
-  - geographical area affected
-  - start date
-  Hamzah finished
+Features required:
 
-- edit emergency plans
-   - close date
-   - close emergency plan
-   - see summary of related details
-      - number of refugees
-      - camp identification
-      - number of volunteers
-      
-
-= administrative
-  - deactivate volunteer accounts
-  - reactive volunteer accountts
-  = delete volunteer accounts
+1) User Registration/Login:
+    a) Create CSV file to store usernames,passwords,type of account and status(activated/deactivated)
+    b) Allow users to register as a volunteer
+    c) Allow admins and volunteers to login and logout
 
 
-= volunteer
-  - edit their information
-    -name
-    -phone
-    =identiciation of their camp
-    -availability
-  Daniel camp ID, availability
+2) Admin features:
+    a) Administrative tasks: deactivate/reactivate volunteer acounts or simply delete the accounts
+    b) Create new emergency plans: type of emergency, description, geographical area affected, start date
+    c) Edit emergency plans: set close date, change number of camps available and close emergency plans
+    d) See summary of related details: Camp identification, number of refugees in camp and number of volunteers in each camp
 
-  =create emergency profile for refugees
-    - which camp they're in
-    = medical condition
 
-Yulu view all plan
-search plan
-delete plan
+3)Volunteer Administrative tasks:
+  a) Edit their information (name, phone, etc)
+  b) Edit their availability
+  c) Assign themselves to a camp
+
+4) Create Emergency profile for each refugee feature
+  a) Register a refugee
+  b) Assign refugee to a camp
+  c) Assign   medical condition to refugee
+  d) Edit refugee details
+
+
+COMPLETED:
+- 1b, 1c completed by Minhaz
+- 2b,2c completed by Hamzah
+- 3a,3b completed by Daniel
+- 4a, 4b, 4c completed Yulu
+
+IN PROGRESS:
+- 1a: Minhaz needs to create a CSV file which includes type of accoutn and status. And use OOP in order to differentiate between admin and volunteer
+- 2a: Minhaz wokring on this feature
+- 2d: Hamzah working on this feature
+= 3c: Daniel working on this feature alongside working on validity of user input
+- 4d: Yulu updating program to use CSV files and removing any bugs from her program
+
+UNASSIGNED:
+
+
