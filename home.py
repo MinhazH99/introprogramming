@@ -1,26 +1,44 @@
 import pandas as pd
 import csv
+from admin import admin
 
 class User:
-    def __init__(self,name,username,password):
-        self.name = name
-        self.username - username
+    '''Represents any user'''
+    def __init__(self,username,password,status = "Activated"):
+        self.username = username
         self.password = password
+        self.status = status
+
+class Volunteer(User):
+    '''Represents a volunteer'''
+    def __init__(self,username,password, phoneno, status ="Activated",accounttype = "Volunteer"):
+        User.__init__(self,username,password,status)
+        self.accounttype = accounttype
+        self.phoneno = phoneno
+
+class Admin(User):
+    '''Represents admin account'''
+    def __init__(self,username, password, status = "Activated",accounttype = "Admin"):
+        User.__init__(self,username,password,status)
+        self.accounttype = accounttype
+        print(f"Initialized Admin: {self.username}")
+    
 
 
 
 def home():
+    print("Welcome to the E-Mergency Management System")
     print("[1] Register as volunter")
     print("[2] Login")
 
     while True:
-        user_input = int(input("Please select option: "))
+        user_input = input("Please select option: ")
 
-        if user_input == 1:
+        if user_input == '1':
             print("-------------------------------------------------------------------------------")
             register()
             break
-        elif user_input == 2:
+        elif user_input == '2':
             print("-------------------------------------------------------------------------------")
             login()
             break
@@ -34,7 +52,7 @@ def register():
     while True:
 
         user_input = input("Please enter a username: ")
-        with open("usernames_db.csv") as file:
+        with open("volunteers_db.csv") as file:
             reader = csv.reader(file,delimiter=",")
             next(reader)
             for row in reader:
@@ -56,9 +74,22 @@ def register():
         else:
             print("Passwords do not match! Please re-enter password.")
 
-    with open("usernames_db.csv","a") as test:
-        writer = csv.writer(test,delimiter=',',lineterminator='\n')
-        writer.writerow((user_input,password))
+    while True:
+
+        phone_number = input("Please enter your phone number: ")
+        confirm_phone_number = input("Please enter your phone number: ")
+
+        if phone_number == confirm_phone_number:
+            break
+        else:
+            print("Phone numbers do not match. Please re-enter")
+
+
+    volunteer = Volunteer(user_input,password,phone_number)
+
+    with open("volunteers_db.csv","a") as file2:
+        writer = csv.writer(file2,delimiter=',',lineterminator='\n')
+        writer.writerow((volunteer.username,volunteer.password,volunteer.phoneno,volunteer.status,volunteer.accounttype))
 
     print("Account successfully created")
     print("-------------------------------------------------------------------------------")
@@ -66,32 +97,39 @@ def register():
     
 def login_volunteer():
     print("Logged in as volunteer")
+    print("-------------------------------------------------------------------------------")
 
 def login_admin():
     print("Logged in as admin")
+    print("-------------------------------------------------------------------------------")
+    admin()
     
 def login():
     print("[1] Login as admin")
     print("[2] Login as volunteer")
     while True:
-        login_input = int(input("Please select an option: "))
+        login_input = input("Please select an option: ")
 
-        if login_input == 1:
-            if ValidateUser:
+        if login_input == '1':
+            if ValidateUser(login_input):
                 login_admin()
             break
-        elif login_input ==2:
-            if ValidateUser():
+        elif login_input == '2':
+            if ValidateUser(login_input):
                 login_volunteer()
             break
         else:
             print("Please enter a valid option: [1] or [2]")
 
 
-def ValidateUser():
-    userData = pd.read_csv("usernames_db.csv")    
-    df = pd.DataFrame(userData)
-
+def ValidateUser(login_input):
+    if login_input == '1':
+        userData = pd.read_csv("admin_db.csv")    
+        df = pd.DataFrame(userData).astype('str')
+    elif login_input == '2':
+        userData = pd.read_csv("volunteers_db.csv")    
+        df = pd.DataFrame(userData).astype('str')
+    
     while True:
 
         user = input("Please enter your username: ")
@@ -106,5 +144,4 @@ def ValidateUser():
 
 
 
-home()
 
