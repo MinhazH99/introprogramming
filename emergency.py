@@ -72,9 +72,43 @@ def create_profile():
             writer.writerow(profile)
     print("The emergency profile(s) has been created.")
 
+
 def csv_modify_profile():
-    df = pd.read_csv(emergencyFilename)
+    profile_list = []
+    refugee_name_list = []
+    with open(emergencyFilename, "r",  encoding='utf-8', errors='ignore') as rfile:
+        reader = csv.reader(rfile)
+        for row in reader:
+            profile_list.append(row)
+            refugee_name_list.append(row[0])
+    
+
     searched_refugee_name = input("Please enter the name of the refugee that you're searching: ")
+    
+    with open(emergencyFilename, "w",  encoding='utf-8', errors='ignore', newline='') as wfile:
+        writer = csv.writer(wfile)
+        for profile in profile_list:
+            if profile_list == searched_refugee_name:
+                print("Found the refugee's profile. Please modify the information of the refugee: ")
+                while True:
+                    try:
+                        row[0] = input("Please enter the refugee's name: ")
+                        row[1] = input("Please enter the code of camp that they are in: ")
+                        row[2] = input("Please enter the numbers of his/her family in the camp: ")
+                        row[3] = input("Please enter the Refugee's Medical condition if any: ")
+                    except:
+                        print("Wrong input, please enter again")
+                    else:
+                        break
+                writer.writerow(row)
+                print("Successfully updated the profile of the refugee.")
+            else:
+                # If the refugee's profile is not found, create a new profile for the refugee. 
+                writer.writerow(row)
+        answer = str(input("Continue to edit another emergency profile? Y/N \n"))
+        if answer == 'Y' or answer== 'y':
+            modify_profile()
+        
 
 
 def modify_profile():
@@ -83,12 +117,8 @@ def modify_profile():
             profile_info = rfile.readlines()
     else:
         return
-    with open(emergencyFilename, "r",  encoding='utf-8', errors='ignore') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            print(row)
         
-    searched_refugee_name = input("Please enter the name of the refugee that you're searching: ")
+    searched_refugee_name = input("Please enter the name of the refugee that you want to modify: ")
     with open(emergencyFilename, 'a+', encoding='utf-8') as wfile:
         for refugee in profile_info:
             d = dict(eval(refugee))
@@ -153,20 +183,26 @@ def delete_profile():
     while True:
         delete_refugee_name = str(input("Please enter the name of the refugee that you want to delete : "))
         df = pd.read_csv(emergencyFilename, header=0)
-        #if delete_refugee_name in pd.Series.to_string(df['refugee_name']):   -> Why not
+        #if delete_refugee_name in pd.Series.to_string(df['refugee_name']):   -> Why not working?
         # Do we need to consider refugees have the same name?
         delete_profile_result = df[(df['refugee_name'] == delete_refugee_name)]
         if len(delete_profile_result) != 0: 
-            #df = df.drop(df.index[df['A'] == 2]) ## 删除A列数值为2的行
-            #❌Not working
-            df.drop(df.index[df['refugee_name'] == delete_refugee_name], inplace=True)
-            answer = input(f"Deleted {delete_refugee_name}'s profile successfully. Continue to delete other emergency profile? Y/N \n")
+            # Way1:Not working
+            #df = df.drop(df.index[df['A'] == 2])  -> syntax of df.drop
+            df.drop(df.index[df['refugee_name'] == delete_refugee_name], inplace = True)
+            df.to_csv(emergencyFilename, index=False)
+
+            # Way2: Not working
+            # Set an index then drop -> failed. 
+            #df.set_index('refugee_name')
+            #df.drop(df.index == delete_refugee_name, inplace=True)
+            answer = input(f"Deleted {delete_refugee_name}'s emergency profile successfully. Continue to delete other emergency profile? Y/N \n")
             if answer == 'Y' or answer == 'y':
                 continue
             else:
                 break
         else:
-            print("Refugee not found. ")
+            print("Emergency profile not found. ")
             return
 
 def search_profile():
@@ -200,3 +236,4 @@ def show_all_profile():
 emergency_profile()
 #delete_profile()
 #search_profile()
+# csv_modify_profile()

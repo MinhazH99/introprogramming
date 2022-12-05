@@ -31,14 +31,24 @@ COMPLETED:
 - 2b,2c completed by Hamzah
 - 3a,3b completed by Daniel
 - 4a, 4b, 4c completed Yulu
+-- 1a: Minhaz needs to create a CSV file which includes type of accoutn and status. And use OOP in order to differentiate between admin and volunteer
+-- 2a: Minhaz wokring on this feature
+-- 2d: Hamzah working on this feature
+-- 3c: Daniel working on this feature
+-- 4d: Yulu updating program to use CSV files and removing any bugs from her program
 
 IN PROGRESS:
-- 1a: Minhaz needs to create a CSV file which includes type of accoutn and status. And use OOP in order to differentiate between admin and volunteer
-- 2a: Minhaz wokring on this feature
-- 2d: Hamzah working on this feature
-= 3c: Daniel working on this feature alongside working on validity of user input
-- 4d: Yulu updating program to use CSV files and removing any bugs from her program
+- 3c: Daniel working on this feature alongside working on validity of user input
+- Minhaz: deactivated accounts can't login
 
 UNASSIGNED:
 
 
+TIMELINE:
+12.5-12.6    Fix bugs & clean code
+12.7         Merge code
+12.8-12.11   Extra features
+12.12-12.13  Test code & run on another computer
+12.14-12.16  Write report
+12.17-12.18  Make video & submit
+12.19        Deadline
