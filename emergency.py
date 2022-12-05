@@ -1,15 +1,18 @@
 import os
-emergencyFilename = 'emergency_profile.txt'
+import csv
+import sys
+import pandas as pd
+emergencyFilename = 'emergency_profile.csv'
 
 
-def emegerncy_profile():
+def emergency_profile():
     while True:
         profile_menu()
         volunteer_option = str(input("Option : "))
         if volunteer_option in ["0", "1", "2", "3", "4", "5", "6"]:
             if volunteer_option == "0":
                 answer = input("Are you sure to exit? Y/N \n")
-                if answer == 'Y' or 'y':
+                if answer == 'Y' or answer == 'y':
                     print("Thanks for visiting our website!")
                     break
                 else:
@@ -57,20 +60,34 @@ def create_profile():
         profile = {'refugee_name':refugee_name, 'camp_code':camp_code, 'family_number':family_number, 'medical_condition':medical_condition}
         profile_list.append(profile)
         answer = input("Do you want to create another emergency profile? Y/N \n")
-        if answer == 'y':
+        if answer == 'y' or answer == 'Y':
             continue
         else:
             break
-    save_profile(profile_list)
+
+    with open(emergencyFilename, "a", newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=['refugee_name', 'camp_code', 'family_number', 'medical_condition'])
+        writer.writeheader()
+        for profile in profile_list:
+            writer.writerow(profile)
     print("The emergency profile(s) has been created.")
 
+def csv_modify_profile():
+    df = pd.read_csv(emergencyFilename)
+    searched_refugee_name = input("Please enter the name of the refugee that you're searching: ")
+
+
 def modify_profile():
-    #show_profile()
     if os.path.exists(emergencyFilename):
         with open(emergencyFilename, 'r', encoding='utf-8') as rfile:
             profile_info = rfile.readlines()
     else:
         return
+    with open(emergencyFilename, "r",  encoding='utf-8', errors='ignore') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            print(row)
+        
     searched_refugee_name = input("Please enter the name of the refugee that you're searching: ")
     with open(emergencyFilename, 'a+', encoding='utf-8') as wfile:
         for refugee in profile_info:
@@ -96,9 +113,9 @@ def modify_profile():
         # Bug to be fixed: when input is not y/Y, will still execute modify_profile()
         if answer == 'Y' or answer== 'y':
             modify_profile()
-            
 
-def delete_profile():
+
+def txt_delete_profile():
     while True:
         delete_refugee_name = input("Please enter the name of the refugee that you want to delete : ")
         if delete_refugee_name != '':
@@ -126,31 +143,44 @@ def delete_profile():
             else:
                 print("No emergency profile found.")
                 break
-            show_profile()
             answer = input("Continue to delete other emergency profile? Y/N \n")
             if answer == 'Y' or answer == 'y':
                 continue
             else:
                 break
 
+def delete_profile():
+    while True:
+        delete_refugee_name = str(input("Please enter the name of the refugee that you want to delete : "))
+        df = pd.read_csv(emergencyFilename, header=0)
+        #if delete_refugee_name in pd.Series.to_string(df['refugee_name']):   -> Why not
+        # Do we need to consider refugees have the same name?
+        delete_profile_result = df[(df['refugee_name'] == delete_refugee_name)]
+        if len(delete_profile_result) != 0: 
+            #df = df.drop(df.index[df['A'] == 2]) ## 删除A列数值为2的行
+            #❌Not working
+            df.drop(df.index[df['refugee_name'] == delete_refugee_name], inplace=True)
+            answer = input(f"Deleted {delete_refugee_name}'s profile successfully. Continue to delete other emergency profile? Y/N \n")
+            if answer == 'Y' or answer == 'y':
+                continue
+            else:
+                break
+        else:
+            print("Refugee not found. ")
+            return
 
 def search_profile():
-    profile_query = []
+    keyword = ""
     while True:
-        refugee_name = input("Please enter the refugee's name: ")
-        if os.path.exists(emergencyFilename):
-            with open (emergencyFilename, 'r', encoding='utf-8') as rfile:
-                profile = rfile.readlines()
-                for item in profile:
-                    d = dict(eval(item))
-                    if refugee_name != '':
-                        if d['refugee_name'] == refugee_name:
-                            profile_query.append(d)
-            #show_profile(profile_query)
-            #clear the list
-            profile_query.clear()
+        keyword = input("Please enter the refugee's name: ")
+        df = pd.read_csv(emergencyFilename, header=0)
+        # profile_search_result = df[(keyword in pd.Series.to_string(df['refugee_name']))]   -> not working
+        profile_search_result = df[(df['refugee_name'] == keyword)]
+        if len(profile_search_result) != 0:
+            print("Below is the search result(s): ")
+            print(profile_search_result)
             answer = input("Continue to search emergency profile? Y/N \n")
-            if answer == 'Y' or 'y':
+            if answer == 'Y' or answer == 'y':
                 continue
             else:
                 break
@@ -158,37 +188,15 @@ def search_profile():
             print("Emergency profile not found.")
             return
 
-
-def show_profile(lst):
-    if len(lst) == 0:
-        print("No result found.")
-        return
-    # Design the layout of the result
-    format_title = '{:^16}\t{:^16}\t{:^16}\t{:^16}'
-    print(format_title.format('refugee_name', 'camp_code', 'family_number', 'medical_condition'))
-    format_content = '{:^16}\t{:^16}\t{:^16}\t{:^16}'
-    for item in lst:
-        print(format_content.format(item.get('refugee_name'), item.get('camp_code')), item.get('family_number'), item.get('medical_condition'))
-
 def show_all_profile():
-    profile_lst = []
     if os.path.exists(emergencyFilename):
-        with open (emergencyFilename, 'r', encoding='utf-8') as rfile:
-            profile = rfile.readlines()
-            for item in profile:
-                profile_lst.append(eval(item))
-            if profile_lst:
-                show_profile(profile_lst)
+        print("")
+        print("Summary of all emergency profiles:")
+        df = pd.read_csv(emergencyFilename, header=0)
+        print(df)
     else:
         print("No result found. ")
 
-def save_profile(list):
-    try:
-        profile_txt=open(emergencyFilename, 'a+', encoding='utf-8')
-    except:
-        profile_txt=open(emergencyFilename, 'a+', encoding='utf-8')
-    for item in list:
-        profile_txt.write(str(item)+'\n')
-    profile_txt.close()
-
-emegerncy_profile()
+emergency_profile()
+#delete_profile()
+#search_profile()
