@@ -169,4 +169,3 @@ def show_all_profile():
     else:
         print("No result found. ")
 
-emergency_profile()

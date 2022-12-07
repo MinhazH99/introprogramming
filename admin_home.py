@@ -10,10 +10,12 @@ def admin_home():
 
         if user_input == '1':
             admin()
+            admin_home()
             break
 
         elif user_input == '2':
             adminFeatures()
+            admin_home()
             break
 
         else:

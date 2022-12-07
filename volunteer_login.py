@@ -16,7 +16,7 @@ def getLine(datum):
             else:
                 return False
 
-class Volunteer:
+class editVolunteer:
     """
     Allows the volunteer to:
     -Edit their information
@@ -227,5 +227,5 @@ class Volunteer:
     def editAvailability(self):
         pass
 
-a = Volunteer('John', 'Doe', 1203)
-a.editPersonalInfo()
+# a = Volunteer('John', 'Doe', 1203)
+# a.editPersonalInfo()

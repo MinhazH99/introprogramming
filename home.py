@@ -1,6 +1,7 @@
 import pandas as pd
 import csv
 from admin_home import admin_home
+from volunteer_home import volunteer_home
 
 class User:
     '''Represents any user'''
@@ -100,10 +101,10 @@ def register():
     print("-------------------------------------------------------------------------------")
     home()
     
-def login_volunteer():
+def login_volunteer(inp):
     print("Logged in as volunteer")
     print("-------------------------------------------------------------------------------")
-
+    volunteer_home(user)
 def login_admin():
     print("Logged in as admin")
     print("-------------------------------------------------------------------------------")
@@ -121,7 +122,8 @@ def login():
             break
         elif login_input == '2':
             if ValidateUser(login_input):
-                login_volunteer()
+                print(user)
+                login_volunteer(user)
             break
         else:
             print("Please enter a valid option: [1] or [2]")
@@ -136,7 +138,7 @@ def ValidateUser(login_input):
         df = pd.DataFrame(userData).astype('str')
     
     while True:
-
+        global user
         user = input("Please enter your username: ")
         password = input("Please enter your password: ")
 

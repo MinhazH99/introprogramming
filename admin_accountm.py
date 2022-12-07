@@ -29,10 +29,11 @@ def admin():
             break
 
         elif user_input =='5':
-            pass
+            continue
 
         else:
             print("Please select a valid option")
+        break
 
 
 def viewVolunteers():

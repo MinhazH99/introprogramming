@@ -47,8 +47,18 @@ UNASSIGNED:
 TIMELINE:
 12.5-12.6    Fix bugs & clean code
 12.7         Merge code
+12.8-12.9    Error handling & formatting
 12.8-12.11   Extra features
 12.12-12.13  Test code & run on another computer
 12.14-12.16  Write report
 12.17-12.18  Make video & submit
 12.19        Deadline
+
+
+To DO FOR THIS WEEK
+- MInhaz to fix admin home page and volunteer home page
+- Minhaz to add in volunteer change details function
+- Ensure that user input validation is correct (Yulu,Minhaz,Hamzah complete. Daniel)
+- Format code to be consistent. Look at Minhaz code for example
+- Black and rich python libraries for formatting (play around)
+- Minhaz to figure how to ensure examiner downloads all libraries
