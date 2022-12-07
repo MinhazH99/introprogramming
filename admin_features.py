@@ -54,16 +54,17 @@ class CreatePlan:
 
 #Function to check whether the start date of the plan is valid
 def check_date():
-    a = 0
-    while a == 0:
+    # a = 0
+    while True:
         
         try:
             #global start_date #sets start date to global
             start_date = input("Enter the date on which this occurred in the format yyyy-mm-dd: ")
             datetime.datetime.strptime(start_date, '%Y-%m-%d') #checks whether it is in the correct format, and if it is a valid date
 
-            a = 1
+            # a = 1
             return start_date
+
             
         except Exception:
             print("Not a valid date. ")
@@ -88,7 +89,7 @@ def view_camps():
     if camp_file_exists == True:
         var = 1
         while var == 1:
-            camp_opt = input("Enter '1' to view the camp detials for a specific Emergency Plan\nEnter '2' to view all the camp details\n")
+            camp_opt = input("Enter '1' to view the camp details for a specific Emergency Plan\nEnter '2' to view all the camp details\n")
             if camp_opt == '1':
                 var = 2
                 view_plan()
@@ -428,7 +429,7 @@ def retrieve_data():
             print("That is not a valid input")
 
 #function for the main menu
-def main():       
+def adminFeatures():       
     b = 0
     while b == 0:   
         option = input("\nEnter '1' to create a plan\nEnter '2' to view a plan\nEnter '3' to edit a plan\nEnter '4' to view camp details\nEnter '5' to quit\n")
@@ -472,30 +473,30 @@ def main():
                 row.to_csv("EmergencyPlans.csv", mode="a", index = False)
                 b = 1
                 #jumps back to main menu in case user wants to do another task
-                main()
+                adminFeatures()
             else:
                 row = pd.DataFrame(total_np)
                 
                 row.to_csv("EmergencyPlans.csv", mode="a", index = False, header = False)
                 b = 1
-                main()
+                adminFeatures()
                 
 
         elif option == '2':
             b = 1
             #goes to view plan function, and then the main menu again
             view_plan()
-            main()
+            adminFeatures()
         elif option == '3':
             b = 1
             #goes to the edit plans function, and then the main menu afterwards
             retrieve_data()
-            main()
+            adminFeatures()
         elif option == '4':
             b = 1
             #goes to view camps function and main menu afterwards
             view_camps()
-            main()
+            adminFeatures()
         elif option == '5':
             #breaks loop and quits
             b = 1
@@ -503,8 +504,5 @@ def main():
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")
                 
-main()   
-
-    
     
     

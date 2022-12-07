@@ -1,25 +1,27 @@
 import pandas as pd
 import csv
-from admin import admin
+from admin_home import admin_home
 
 class User:
     '''Represents any user'''
-    def __init__(self,username,password,status = "Activated"):
+    def __init__(self,firstname,familyname,username,password,status = "Activated"):
+        self.firstname = firstname
+        self.familyname = familyname
         self.username = username
         self.password = password
         self.status = status
 
 class Volunteer(User):
     '''Represents a volunteer'''
-    def __init__(self,username,password, phoneno, status ="Activated",accounttype = "Volunteer"):
-        User.__init__(self,username,password,status)
+    def __init__(self,firstname,familyname,username,password, phoneno, status ="Activated",accounttype = "Volunteer"):
+        User.__init__(self,firstname,familyname,username,password,status)
         self.accounttype = accounttype
         self.phoneno = phoneno
 
 class Admin(User):
     '''Represents admin account'''
-    def __init__(self,username, password, status = "Activated",accounttype = "Admin"):
-        User.__init__(self,username,password,status)
+    def __init__(self,firstname,familyname,username, password, status = "Activated",accounttype = "Admin"):
+        User.__init__(self,firstname,familyname,username,password,status)
         self.accounttype = accounttype
         print(f"Initialized Admin: {self.username}")
     
@@ -47,6 +49,9 @@ def home():
 
 def register():
     
+    first_name = input("Please enter your first name: ")
+
+    family_name = input("Please enter your family name: ")
     usernames = []
    
     while True:
@@ -85,11 +90,11 @@ def register():
             print("Phone numbers do not match. Please re-enter")
 
 
-    volunteer = Volunteer(user_input,password,phone_number)
+    volunteer = Volunteer(first_name,family_name,user_input,password,phone_number)
 
     with open("volunteers_db.csv","a") as file2:
         writer = csv.writer(file2,delimiter=',',lineterminator='\n')
-        writer.writerow((volunteer.username,volunteer.password,volunteer.phoneno,volunteer.status,volunteer.accounttype))
+        writer.writerow((volunteer.firstname,volunteer.familyname,volunteer.username,volunteer.password,volunteer.phoneno,volunteer.status,volunteer.accounttype))
 
     print("Account successfully created")
     print("-------------------------------------------------------------------------------")
@@ -102,7 +107,7 @@ def login_volunteer():
 def login_admin():
     print("Logged in as admin")
     print("-------------------------------------------------------------------------------")
-    admin()
+    admin_home()
     
 def login():
     print("[1] Login as admin")
@@ -134,14 +139,23 @@ def ValidateUser(login_input):
 
         user = input("Please enter your username: ")
         password = input("Please enter your password: ")
+
         
         validateInput = (len(df[(df.usernames == user) & (df.password == password)]) > 0)
 
-        if validateInput:
+        validateStatus = (len(df[(df.usernames == user) & (df.password == password) & (df.status == "Activated")]) > 0)
+
+        if validateInput and validateStatus:
             return True
+        
+        elif validateInput and validateStatus == False:
+            print("Account deactivated. Please contact admin")
+            print("Returning to home screen")
+            print("-------------------------------------------------------------------------------")
+            home()
+            return False
         else:
             print('Incorrect username or password')
 
 
-
-
+home()
