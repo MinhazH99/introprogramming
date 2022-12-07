@@ -141,6 +141,25 @@ def search_profile():
             print("Emergency profile not found.")
             return
 
+def new_search_profile():
+    keyword = ""
+    while True:
+        keyword = input("Please enter the refugee's name: ")
+        df = pd.read_csv(emergencyFilename)
+        # list = list(emergencyFilename["refugee_name"].str.contains())
+        profile_search_result = df[(df['refugee_name'] == keyword)]
+        if len(profile_search_result) != 0:
+            print("Below is the search result(s): ")
+            print(profile_search_result)
+            answer = input("Continue to search emergency profile? Y/N \n")
+            if answer == 'Y' or answer == 'y':
+                continue
+            else:
+                break
+        else:
+            print("Emergency profile not found.")
+            return
+
 def show_all_profile():
     if os.path.exists(emergencyFilename):
         print("")
