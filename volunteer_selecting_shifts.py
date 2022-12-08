@@ -122,10 +122,14 @@ def availability_funcs(user):
     #again, would need to incorporate select_shift_type
     username = user
     options = {'View current shifts': 0, 'Add new shift': 1, 'Exit': 2}
-    action = int(input(f"Please select one of the following personal details to change:\n\
-    View current shifts: [{options['View current shifts']}]\n\
-    Add new shift: [{options['Add new shift']}]\n\
-    Exit: [{options['Exit']}] \n"))
+    # action = int(input(f"Please select one of the following personal details to change:\n\
+    # View current shifts: [{options['View current shifts']}]\n\
+    # Add new shift: [{options['Add new shift']}]\n\
+    # Exit: [{options['Exit']}] \n"))
+    action = int(input("Please select one of the following personal details to change:"))
+    print("[0] View current shifts")
+    print("[1] Add new shift")
+    print("[2] Exit")
 
     if action == 0:
         #Print all rows where current shifts are in 
