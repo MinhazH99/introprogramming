@@ -159,14 +159,9 @@ def new_search_profile():
     while True:
         print("\n-------------------------------------------------------------------------------")
         keyword = input("Please enter the refugee's name: ")
-
-        with open(emergencyFilename, "r", newline='') as file:
-            writer = csv.DictReader(file, fieldnames=['refugee_name', 'camp_id', 'family_number', 'medical_condition'])
-        profile_dict = pd.read_csv(emergencyFilename).to_dict()
-        print(profile_dict)
-
-        df = pd.DataFrame(profile_dict, columns = ['refugee_name', 'camp_id', 'family_number', 'medical_condition'])
-        # The search is case insensitive, and return the result that contains keyword as a substring. 
+        user_data = pd.read_csv(emergencyFilename)
+        df = pd.DataFrame(user_data).astype("str")
+        print(df)
         contains_keyword = df[df['refugee_name'].str.contains(keyword, case=False)]
         if len(contains_keyword) != 0: 
             print("Below is the search result: ")
@@ -188,3 +183,5 @@ def show_all_profile():
         print(df)
     else:
         print("No result found. ")
+
+new_search_profile()
