@@ -95,7 +95,7 @@ def view_camps():
                 view_plan()
                 while var == 2:
                     try:
-                        plan_index = int(input("\nEnter the number of the plan you wish to view: "))    
+                        plan_index = int(input("\nEnter the number of the plan whose camps you wish to view: "))    
                         total_lines = sum(1 for line in open("EmergencyPlans.csv"))-1
                         if plan_index > (total_lines-1):
                             #if the plan index is too big, the loop will not break and the user will have to input another value
@@ -125,6 +125,55 @@ def view_camps():
         
     else:
         print("There are currently no camp details to view.\nPlease assign a number of camps to an emergency plan first.")
+
+def view_volunteers():
+    volunteer_file_exists = os.path.exists("volunteers_db.csv")
+    if volunteer_file_exists == True:
+        var = 1
+        while var == 1:
+            vol_opt = input("Enter:\n[1] to view the volunteers for a specific Emergency Plan\n[2] to view all the volunteer details\n")
+            if vol_opt == '1':
+                var = 2
+                view_plan()
+                while var == 2:
+                    try:
+                        plan_index = int(input("\nEnter the number of the plan whose volunteers you wish to view: "))    
+                        total_lines = sum(1 for line in open("EmergencyPlans.csv"))-1
+                        if plan_index > (total_lines-1):
+                            #if the plan index is too big, the loop will not break and the user will have to input another value
+                            print("This number is greater than the number of plans.")
+                        elif plan_index <= -1:
+                            #If the plan index is negative, the loop will also not break
+                            print("Negative numbers are not allowed.")
+                        elif plan_index >= 0:
+                            #the loop will only break if the plan index is valid
+                            var = 3
+                            vol_df = pd.read_csv("volunteers_db.csv")
+                            selected_rows = vol_df[vol_df['emergencyplanindex'] == plan_index]
+                            if selected_rows.empty:
+                                print("There are currently no volunteers associated with this plan index.")
+                            else:
+
+                                print("Volunteers for selected plan:\n")
+                                print(selected_rows)
+                            
+                    except ValueError:
+                        print("That is not a valid input.\n")
+            
+            elif vol_opt == '2':
+                var = 0
+                print("Summary of all volunteers:\n")
+
+                vol_df = pd.read_csv("volunteers_db.csv")
+                print(vol_df.to_string())
+            else:
+                print("That is not a valid input.\n")
+        
+    else:
+        #if the file does not exist the program will let the user know and go back to the main function
+        print("There are currently no volunteers assigned to camps.\n") 
+
+view_volunteers()   
         
 #This function takes the natural disaster as a parameter
 def search_dict(nat_disaster):
