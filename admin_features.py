@@ -4,6 +4,7 @@ import numpy as np
 import csv
 import os.path
 import random
+import admin_home
 
 plan_list = [] #empty list to add emergency plans to
 #Dictionry with a list of natural disasters and corresponding 5 or 6-letter codes
@@ -432,7 +433,12 @@ def retrieve_data():
 def adminFeatures():       
     b = 0
     while b == 0:   
-        option = input("\nEnter '1' to create a plan\nEnter '2' to view a plan\nEnter '3' to edit a plan\nEnter '4' to view camp details\nEnter '5' to quit\n")
+        print("[1] Create an Emergency Plan")
+        print("[2] View an Emergency Plan")
+        print("[3] Edit an Emergency Plan")
+        print("[4] View Camp Details")
+        print("[5] Return to admin home page")
+        option = input("Please select an option: ")
         if option == '1':
             #the plan list is cleared, so that a new plan can be created
             plan_list.clear()
@@ -500,6 +506,7 @@ def adminFeatures():
         elif option == '5':
             #breaks loop and quits
             b = 1
+            admin_home.admin_home()
         else:
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")

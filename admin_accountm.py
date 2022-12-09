@@ -1,8 +1,9 @@
 import pandas as pd
+import admin_home
 import csv
 
 
-def admin():
+def admin_accountm():
     print("[1] View Volunteer Accounts")
     print("[2] Deactivate Volunteer Accounts")
     print("[3] Reactivate Volunteer Accounts")
@@ -29,7 +30,7 @@ def admin():
             break
 
         elif user_input =='5':
-            continue
+            admin_home.admin_home()
 
         else:
             print("Please select a valid option")
@@ -39,13 +40,14 @@ def admin():
 def viewVolunteers():
     df = pd.read_csv("volunteers_db.csv", usecols = ["usernames","status"])
     print(df)
+    print(df.dtypes)
     print("\n")
     while True:
 
         askUserInput = input("Please enter # to return to home page: ")
 
         if askUserInput == '#':
-            admin()
+            admin_accountm()
             
     
 
@@ -55,23 +57,24 @@ def EditVolunteers(inp):
 
     print(showdf)
     
-    df = pd.read_csv("volunteers_db.csv")
+    userData = pd.read_csv("volunteers_db.csv")
+    df = pd.DataFrame(userData).astype('str')
 
     usernames = []
     with open("volunteers_db.csv") as file:
             reader = csv.reader(file,delimiter=",")
             next(reader)
             for row in reader:
-                usernames.append(row[0])
+                usernames.append(row[2])
     
     if inp == '2':
         
         while True:
         
             user_input = input("Please type in username which you would like to deactivate or # to return to home page: ")
-
+            print(usernames)
             if user_input == '#':
-                admin()
+                admin_accountm()
        
             if user_input in usernames:
                 df.loc[df["usernames"] == user_input,"status"]='Deactivated'
@@ -92,7 +95,7 @@ def EditVolunteers(inp):
                         EditVolunteers('2')
                         break
                     elif user_input2 == 'N' or user_input2 == 'n':
-                        admin()
+                        admin_accountm()
                         break
 
                     else:
@@ -108,7 +111,7 @@ def EditVolunteers(inp):
             user_input = input("Please type in username which you would like to reactivate or # to return to home page: ")
 
             if user_input == '#':
-                admin()
+                admin_accountm()
 
             if user_input in usernames:
                 df.loc[df["usernames"] == user_input,"status"]='Activated'
@@ -128,7 +131,7 @@ def EditVolunteers(inp):
                         EditVolunteers('3')
                         break
                     elif user_input2 == 'N' or user_input2 == 'n':
-                        admin()
+                        admin_accountm()
                         break
                     else:
                         print("Please enter Y or N")
@@ -148,12 +151,12 @@ def deleteVolunteers():
             reader = csv.reader(file,delimiter=",")
             next(reader)
             for row in reader:
-                usernames.append(row[0])
+                usernames.append(row[2])
     while True:
 
         user_input = input("Please type in username of volunteer you would like to delete or # to return to home page: ")
         if user_input =='#':
-            admin()
+            admin_accountm()
            
         if user_input in usernames:
             while True:
@@ -161,7 +164,8 @@ def deleteVolunteers():
                 doubleCheck = input("Please enter Y or N: ")
                 
                 if doubleCheck == 'Y' or doubleCheck =='y':
-                    df = pd.read_csv("volunteers_db.csv")
+                    userData = pd.read_csv("volunteers_db.csv")
+                    df = pd.DataFrame(userData).astype('str')
                     df = df.loc[df['usernames'] != user_input]
 
                     df.to_csv("volunteers_db.csv",index=False)
@@ -179,7 +183,7 @@ def deleteVolunteers():
                             deleteVolunteers()
                             break
                         elif user_input2 == 'N' or user_input2 == 'n':
-                            admin()
+                            admin_accountm()
                             break
                         else:
                             print("Please enter Y or N")
@@ -187,7 +191,7 @@ def deleteVolunteers():
                 
                 elif doubleCheck == 'N' or doubleCheck =='n':
                     print("Returning to home page")
-                    admin()
+                    admin_accountm()
 
                 else:
                     print("Please select a valid option Y or N")

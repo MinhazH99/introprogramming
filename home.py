@@ -62,7 +62,7 @@ def register():
             reader = csv.reader(file,delimiter=",")
             next(reader)
             for row in reader:
-                usernames.append(row[0])
+                usernames.append(row[2])
 
         if user_input not in usernames:
             break
@@ -103,11 +103,9 @@ def register():
     
 def login_volunteer(inp):
     print("Logged in as volunteer")
-    print("-------------------------------------------------------------------------------")
     volunteer_home(user)
 def login_admin():
     print("Logged in as admin")
-    print("-------------------------------------------------------------------------------")
     admin_home()
     
 def login():
@@ -117,12 +115,13 @@ def login():
         login_input = input("Please select an option: ")
 
         if login_input == '1':
+            print("-------------------------------------------------------------------------------")
             if ValidateUser(login_input):
                 login_admin()
             break
         elif login_input == '2':
+            print("-------------------------------------------------------------------------------")
             if ValidateUser(login_input):
-                print(user)
                 login_volunteer(user)
             break
         else:
