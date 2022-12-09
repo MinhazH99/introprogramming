@@ -89,7 +89,7 @@ def view_camps():
     if camp_file_exists == True:
         var = 1
         while var == 1:
-            camp_opt = input("Enter '1' to view the camp details for a specific Emergency Plan\nEnter '2' to view all the camp details\n")
+            camp_opt = input("Enter:\n[1] to view the camp details for a specific Emergency Plan\n[2] to view all the camp details\n")
             if camp_opt == '1':
                 var = 2
                 view_plan()
@@ -160,7 +160,7 @@ def edit_camp(no_camps, code, index, nat_disaster, current_no_camps):
     num_rows = len(selected_rows)
     #This lets the user know how many camps there currently are, if the number of camps is greater than 0
     print("There are currently " + str(current_no_camps)+ " camps for this plan.\n")
-    opt = input("Enter '1' if you would like to change the number of plans\nEnter '2' to quit\n")
+    opt = input("Enter:\n[1] if you would like to change the number of plans\n[2] to quit\n")
     var = 0
     while var == 0:
         #This if statement checks if the user wants to change the number of plans
@@ -350,8 +350,8 @@ def retrieve_data():
             
                 while var == 1:
                     #user is presented with options about how they want to edit the plan
-                    print("\nEnter '1' to add/edit a closing date\nEnter '2' to add/edit the number of camps\nEnter '3' to close the emergency plan")
-                    decision = input("Enter '4' to edit a different plan\nEnter '5' to quit\n")
+                    print("\nEnter:\n[1] to add/edit a closing date\n[2] to add/edit the number of camps\n[3] to close the emergency plan")
+                    decision = input("[4] to edit a different plan\n[5] to quit\n")
                     if decision == '1':
                         #the user is adding a close date
                         #a while loop similar to that in the check date function is used to check whether the date is valid
@@ -371,7 +371,7 @@ def retrieve_data():
                                     df.loc[plan_index, 'Close Date'] = str(closing_date)
                                     df.to_csv("EmergencyPlans.csv", index = False)
                                     var = 3
-                                    print("The closing date '" + str(closing_date) + "' has been added to plan 2\n")
+                                    print("The closing date '" + str(closing_date) + "' has been added to plan" + str(plan_index)+"\n")
 
                             except Exception:
                                 print("Not a valid date.\n")
@@ -432,7 +432,7 @@ def retrieve_data():
 def adminFeatures():       
     b = 0
     while b == 0:   
-        option = input("\nEnter '1' to create a plan\nEnter '2' to view a plan\nEnter '3' to edit a plan\nEnter '4' to view camp details\nEnter '5' to quit\n")
+        option = input("\nEnter:\n[1] to create a plan\n[2] to view a plan\n[3] to edit a plan\n[4] to view camp details\n[5] to quit\n")
         if option == '1':
             #the plan list is cleared, so that a new plan can be created
             plan_list.clear()
