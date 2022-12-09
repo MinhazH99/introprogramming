@@ -1,3 +1,4 @@
-refugee_name, camp_code, family_number, medical_condition
-test2,2,2,2
-test3,3,3,3
+refugee_name, camp_id, family_number, medical_condition
+USER1,PAKFLOOD0_1,1,1
+user2,PAKFLOOD0_1,2,2
+user3,PAKFLOOD0_1,2.0,
