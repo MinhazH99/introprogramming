@@ -1,5 +1,4 @@
-firstname,familyname,usernames,password,phoneno,status,accounttype
-testtt,test,volunteer1,112,115,Activated,Volunteer
-testchang,ttt,volunteer2,111,115,Deactivated,Volunteer
-volunteer3,test,volunteer3,111,116,Activated,Volunteer
-test,test,volunteer4,111,117,Activated,Volunteer
+firstname,familyname,usernames,password,phoneno,status,accounttype,emergencyplanindex,campid
+test,test,volunteer1,111,115,Activated,Volunteer,1,PAKFLOOD2
+volunteer2,test,volunteer2,111,115,Deactivated,Volunteer,1,PAKFLOOD1
+volunteer3,test,volunteer3,111,116,Deactivated,Volunteer,2,TXSSTORM1

@@ -90,13 +90,13 @@ def view_camps():
     if camp_file_exists == True:
         var = 1
         while var == 1:
-            camp_opt = input("Enter '1' to view the camp details for a specific Emergency Plan\nEnter '2' to view all the camp details\n")
+            camp_opt = input("Enter:\n[1] to view the camp details for a specific Emergency Plan\n[2] to view all the camp details\n")
             if camp_opt == '1':
                 var = 2
                 view_plan()
                 while var == 2:
                     try:
-                        plan_index = int(input("\nEnter the number of the plan you wish to view: "))    
+                        plan_index = int(input("\nEnter the number of the plan whose camps you wish to view: "))    
                         total_lines = sum(1 for line in open("EmergencyPlans.csv"))-1
                         if plan_index > (total_lines-1):
                             #if the plan index is too big, the loop will not break and the user will have to input another value
@@ -126,6 +126,57 @@ def view_camps():
         
     else:
         print("There are currently no camp details to view.\nPlease assign a number of camps to an emergency plan first.")
+
+def view_volunteers():
+    volunteer_file_exists = os.path.exists("volunteers_db.csv")
+    if volunteer_file_exists == True:
+        var = 1
+        while var == 1:
+            vol_opt = input("Enter:\n[1] to view the volunteers for a specific Emergency Plan\n[2] to view all the volunteer details\n")
+            if vol_opt == '1':
+                var = 2
+                view_plan()
+                while var == 2:
+                    try:
+                        plan_index = int(input("\nEnter the number of the plan whose volunteers you wish to view: "))    
+                        total_lines = sum(1 for line in open("EmergencyPlans.csv"))-1
+                        if plan_index > (total_lines-1):
+                            #if the plan index is too big, the loop will not break and the user will have to input another value
+                            print("This number is greater than the number of plans.")
+                        elif plan_index <= -1:
+                            #If the plan index is negative, the loop will also not break
+                            print("Negative numbers are not allowed.")
+                        elif plan_index >= 0:
+                            #the loop will only break if the plan index is valid
+                            var = 3
+                            vol_df = pd.read_csv("volunteers_db.csv")
+                            selected_rows = vol_df[vol_df['emergencyplanindex'] == plan_index]
+                            if selected_rows.empty:
+                                print("There are currently no volunteers associated with this plan index.")
+                            else:
+
+                                print("Volunteers for selected plan:\n")
+                                print(selected_rows.to_string())
+                            
+                    except ValueError:
+                        print("That is not a valid input.\n")
+            
+            elif vol_opt == '2':
+                var = 0
+                vol_df = pd.read_csv("volunteers_db.csv")
+                if vol_df.empty:
+                    print("There are currently no volunteers associated with any plan")
+                else:
+                    print("Summary of all volunteers:\n")
+                    print(vol_df.to_string())
+
+            else:
+                print("That is not a valid input.\n")
+        
+    else:
+        #if the file does not exist the program will let the user know and go back to the main function
+        print("There are currently no volunteers assigned to camps.\n") 
+  
         
 #This function takes the natural disaster as a parameter
 def search_dict(nat_disaster):
@@ -161,7 +212,7 @@ def edit_camp(no_camps, code, index, nat_disaster, current_no_camps):
     num_rows = len(selected_rows)
     #This lets the user know how many camps there currently are, if the number of camps is greater than 0
     print("There are currently " + str(current_no_camps)+ " camps for this plan.\n")
-    opt = input("Enter '1' if you would like to change the number of plans\nEnter '2' to quit\n")
+    opt = input("Enter:\n[1] if you would like to change the number of plans\n[2] to quit\n")
     var = 0
     while var == 0:
         #This if statement checks if the user wants to change the number of plans
@@ -351,8 +402,8 @@ def retrieve_data():
             
                 while var == 1:
                     #user is presented with options about how they want to edit the plan
-                    print("\nEnter '1' to add/edit a closing date\nEnter '2' to add/edit the number of camps\nEnter '3' to close the emergency plan")
-                    decision = input("Enter '4' to edit a different plan\nEnter '5' to quit\n")
+                    print("\nEnter:\n[1] to add/edit a closing date\n[2] to add/edit the number of camps\n[3] to close the emergency plan")
+                    decision = input("[4] to edit a different plan\n[5] to quit\n")
                     if decision == '1':
                         #the user is adding a close date
                         #a while loop similar to that in the check date function is used to check whether the date is valid
@@ -372,7 +423,7 @@ def retrieve_data():
                                     df.loc[plan_index, 'Close Date'] = str(closing_date)
                                     df.to_csv("EmergencyPlans.csv", index = False)
                                     var = 3
-                                    print("The closing date '" + str(closing_date) + "' has been added to plan 2\n")
+                                    print("The closing date '" + str(closing_date) + "' has been added to plan" + str(plan_index)+"\n")
 
                             except Exception:
                                 print("Not a valid date.\n")
@@ -477,39 +528,42 @@ def adminFeatures():
                                                         'Description', 'Area Code', 'No. Camps Available', 'Close Date', 'Status'])
              
                 row.to_csv("EmergencyPlans.csv", mode="a", index = False)
-                b = 1
+                #b = 1
                 #jumps back to main menu in case user wants to do another task
-                adminFeatures()
+                #adminFeatures()
             else:
                 row = pd.DataFrame(total_np)
                 
                 row.to_csv("EmergencyPlans.csv", mode="a", index = False, header = False)
-                b = 1
-                adminFeatures()
+                #b = 1
+                #adminFeatures()
                 
 
         elif option == '2':
-            b = 1
+           # b = 1
             #goes to view plan function, and then the main menu again
             view_plan()
-            adminFeatures()
+            #adminFeatures()
         elif option == '3':
-            b = 1
+            #b = 1
             #goes to the edit plans function, and then the main menu afterwards
             retrieve_data()
-            adminFeatures()
+            #adminFeatures()
         elif option == '4':
-            b = 1
+            #b = 1
             #goes to view camps function and main menu afterwards
             view_camps()
-            adminFeatures()
+            #adminFeatures()
         elif option == '5':
             #breaks loop and quits
+            view_volunteers()
+            #adminFeatures()
+        elif option == '6':
             b = 1
             admin_home.admin_home()
         else:
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")
                 
-    
+adminFeatures()  
     
