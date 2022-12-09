@@ -155,25 +155,27 @@ def view_volunteers():
                             else:
 
                                 print("Volunteers for selected plan:\n")
-                                print(selected_rows)
+                                print(selected_rows.to_string())
                             
                     except ValueError:
                         print("That is not a valid input.\n")
             
             elif vol_opt == '2':
                 var = 0
-                print("Summary of all volunteers:\n")
-
                 vol_df = pd.read_csv("volunteers_db.csv")
-                print(vol_df.to_string())
+                if vol_df.empty:
+                    print("There are currently no volunteers associated with any plan")
+                else:
+                    print("Summary of all volunteers:\n")
+                    print(vol_df.to_string())
+
             else:
                 print("That is not a valid input.\n")
         
     else:
         #if the file does not exist the program will let the user know and go back to the main function
         print("There are currently no volunteers assigned to camps.\n") 
-
-view_volunteers()   
+  
         
 #This function takes the natural disaster as a parameter
 def search_dict(nat_disaster):
@@ -481,7 +483,7 @@ def retrieve_data():
 def adminFeatures():       
     b = 0
     while b == 0:   
-        option = input("\nEnter:\n[1] to create a plan\n[2] to view a plan\n[3] to edit a plan\n[4] to view camp details\n[5] to quit\n")
+        option = input("\nEnter:\n[1] to create a plan\n[2] to view a plan\n[3] to edit a plan\n[4] to view camp details\n[5] to view volunteer details\n[6] to quit\n")
         if option == '1':
             #the plan list is cleared, so that a new plan can be created
             plan_list.clear()
@@ -520,38 +522,41 @@ def adminFeatures():
                                                         'Description', 'Area Code', 'No. Camps Available', 'Close Date', 'Status'])
              
                 row.to_csv("EmergencyPlans.csv", mode="a", index = False)
-                b = 1
+                #b = 1
                 #jumps back to main menu in case user wants to do another task
-                adminFeatures()
+                #adminFeatures()
             else:
                 row = pd.DataFrame(total_np)
                 
                 row.to_csv("EmergencyPlans.csv", mode="a", index = False, header = False)
-                b = 1
-                adminFeatures()
+                #b = 1
+                #adminFeatures()
                 
 
         elif option == '2':
-            b = 1
+           # b = 1
             #goes to view plan function, and then the main menu again
             view_plan()
-            adminFeatures()
+            #adminFeatures()
         elif option == '3':
-            b = 1
+            #b = 1
             #goes to the edit plans function, and then the main menu afterwards
             retrieve_data()
-            adminFeatures()
+            #adminFeatures()
         elif option == '4':
-            b = 1
+            #b = 1
             #goes to view camps function and main menu afterwards
             view_camps()
-            adminFeatures()
+            #adminFeatures()
         elif option == '5':
             #breaks loop and quits
+            view_volunteers()
+            #adminFeatures()
+        elif option == '6':
             b = 1
         else:
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")
                 
-    
+adminFeatures()  
     
