@@ -2,6 +2,7 @@ import os
 import csv
 import sys
 import pandas as pd
+from tabulate import tabulate
 emergencyFilename = 'emergency_profile.csv'
 
 
@@ -180,8 +181,8 @@ def show_all_profile():
         print("\n-------------------------------------------------------------------------------")
         print("Summary of all emergency profiles:")
         df = pd.read_csv(emergencyFilename, header=0)
-        print(df)
+        print(tabulate(df, headers='firstrow', tablefmt='fancy_grid'))
     else:
         print("No result found. ")
 
-new_search_profile()
+show_all_profile()
