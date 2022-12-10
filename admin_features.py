@@ -4,6 +4,12 @@ import numpy as np
 import csv
 import os.path
 import random
+from tabulate import tabulate
+import sys
+import subprocess
+
+#automatically install tabulate
+subprocess.Popen(['pip3', 'install', 'Tabulate'])
 
 plan_list = [] #empty list to add emergency plans to
 #Dictionry with a list of natural disasters and corresponding 5 or 6-letter codes
@@ -78,7 +84,7 @@ def view_plan():
         #if the plan exists, the data is read into a pandas dataframe, converted to a string and printed
         df = pd.read_csv("EmergencyPlans.csv")
         
-        print(df.to_string())
+        print(tabulate(df, headers = 'keys', tablefmt = 'fancy_grid'))
     else:
         #if the file does not exist the program will let the user know and go back to the main function
         print("There are currently no plans to view/edit.\nPlease create a plan first.") 
@@ -109,7 +115,7 @@ def view_camps():
                             camp_df = pd.read_csv("CampDetails.csv")
                             selected_rows = camp_df[camp_df['Emergency Plan Index'] == plan_index]
                             print("Refugee camps for selected plan:\n")
-                            print(selected_rows)
+                            print(tabulate(selected_rows, headers = 'keys', tablefmt = 'fancy_grid'))
                             
                     except ValueError:
                         print("That is not a valid input.\n")
@@ -119,7 +125,9 @@ def view_camps():
                 print("Summary of all refugee camps:\n")
 
                 camp_df = pd.read_csv("CampDetails.csv")
-                print(camp_df.to_string())
+                #print(camp_df.to_string())
+                print(tabulate(camp_df, headers = 'keys', tablefmt = 'fancy_grid'))
+                
             else:
                 print("That is not a valid input.\n")
         
@@ -155,7 +163,7 @@ def view_volunteers():
                             else:
 
                                 print("Volunteers for selected plan:\n")
-                                print(selected_rows.to_string())
+                                print(tabulate(selected_rows, headers = 'keys', tablefmt = 'fancy_grid'))
                             
                     except ValueError:
                         print("That is not a valid input.\n")
@@ -167,8 +175,9 @@ def view_volunteers():
                     print("There are currently no volunteers associated with any plan")
                 else:
                     print("Summary of all volunteers:\n")
-                    print(vol_df.to_string())
+                    print(tabulate(vol_df, headers = 'keys', tablefmt = 'fancy_grid'))
 
+                    
             else:
                 print("That is not a valid input.\n")
         
@@ -279,7 +288,7 @@ def edit_camp(no_camps, code, index, nat_disaster, current_no_camps):
                 df.to_csv("EmergencyPlans.csv", index = False)
                 #displays all the refugee camps for the selected emergency plan, so that the user can select the one they want to delete
                 print("Refugee camps for selected plan:\n")
-                print(selected_rows)
+                print(tabulate(selected_rows, headers = 'keys', tablefmt = 'fancy_grid'))
                 loop = 0
                 #difference between desired and current number of camps is calculated
                 diff = num_rows - int(no_camps)
@@ -558,7 +567,3 @@ def adminFeatures():
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")
                 
-adminFeatures()  
-                
-    
-    
