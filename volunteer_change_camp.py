@@ -1,123 +1,104 @@
 import pandas as pd
-import numpy as np
-import os
-import csv
 
-#Menu:
+def get_camp_list():
+    '''Returns a list of all camps in CampDetails.csv'''
+    df = pd.read_csv('CampDetails.csv')
+    camp_list = []
+    for ind in df.index:
+        camp_list.append(df.loc[ind]["Camp ID"])
+    return camp_list
 
-#Logic:
+def get_assoc_emergency_plan(camp):
+    '''For a choice of camp, returns the associated emergency plan index'''
+    df = pd.read_csv('CampDetails.csv')
+    emergency_plan_index_df = df[df["Camp ID"] == camp]
+    b = emergency_plan_index_df['Emergency Plan Index']
+    c = int(b)
+    emergency_plan_index = str(c)
+    # print(c)
+    return emergency_plan_index
 
-## At start of session, need to read in current number - in practice, a limitation would be that only one
-## user can use the system at a time for data integrity (overlapping transactions)
-#Load disaster count table to dataframe
-#Maybe use value_counts() to produce the values for the number of volunteers in each camp (number of times a camp name occurs)
-#Load volunteer info to dataframe
-#Options: 
-#[0] assign oneself to camp for first time
-#[1] view current camp
-#[2] change camps
-#If [0]:
-#   Check whether they have a camp, and raise an error if so. 
-#   Show them current camp
-#   If they don't:
-#       Ask them which city 
-#       Ask them the disaster time
-#       Based on these two, show current camps and numbers of staff/ refugees (make this a new (temportary?) dataframe)
-#       Ask user which camp they'd like to change to
-#       Decrement number of users at user's
-#       Change user's camp to that one
-#       Increment the number of volunteers at the camp in dataframe
-#       Write change to CSV file
-# 
-#See bookmarked articles - can read in CSV data to Pandas dataframe and change data type as appropriate (useful for integers)
+def update_volunteer_count():
+    '''Function to update the number of volunteers in each camp'''
+    volunteer_df = pd.read_csv('volunteers_db.csv')
+    camps_df = pd.read_csv('CampDetails.csv')
+    camp_list = get_camp_list() #store list of all camps
+    camp_count_list = []
+    for camp in camp_list:
+        #iterate through the list and store the number of occurrences of the camp in the volunteer database, 
+        #i.e. how many volunteers are at that camp
+        try:
+            camp_count_list.append(volunteer_df['campid'].value_counts()[f'{camp}'])
+        except KeyError:
+            camp_count_list.append(0) #if the camp does not appear in the volunteer database, nobody has signed up to it
+    
+    camp_count_dict = {camp_list[i]: camp_count_list[i] for i in range(len(camp_list))} #dictionary of camp IDs and no. volunteers at each
+    for key, value in camp_count_dict.items():
+        camps_df.loc[camps_df['Camp ID'] == f'{key}', 'No. Volunteers'] = f'{value}' #update number of volunteers at each
+    camps_df.to_csv("CampDetails.csv",index=False) #store the updated counts
 
-# test_file = open('list_of_camps.csv', 'r')
-# DictReader_obj = csv.DictReader(test_file)
-# for item in DictReader_obj:
-#     print(item['Camp ID'])
+def camp_functions_menu(user):
+    '''Main menu for users to decide whether to choose a camp, view current camp, change camp, or return to main menu.'''
+    print("Enter [1] to choose a camp for the first time.")
+    print("Enter [2] to view the ID of the camp you are currently assigned to.")
+    print("Enter [3] to change camps.")
+    print("Enter [4] to exit.") #with the understanding that from the menu, a user can pick a camp
+    user_input = input("Please select an option: ").strip()
+    if user_input == '1':
+        choose_camp(user)
+    elif user_input == '2':
+        view_camp(user) 
+    elif user_input == '3':
+        change_camp(user) 
+    elif user_input == '4':
+        print("Goodbye") #call main menu function
+    else: #error handling
+        pass
 
-
-def get_num_camps():
-    df = pd.read_csv('test_file.csv')
-    print(df)
-    num_volunteers = df['Camp ID'].value_counts()
-    return num_volunteers
-
-
-# print(get_num_camps())
-
-# Come back to these lines - for making a 'view' of camps and volunteer counts
-# df = pd.read_csv('test_file.csv')
-# res = pd.Series(list(zip(df['Camp ID'], df['Emergency plan index']))).value_counts()
-# df2 = df[['Camp ID', 'Emergency plan index']].value_counts().reset_index(name = 'Number of volunteers')
-# print(df2)
-
-
-
-
-# class volunteerCampFunctions:
-#     """
-#     All methods for viewing and changing camp assignment for volunteers
-#     """
-
-def pick_relevant_camps(emergency_plan_index):
-    '''Method for listing camps to user signed up to a particular emergency plan'''
-    print(type(emergency_plan_index))
-    print("Here is a list of camps:")
-    camps_df = pd.read_csv('list_of_camps.csv')
-    q = camps_df[camps_df['Emergency plan index'] == emergency_plan_index]['Camp ID']
-    l = []
-    for ind in q.index:
-        print(q[ind])
-        l += [q[ind]]
-    choice = input("Which camp would you like to join?" ).strip()
-    while choice not in l:
-        print("Invalid choice. Please select one of the available camps.")
-        choice = pick_relevant_camps(emergency_plan_index)
-    return choice
 
 def choose_camp(user):
+    """
+    Allows user to change camp id
+    Removes user from camp they were previously at (should edit the text file containing all camp details)
+    NOT IMPLEMENTED YET: notifies camp administrator that volunteer has moved to different camp
+    NOT IMPLEMENTED YET: Doesn't allow volunteer to move camps if their camp is understaffed, or at minimum staffing level.
+    Minimum staffing level could be set manually, or set as a default to the closest integer value to number of refugees / 10
+    """
 
-    found = False
-
-    df = pd.read_csv('test_file.csv') #file containing all volunteer info
+    df = pd.read_csv('volunteers_db.csv') #file containing all volunteer info
     username = user
-    a = df[df['Username'] == f'{username}']
+    a = df[df['usernames'] == f'{username}']
+    camp_list = get_camp_list()
     
     if len(a) > 0: #i.e., if there are any rows in the dataframe with this username
-        camp_id = a['Camp ID'].to_string(index = False)
-        if camp_id != 'NaN':
+        b = a.at[1, 'campid']
+        camp_id = str(b)
+        if camp_id != 'nan':
             print("You are already assigned to a camp. Your camp ID is", camp_id) #print Camp ID without index
         else:
-            emergency_plan = int(a['Emergency plan index'].to_string(index = False)) #get emergency plan of volunteer from file
-            choice = pick_relevant_camps(emergency_plan)
+            # The commented lines are only relevant if we decide volunteers can only move within camps from one plan
+            # emergency_plan = int(a['emergencyplanindex'].to_string(index = False)) #get emergency plan of volunteer from file
+            
+            # choice = pick_relevant_camps(emergency_plan) #assigns choice of camp to variable 'choice'
             #insert validation/ error-catching here
+            for camp in camp_list:
+                print(camp)
+            while True:
+                choice = input("Pick a camp from the above list: ").strip()
+                if choice not in camp_list:
+                    print("Invalid choice.")
+                emergency_plan_index = get_assoc_emergency_plan(choice)
+                break
+        
+            #camps_df = pd.read_csv('CampDetails.csv')
+            df.loc[(df["usernames"] == username),"campid"]=f'{choice}' #Use this in selecting_shifts
+            df.loc[(df["usernames"] == username),"emergencyplanindex"]=f'{emergency_plan_index}'
+            print("Camp ID updated")
+            df.to_csv("volunteers_db.csv",index=False)
+            update_volunteer_count()
 
-            test_file = open('test_file.csv', 'r')
-            for line in test_file:
-                part = line.split(',') # creates list of strings separated by , from the line
-                if part[3] == username:
-                    found = True
-                    new = (part[0] + "," + part[1] + "," + part[2] + "," + part[3] + "," + part[4] + "," + part[5] + "," + choice) # Create new line to replace old one
-                    tempfile = open('temp.csv', 'w')
-                    test_file.seek(0,0) #set file pointer to the start of line 0
-                    for line in test_file:
-                        if username in line:
-                            tempfile.write(new) #replace only the line to be overwritten
-                            tempfile.write('\n')
-                        else:
-                            tempfile.write(line)
-                #else: do nothing
-            test_file.close()
-
-            if found == False:
-                print("Username not in records!")
-            elif found == True:
-                os.rename('test_file.csv', 'delete.csv')
-                os.remove('delete.csv')
-                os.rename('temp.csv', 'test_file.csv')
-                print("Camp selected successfully. New camp: ", choice)
-
+            #modify camps_df by row count 
+            #rewrite camps_df
 
     else:
         print("Username not found!")
@@ -125,21 +106,32 @@ def choose_camp(user):
 
 def view_camp(user):
     '''View curent camp'''
-    df = pd.read_csv('test_file.csv') #file containing all volunteer info
+    df = pd.read_csv('volunteers_db.csv') #file containing all volunteer info
     username = user
-    a = df[df['Username'] == f'{username}']
+    a = df[df['usernames'] == f'{username}']
+    
     if len(a) > 0: #i.e., if there are any rows in the dataframe with this username
-        camp_id = a['Camp ID'].to_string(index = False)
-        if camp_id != 'NaN':
+        # camp_id = a['Camp ID'].to_string(index = False)
+        b = a.at[1, 'campid']
+        camp_id = str(b)
+        if camp_id != 'nan':
             print("Your camp ID is", camp_id) #print Camp ID without index
+            action = input("Your current camp is " + camp_id + ". Would you still like to change this? (Y/N)").strip()
+            if action.lower() == 'y':
+                pass
+            elif action.lower() == 'n':
+                print("Goodbye") #leaves camp manipulation menu
+            else: #error handling
+                pass
         else: 
-            action = input("You are not currently assigned to a camp.\n\
-            Enter [0] to return to menu.\n\
-            Enter [1] to exit.") #with the understanding that from the menu, a user can pick a camp
-            if action == 0:
-                change_camp #call main menu function
-            elif action == 1:
-                print("Goodbye")
+            print("You are not currently assigned to a camp.")
+            print("Enter [1] to choose a camp.")
+            print("Enter [2] to exit.") #with the understanding that from the menu, a user can pick a camp
+            user_input = input("Please select an option: ").strip()
+            if user_input == '1':
+                change_camp(user) 
+            elif user_input == '2':
+                print("Goodbye") #call main menu function
             else: #error handling
                 pass
     else:
@@ -148,53 +140,52 @@ def view_camp(user):
 
 
 def change_camp(user):
-    '''To allow volunteers to change their camp'''
-    found = False
+    """
+    To allow volunteers to change their camp
+    Removes user from camp they were previously at (should edit the CSV file containing all camp details)
+    NOT IMPLEMENTED YET: notifies camp administrator that volunteer has moved to different camp
+    NOT IMPLEMENTED YET: Doesn't allow volunteer to move camps if their camp is understaffed, or at minimum staffing level.
+    Minimum staffing level could be set manually, or set as a default to the closest integer value to number of refugees / 10
+    """
 
-    df = pd.read_csv('test_file.csv') #file containing all volunteer info
+    df = pd.read_csv('volunteers_db.csv') #file containing all volunteer info
     username = user
-    a = df[df['Username'] == f'{username}']
+    a = df.loc[df['usernames'] == f'{username}']
     
     if len(a) > 0: #i.e., if there are any rows in the dataframe with this username
-        camp_id = a['Camp ID'].to_string(index = False)
-        print(camp_id)
+        b = a.at[1, 'campid']
+        camp_id = str(b)
         print(type(camp_id))
-        if camp_id != 'NaN':
+        if camp_id != 'nan':
             action = input("Your current camp is " + camp_id + ". Would you still like to change this? (Y/N)").strip()
             if action.lower() == 'y':
-                emergency_plan = int(a['Emergency plan index'].to_string(index = False)) #get emergency plan of volunteer from file
-                choice = pick_relevant_camps(emergency_plan)
+                
+                #the superior version
+                # emergency_plan = int(a['emergencyplanindex'].to_string(index = False)) #get emergency plan of volunteer from file
+                #for now:
+                
+                # choice = pick_relevant_camps(emergency_plan_index)
+                while True:
+                    choice = input("Pick a camp from the above list: ").strip()
+                    camp_list = get_camp_list()
+                    if choice not in camp_list:
+                        print("Invalid choice.")
+                    emergency_plan_index = get_assoc_emergency_plan(choice)
+                    break
 
-                test_file = open('test_file.csv', 'r')
-                for line in test_file:
-                    part = line.split(',') # creates list of strings separated by , from the line
-                    if part[3] == username:
-                        found = True
-                        new = (part[0] + "," + part[1] + "," + part[2] + "," + part[3] + "," + part[4] + "," + part[5] + "," + choice) # Create new line to replace old one
-                        tempfile = open('temp.csv', 'w')
-                        test_file.seek(0,0) #set file pointer to the start of line 0
-                        for line in test_file:
-                            if username in line:
-                                tempfile.write(new) #replace only the line to be overwritten
-                                tempfile.write('\n')
-                            else:
-                                tempfile.write(line)
-                #else: do nothing
-                test_file.close()
+
+                df.loc[(df["usernames"] == username),"campid"]=f'{choice}' #Use this in selecting_shifts
+                df.loc[(df["usernames"] == username),"emergencyplanindex"]=f'{emergency_plan_index}'
+                print("Camp ID updated")
+                df.to_csv("volunteers_db.csv",index=False)
+                update_volunteer_count()
+
             elif action.lower() == 'n':
-                print("Goodbye")
+                print("Goodbye") #return to main menu
             else: #error handling
                 pass
-            
-
-            if found == False:
-                print("Username not in records!")
-            elif found == True:
-                os.rename('test_file.csv', 'delete.csv')
-                os.remove('delete.csv')
-                os.rename('temp.csv', 'test_file.csv')
-                print("Camp selected successfully. New camp: ", choice)
-        elif camp_id == 'NaN':
+        
+        elif camp_id == 'nan':
             action = input("You are not currently assigned to a camp. Would you like to choose a camp? (Y/N) ").strip()
             if action.lower() == 'y':
                 choose_camp(user)
@@ -208,18 +199,3 @@ def change_camp(user):
     else:
         print("Username not found!")
         change_camp(user)
-
-
-
-
-def camp_volunteer_counts():
-    '''Counts the number of volunteers at each camp. Creates a series with volunteer counts and merges with dataframe'''
-    pass
-
-
-
-# pick_relevant_camps(0)
-
-
-
-#at present, achieved without auto-creation of new camps based on number of volunteers. Can only choose/ change to existing camp
