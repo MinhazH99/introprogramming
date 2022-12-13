@@ -5,9 +5,9 @@ import volunteer_selecting_shifts
 
 def volunteer_home(user):
     print("-------------------------------------------------------------------------------")
-    print("[1] Edit your details")
-    print("[2] Assign yourself a camp")
-    print("[3] Edit avalaiblity")
+    print("[1] Edit your personal details")
+    print("[2] View and edit your assigned camp")
+    print("[3] Edit availability")
     print("[4] Create or Edit Emergency Profile for Refugee")
     print("[5] Logout")
 
@@ -20,7 +20,7 @@ def volunteer_home(user):
             break
 
         elif user_input == '2':
-            volunteer_change_camp.change_camp(user)
+            volunteer_change_camp.camp_functions_menu(user)
             break
 
         elif user_input == '3':
@@ -38,6 +38,3 @@ def volunteer_home(user):
         else:
             print("Please select a valid option")
         
-
-
-
