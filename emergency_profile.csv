@@ -1,4 +1,4 @@
-refugee_name, camp_id, family_number, medical_condition, food_requirement, space_requirement, create_time
+refugee_name,camp_id,family_number,medical_condition,food_requirement,space_requirement,create_time
 user1,PAKFLOOD0_1,1,diabetes,gluten free,quiet place,2022-12-13
 user2,TXSSTORM1_3,2,high blood pressure,low carb,accessible toilet,2022-12-13
 user3,INDFLOOD2_2,2,wheelchair,no beef,na,2022-12-15
