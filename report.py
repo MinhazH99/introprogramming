@@ -40,86 +40,81 @@ def report_menu():
     print("[0] Exit")
 
 
-def create_profile():
+def create_report():
     print("\n----------------------------------------------------------------------------------------------------------------------------------------")
     print("Create a New Report")
-    create_report = []
+    report_list = []
     # volunteer,title,category,camp_id,message,report_time,severity
     while True:
         print("")
         # Not sure how to get current volunteer's username yet, set a dummy data.
         volunteer = "volunteer1"
-        title = str(input("Please enter the report title: "))
-        # If they don't enter anything, the function will end
-        if not title:
-            break
-        
-        # For example, if "chris" already exists in profile, put "chris1" as the refugee's name, then "chris2", "chris3" and so on.
-        df = pd.read_csv('emergency_profile.csv')
-        category = df[(df['refugee_name'].str.startswith(input_refugee_name))]
-        
-        # Firstly, check if there's name starts with input_refugee_name
-        if name_result.empty == False:
-            count = 1
-            for i in range(len(name_result)):
-                # Secondly, count how many of them ends with a number
-                if name_result['refugee_name'].values[i][-1].isdigit() == True:
-                    count += 1
-                # If there's no result ends with a number, then refugee_name = input_refugee_name
-                else:
-                    refugee_name = input_refugee_name
-            # Lastly, concatenate the input_refugee_name with the count number. 
-            refugee_name = input_refugee_name + str(count)
-        else:
-            # If there's no name starts with input_refugee_name, then refugee_name = input_refugee_name
-            refugee_name = input_refugee_name
-    
-
-        # While loop for camp_id validation
         while True:
-            camp_id = str(input("Please enter the ID of camp that they are in: "))
+            camp_id = str(input("Please enter the camp id that you want to report: "))
+            # if there's no input, ask again 
             if not camp_id:
-                break
+                continue
             # Validating that camp_id exits in CampDetails.csv:
             df = pd.read_csv('CampDetails.csv')
             id_result = df[(df['Camp ID'] == camp_id)]
             if len(id_result) != 0:
-                # While loop for family_number validation
+                # While loop for category
                 while True:
-                    # Validating that family_number input is a number
-                    try:
-                        family_number = int(input("Please enter the numbers of his/her family in the camp (enter 0 if there's no family member): "))
-                    except: 
-                        print("The input is not a number, please enter again")
+                    category_choice = str(input("Which category does the report belong to? [1]Harassment [2]Resources [3]Equipment [4]Other: "))
+                    if not category_choice:
+                        continue 
+                    match category_choice:
+                        case "1":
+                            category = "Harassment"
+                        case "2":
+                            category = "Resources"
+                        case "3":
+                            category = "Equipment"
+                        case "4":
+                            category = "Other"
+                        case _:
+                            print("Wrong input, please enter 1, 2, 3, or 4.")
+                            continue
+                    # Title is compolsury, while message can be null. 
+                    title = str(input("Please enter the report title: "))
+                    if not title:
                         continue
-                    # Medical condition can be null.
-                    medical_condition = str(input("Please enter the Refugee's Medical condition if any: "))
-                    # Food requirement can be null.
-                    food_requirement = str(input("Please enter the Refugee's food requirement if any: "))
-                    # Food requirement can be null.
-                    space_requirement = str(input("Please enter the Refugee's space requirement if any: "))
-                    create_time = date.today().strftime("%Y-%m-%d")
+                    message = str(input("Please enter the report content: "))
+                    # volunteer,camp_id,category,title,message,report_time,severity
+                    report_time = date.today().strftime("%Y-%m-%d")
                     break
-                    
-                profile = {'refugee_name':refugee_name, 'camp_id':camp_id, 'family_number':family_number, 'medical_condition':medical_condition,
-                 'food_requirement':food_requirement, 'space_requirement':space_requirement, 'create_time':create_time}
-                profile_list.append(profile)
+                report = {'volunteer':volunteer, 'camp_id':camp_id, 'category':category, 'title':title, 'message':message, 'report_time':report_time}
+                report_list.append(report)
                 break
             else: 
                 print("The camp ID is invalid, please enter again.")
                 continue
-        answer = input("\nSuccessfully created the profile(s) of the refugee.\nDo you want to create another emergency profile? Y/N \n")
+        answer = input("\nSuccessfully created the report.\nDo you want to create another report? Y/N \n")
         if answer == 'y' or answer == 'Y':
             continue
         else:
-            print("\nHere's the profile(s) you've created just now:")
-            print(tabulate(pd.DataFrame(profile_list).fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
+            print("\nHere's the report(s) you've created just now:")
+            print(tabulate(pd.DataFrame(report_list).fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Time"], tablefmt='fancy_grid', showindex=False))
             break
 
+
     # If volunteer doesn't input the refugee's name, the info won't be written to the csv file. 
-    if profile_list:
-        with open("emergency_profile.csv", "a", newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=['refugee_name', 'camp_id', 'family_number', 'medical_condition', 'food_requirement', 'space_requirement', 'create_time'])
-            for profile in profile_list:
-                writer.writerow(profile)
-            print("The emergency profile(s) has been created.")
+    if report_list:
+        with open("report.csv", "a", newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=['volunteer', 'camp_id', 'category', 'title', 'message', 'report_time', 'severity'])
+            for report in report_list:
+                writer.writerow(report)
+            print("The report(s) has been created.")
+
+
+                        
+      
+def delete_report():
+    pass
+
+def view_my_report():
+    pass
+
+def view_all_report():
+    pass
+create_report()
