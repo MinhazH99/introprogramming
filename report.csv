@@ -1,3 +1,7 @@
-volunteer,camp_id,category,title,message,report_time,severity
+volunteer,camp_id,category,title,message,report_date,severity
 volunteer1,PAKFLOOD0_3,Equipment,Lack of beds,,2022-12-15,
 volunteer1,TXSSTORM1_2,Resources,Lack of water,,2022-12-15,
+volunteer1,TXSSTORM1_2,Other,Lack of sheets,Need 40 sheets,2022-12-15,
+volunteer2,TXSSTORM1_2,Other,Lack of sheets,Need 40 sheets,2022-12-15,
+volunteer1,PAKFLOOD0_2,Resources,d,d,2022-12-15,
+volunteer1,PAKFLOOD0_2,Resources,not,nd,2022-12-15,Not graded yet
