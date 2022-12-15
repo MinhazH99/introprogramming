@@ -507,9 +507,10 @@ def view_report():
 def assign_severity():
     report_file_exists = os.path.exists("report.csv")
     if report_file_exists == True:
+        rep_df = pd.read_csv("report.csv")
+        print(tabulate(rep_df,headers = 'keys', tablefmt = 'fancy_grid'))
         while True:
-            rep_df = pd.read_csv("report.csv")
-            print(tabulate(rep_df,headers = 'keys', tablefmt = 'fancy_grid'))
+            
             try:
                 report_index = int(input("\nEnter the number of the report you wish to assign a severity to: ")) 
                 
@@ -637,3 +638,4 @@ def adminFeatures():
         else:
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")
+#adminFeatures()
