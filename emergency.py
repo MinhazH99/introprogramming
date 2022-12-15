@@ -230,8 +230,9 @@ def search_profile():
         contains_keyword = df[df['refugee_name'].str.contains(keyword, case=False)]
         if len(contains_keyword) != 0: 
             print("Below is the search result: ")
-            # Display the result(s) found in csv file.
-            print(tabulate(contains_keyword.fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
+            # Display the result(s) found in csv file sorting by create_time.
+            contains_keyword['create_time'] = pd.to_datetime(contains_keyword['create_time'])
+            print(tabulate(contains_keyword.sort_values(by='create_time').fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
             answer = input("Continue to search emergency profile? Y/N \n")
             if answer == 'Y' or answer == 'y':
                 continue
@@ -247,13 +248,13 @@ def show_all_profile():
     if os.path.exists("emergency_profile.csv"):
         print("\n----------------------------------------------------------------------------------------------------------------------------------------")
         print("Summary of all emergency profiles:")
-        df = pd.read_csv("emergency_profile.csv", header=0)
-        # TODO How to sort the result by create_time?
-        # df.sort_values(pd.to_datetime(df['create_time'], unit="D")), inplace=True)
-        print(tabulate(df.fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
+        df = pd.read_csv("emergency_profile.csv")
+        # Sort the result by create_time
+        df['create_time'] = pd.to_datetime(df['create_time'])
+        print(tabulate(df.sort_values(by='create_time'), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
     else:
         print("No result found. ")
 
 
 # To test the code
-# emergency_profile()
+emergency_profile()
