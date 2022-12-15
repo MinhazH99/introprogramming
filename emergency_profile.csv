@@ -1,6 +1,7 @@
-refugee_name, camp_id, family_number, medical_condition
-user1,PAKFLOOD0_1,1,1
-user2,PAKFLOOD0_1,2,2
-user3,TXSSTORM1_3,2,2
-test2,PAKFLOOD0_1,2,1
-TEST3,PAKFLOOD0_3,3,ahaha
+refugee_name, camp_id, family_number, medical_condition, food_requirement, space_requirement, create_time
+user1,PAKFLOOD0_1,1,diabetes,gluten free,quiet place,2022-12-13
+user2,TXSSTORM1_3,2,high blood pressure,low carb,accessible toilet,2022-12-13
+user3,INDFLOOD2_2,2,wheelchair,no beef,na,2022-12-15
+user4,TXSSTORM1_5,2,high blood pressure,low protein,na,2022-12-15
+chris,TXSSTORM1_3,0,poor eye sight condition,low fat,na,2022-12-10
+christopher,TXSSTORM1_3,2,na,low sugar,na,2022-10-21

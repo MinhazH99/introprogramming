@@ -3,13 +3,14 @@ import csv
 import sys
 import pandas as pd
 from tabulate import tabulate
+from datetime import date
 
 
 def emergency_profile():
     while True:
         profile_menu()
         volunteer_option = str(input("Option: "))
-        if volunteer_option in ["0", "1", "2", "3", "4", "5", "6"]:
+        if volunteer_option in ["0", "1", "2", "3", "4", "5"]:
             if volunteer_option == "0":
                 answer = input("Are you sure to exit? Y/N \n")
                 if answer == 'Y' or answer == 'y':
@@ -32,7 +33,7 @@ def emergency_profile():
 
 
 def profile_menu():
-    print("\n-------------------------------------------------------------------------------")
+    print("\n----------------------------------------------------------------------------------------------------------------------------------------")
     print("Refugee's Emergency Profile Menu")
     print("[1] Create New Emergency Profile")
     print("[2] Edit Existing Emergency Profile")
@@ -43,17 +44,38 @@ def profile_menu():
 
 
 def create_profile():
-    print("\n-------------------------------------------------------------------------------")
+    print("\n----------------------------------------------------------------------------------------------------------------------------------------")
     print("Create New Emergency Profile")
     profile_list = []
     while True:
         print("")
-        # TODO: check if the input name already exists in our profile, if so, add a number after the name.
-        # For example, if "chris" already exists in profile, put "chris1" as the refugee's name.
-        refugee_name = str(input("Please enter the refugee's name: "))
+        input_refugee_name = str(input("Please enter the refugee's name: "))
         # If they don't enter anything for refugeeName or camp_id the function will end
-        if not refugee_name:
+        if not input_refugee_name:
             break
+
+        # Check if the input name already exists in our profile, if so, add a number after the name.
+        # For example, if "chris" already exists in profile, put "chris1" as the refugee's name, then "chris2", "chris3" and so on.
+        df = pd.read_csv('emergency_profile.csv')
+        name_result = df[(df['refugee_name'].str.startswith(input_refugee_name))]
+        
+        # Firstly, check if there's name starts with input_refugee_name
+        if name_result.empty == False:
+            count = 1
+            for i in range(len(name_result)):
+                # Secondly, count how many of them ends with a number
+                if name_result['refugee_name'].values[i][-1].isdigit() == True:
+                    count += 1
+                # If there's no result ends with a number, then refugee_name = input_refugee_name
+                else:
+                    refugee_name = input_refugee_name
+            # Lastly, concatenate the input_refugee_name with the count number. 
+            refugee_name = input_refugee_name + str(count)
+        else:
+            # If there's no name starts with input_refugee_name, then refugee_name = input_refugee_name
+            refugee_name = input_refugee_name
+    
+
         # While loop for camp_id validation
         while True:
             camp_id = str(input("Please enter the ID of camp that they are in: "))
@@ -61,8 +83,8 @@ def create_profile():
                 break
             # Validating that camp_id exits in CampDetails.csv:
             df = pd.read_csv('CampDetails.csv')
-            match_result = df[(df['Camp ID'] == camp_id)]
-            if len(match_result) != 0:
+            id_result = df[(df['Camp ID'] == camp_id)]
+            if len(id_result) != 0:
                 # While loop for family_number validation
                 while True:
                     # Validating that family_number input is a number
@@ -73,78 +95,99 @@ def create_profile():
                         continue
                     # Medical condition can be null.
                     medical_condition = str(input("Please enter the Refugee's Medical condition if any: "))
+                    # Food requirement can be null.
+                    food_requirement = str(input("Please enter the Refugee's food requirement if any: "))
+                    # Food requirement can be null.
+                    space_requirement = str(input("Please enter the Refugee's space requirement if any: "))
+                    create_time = date.today().strftime("%Y-%m-%d")
                     break
-                profile = {'refugee_name':refugee_name, 'camp_id':camp_id, 'family_number':family_number, 'medical_condition':medical_condition}
+                    
+                profile = {'refugee_name':refugee_name, 'camp_id':camp_id, 'family_number':family_number, 'medical_condition':medical_condition,
+                 'food_requirement':food_requirement, 'space_requirement':space_requirement, 'create_time':create_time}
                 profile_list.append(profile)
                 break
             else: 
                 print("The camp ID is invalid, please enter again.")
                 continue
-        answer = input("Successfully created the profile(s) of the refugee.\nDo you want to create another emergency profile? Y/N \n")
+        answer = input("\nSuccessfully created the profile(s) of the refugee.\nDo you want to create another emergency profile? Y/N \n")
         if answer == 'y' or answer == 'Y':
             continue
         else:
+            print("\nHere's the profile(s) you've created just now:")
+            print(tabulate(pd.DataFrame(profile_list).fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
             break
 
-    with open("emergency_profile.csv", "a", newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=['refugee_name', 'camp_id', 'family_number', 'medical_condition'])
-        for profile in profile_list:
-            writer.writerow(profile)
-        print("The emergency profile(s) has been created.")
+    # If volunteer doesn't input the refugee's name, the info won't be written to the csv file. 
+    if profile_list:
+        with open("emergency_profile.csv", "a", newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=['refugee_name', 'camp_id', 'family_number', 'medical_condition', 'food_requirement', 'space_requirement', 'create_time'])
+            for profile in profile_list:
+                writer.writerow(profile)
+            print("The emergency profile(s) has been created.")
 
 
 def modify_profile():
-    refugee_name_list = []
-    with open("emergency_profile.csv", "r",  encoding='utf-8', errors='ignore') as rfile:
-        reader = csv.reader(rfile)
-        for row in reader:
-            refugee_name_list.append(row[0])
-
-    # Display all emergency profile before searching. 
     show_all_profile()
-
     searched_refugee_name = input("Please enter the name of the refugee's profile that you want to modify: ")
-    if searched_refugee_name in refugee_name_list:
-        print("Found the refugee's profile. Please modify the information of the refugee: ")
+    df = pd.read_csv('emergency_profile.csv')
+    result = df.loc[df['refugee_name'].str.contains(searched_refugee_name, case=False)]
+    
+    if result.empty == False:
+        print("Here's the summary of the refugee's profile(s): ")
+        print(tabulate(result.fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement"], tablefmt='fancy_grid', showindex=False))
+        
+        exact_searched_refugee_name = str(input("Please ensure modification by entering the exact refugee name that you want to modify: "))
+        exact_result = df.loc[df['refugee_name'].str.contains(exact_searched_refugee_name, case=False)]
         while True:
-            print("")
-            refugee_name = str(input("Please enter the refugee's name: "))
-            # If they don't enter anything for refugeeName or camp_id the function will end
-            if not refugee_name:
-                break
-            # While loop for camp_id validation
-            while True:
-                camp_id = str(input("Please enter the ID of camp that they are in: "))
-                if not camp_id:
-                    break
-                # Validate that camp_id exits in CampDetails.csv:
-                df = pd.read_csv('CampDetails.csv')
-                match_result = df[(df['Camp ID'] == camp_id)]
-                if len(match_result) != 0:
-                    # While loop for family_number validation
-                    while True:
-                        # Validating that family_number input is a number
-                        try:
-                            family_number = int(input("Please enter the numbers of his/her family in the camp (enter 0 if there's no family member): "))
-                        except: 
-                            print("The input is not a number, please enter again")
-                            continue
-                        # Medical condition can be null.
-                        medical_condition = str(input("Please enter the Refugee's Medical condition if any: "))
+            if exact_result.empty == False:
+                while True:
+                    print("")
+                    refugee_name = input("Please change refugee's name: ")
+                    # If they don't enter anything for refugeeName or camp_id the function will end
+                    if not refugee_name:
                         break
+                    # While loop for camp_id validation
+                    while True:
+                        camp_id = str(input("Please change the camp ID they are in: "))
+                        if not camp_id:
+                            break
+                        # Validate that camp_id exits in CampDetails.csv:
+                        df = pd.read_csv('CampDetails.csv')
+                        match_result = df[(df['Camp ID'] == camp_id)]
+                        if len(match_result) != 0:
+                            # While loop for family_number validation
+                            while True:
+                                # Validating that family_number input is a number
+                                try:
+                                    family_number = int(input("Please change the numbers of his/her family in the camp (enter 0 if there's no family member): "))
+                                except: 
+                                    print("The input is not a number, please enter again")
+                                    continue
+                                # Medical condition can be null.
+                                medical_condition = str(input("Please change the Refugee's Medical condition if any: "))
+                                # Food requirement can be null.
+                                food_requirement = str(input("Please change the Refugee's food requirement if any: "))
+                                # Food requirement can be null.
+                                space_requirement = str(input("Please change the Refugee's space requirement if any: "))
+                                modify_time = date.today().strftime("%Y-%m-%d")
+
+                                break
+                            break
+                        else: 
+                            print("The camp ID is invalid, please enter again.")
+                            continue
                     break
-                else: 
-                    print("The camp ID is invalid, please enter again.")
-                    continue
+            else:
+                break
             break
         # Update all valid profile info to emergency_profile.csv
         df = pd.read_csv('emergency_profile.csv')
-        df.loc[df['refugee_name'] == searched_refugee_name] = [refugee_name, camp_id, family_number, medical_condition]
+        df.loc[df['refugee_name'] == exact_searched_refugee_name] = [refugee_name, camp_id, family_number, medical_condition, food_requirement, space_requirement, modify_time]
         df.to_csv('emergency_profile.csv', index = False)
         print("Successfully updated the profile of the refugee.")
     else:
         print("Emergency profile not found. ")
-            
+
     answer = str(input("Continue to edit another emergency profile? Y/N \n"))
     if answer == 'Y' or answer== 'y':
         modify_profile()
@@ -152,12 +195,16 @@ def modify_profile():
 
 def delete_profile():
     while True:
-        print("\n-------------------------------------------------------------------------------")
+        print("\n----------------------------------------------------------------------------------------------------------------------------------------")
         delete_refugee_name = str(input("Please enter the name of the refugee that you want to delete : "))
         df = pd.read_csv('emergency_profile.csv')
-        delete_profile_result = df[(df['refugee_name'] == delete_refugee_name)]
-        if len(delete_profile_result) != 0: 
-            df.drop(df.index[df['refugee_name'] == delete_refugee_name], inplace = True)
+        # Show every emergency profile of the name that the keyword contains
+        contains_keyword = df[df['refugee_name'].str.contains(delete_refugee_name, case=False)]
+        if len(contains_keyword) != 0: 
+            print(tabulate(contains_keyword.fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement"], tablefmt='fancy_grid', showindex=False))
+            # 
+            exact_delete_refugee_name = input("Please ensure deletion by entering the exact refugee name that you want to delete: ")
+            df.drop(df.index[df['refugee_name'] == exact_delete_refugee_name], inplace = True)
             df.to_csv('emergency_profile.csv', index = False)
             answer = input(f"Deleted {delete_refugee_name}'s emergency profile successfully. Continue to delete other emergency profile? Y/N \n")
             if answer == 'Y' or answer == 'y':
@@ -168,9 +215,10 @@ def delete_profile():
             print("Emergency profile not found. ")
             return
 
+
 def search_profile():
     while True:
-        print("\n-------------------------------------------------------------------------------")
+        print("\n----------------------------------------------------------------------------------------------------------------------------------------")
         keyword = input("Please enter the refugee's name: ")
         # If there's no input, go back to profile main menu
         if not keyword:
@@ -183,7 +231,7 @@ def search_profile():
         if len(contains_keyword) != 0: 
             print("Below is the search result: ")
             # Display the result(s) found in csv file.
-            print(tabulate(contains_keyword, headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition"], tablefmt='fancy_grid'), showindex=False)
+            print(tabulate(contains_keyword.fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
             answer = input("Continue to search emergency profile? Y/N \n")
             if answer == 'Y' or answer == 'y':
                 continue
@@ -193,12 +241,19 @@ def search_profile():
             print("Emergency profile not found.")
             return
 
+
 def show_all_profile():
     # Check if emergency_profile.csv exists, if so, print all profiles; if not, print "no result found"
     if os.path.exists("emergency_profile.csv"):
-        print("\n-------------------------------------------------------------------------------")
+        print("\n----------------------------------------------------------------------------------------------------------------------------------------")
         print("Summary of all emergency profiles:")
         df = pd.read_csv("emergency_profile.csv", header=0)
-        print(tabulate(df, headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition"], tablefmt='fancy_grid', showindex=False))
+        # TODO How to sort the result by create_time?
+        # df.sort_values(pd.to_datetime(df['create_time'], unit="D")), inplace=True)
+        print(tabulate(df.fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
     else:
         print("No result found. ")
+
+
+# To test the code
+# emergency_profile()
