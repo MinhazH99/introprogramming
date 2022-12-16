@@ -519,11 +519,11 @@ def view_report():
             #if reports exists, the data is read into a pandas dataframe, converted to a string and printed
             
             #potentially order by date with oldest first for consistency
-            print(tabulate(rep_df, headers = 'keys', tablefmt = 'fancy_grid'))
+            print(tabulate(rep_df.sort_values(by='report_date'), headers = 'keys', tablefmt = 'fancy_grid'))
         elif rep_opt == '2':
             selected_rows = rep_df[rep_df['severity'] == "Not Graded Yet"]
             print("Unassigned Reports:\n")
-            print(tabulate(selected_rows, headers = 'keys', tablefmt = 'fancy_grid'))
+            print(tabulate(selected_rows.sort_values(by='report_date'), headers = 'keys', tablefmt = 'fancy_grid'))
 
     else:
         print("No reports have been made yet.\n")
