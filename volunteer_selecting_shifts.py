@@ -2,6 +2,7 @@ import pandas as pd
 from datetime import date, datetime, timedelta
 import csv
 from tabulate import tabulate
+import volunteer_home
 
 #to avoid FutureWarning about the coming deprecation of the .append method for Pandas dataframes
 import warnings
@@ -64,6 +65,7 @@ def write_to_file(new_shift):
 
 def select_shift_type():
     '''Allows volunteer to select shift type'''
+    print("-------------------------------------------------------------------------------")
     print("Which type of shift would you like to interact with?")
     print("[1] Day shifts")
     print("[2] Night shifts")
@@ -160,14 +162,14 @@ def add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_
 
         if shift_type == '1':
             print(f"Sign up for a shift on {start_date} from 09:00 to 19:00?")
-            print("No: [0]")
-            print("Yes: [1]\n")
+            print("[0] No")
+            print("[1] Yes\n")
             decision = input("Please select an option: ").strip()
             print('\n')
         elif shift_type == '2':
             print(f"Sign up for a shift from {start_date} at 19:00 to {start_date + timedelta(1)} at 09:00?")
-            print("No: [0]")
-            print("Yes: [1]\n")
+            print("[0] No")
+            print("[1] Yes \n")
             decision = input("Please select an option: ").strip()
             print('\n')
 
@@ -227,7 +229,7 @@ def availability_funcs(user):
         custom_date_parser = lambda x: datetime.strptime(x, '%Y-%m-%d')   
         df = pd.read_csv("shifts.csv", parse_dates = ['startdate', 'enddate'], date_parser = custom_date_parser)
         volunteer_shifts_df = df[df['username'] == f'{username}'] #dataframe of user's shifts
-
+        print("-------------------------------------------------------------------------------")
         print("[1] View current shifts")
         print("[2] Add new shift")
         print("[3] Return to home screen")
@@ -236,7 +238,7 @@ def availability_funcs(user):
         while True:
             if user_input == '1':
                 view_shifts(df, volunteer_shifts_df, username)
-                print('--------------------------------\n')
+                #print('--------------------------------\n')
                 availability_funcs(user)
                 break
             elif user_input == '2':
@@ -245,12 +247,13 @@ def availability_funcs(user):
                     break
                 else:
                     add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_plan_index)
-                    print('--------------------------------\n')
+                    #print('--------------------------------\n')
                     availability_funcs(user)
                     break
             elif user_input == '3':
                 #return to Home menu
-                print("Goodbye")
+                #print("Goodbye")
+                volunteer_home.volunteer_home(user)
                 break
             else: #error handling
                 print("Please enter a valid input.")
