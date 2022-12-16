@@ -435,6 +435,12 @@ def retrieve_data():
                                         print("\nThe start date cannot be after or equal to the close date.\n")
                                     else:
                                         #if the close date is valid and after the start date, it is added to the emergency plan in the csv file
+                                        curr_date = dt.today().strftime('%Y-%m-%d')
+                                        
+                                        if closing_date <= curr_date:
+                                            df.loc[plan_index, 'Status'] = "Closed"
+                                            print("The plan has been closed, as the closing date is before or equal to the current date: ",curr_date)
+
                                         df.loc[plan_index, 'Close Date'] = str(closing_date)
                                         df.to_csv("EmergencyPlans.csv", index = False)
                                         var = 3
@@ -675,4 +681,4 @@ def adminFeatures():
         else:
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")
-# adminFeatures()
+adminFeatures()
