@@ -30,7 +30,7 @@ class Admin(User):
 
 
 def home():
-    print("Welcome to the E-Mergency Management System")
+    print("Welcome to the E-Mergency Management System (EMS)")
     print("[1] Register as volunter")
     print("[2] Login")
 
@@ -169,5 +169,5 @@ def ValidateUser(login_input):
                 print(f"Incorrect password. You have {5 - i} attempts left before account is deactivated")
 
 
-home()
+# home()
 

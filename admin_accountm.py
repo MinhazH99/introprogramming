@@ -50,6 +50,7 @@ def viewVolunteers():
 
         if askUserInput == '#':
             admin_accountm()
+            break
             
     
 
@@ -89,7 +90,7 @@ def EditVolunteers(inp):
 
                 print(tabulate(df,headers=["usernames","status"],tablefmt='fancy_grid',showindex=False))
 
-                print("Would you like to reactivate another account?")
+                print("Would you like to deactivate another account?")
 
                 while True:
                     user_input2 = input("Please enter [Y/N]: ")

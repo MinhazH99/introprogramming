@@ -3,7 +3,7 @@ import pandas as pd
 import subprocess
 
 # implement pip as subprogress:
-subprocess.Popen(['pip3', 'install', 'secure-smtplib'])
+# subprocess.Popen(['pip3', 'install', 'secure-smtplib'])
 
 
 sys_email = "3.mergency.sys@gmail.com"

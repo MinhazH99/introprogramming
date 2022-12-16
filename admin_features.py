@@ -692,4 +692,4 @@ def adminFeatures():
         else:
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")
-adminFeatures()
+# adminFeatures()
