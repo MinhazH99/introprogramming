@@ -8,11 +8,12 @@ import random
 from tabulate import tabulate
 import sys
 import subprocess
+import admin_home
 
 
 #automatically install tabulate
-subprocess.Popen(['pip3', 'install', 'secure-smtplib'])
-subprocess.Popen(['pip3', 'install', 'Tabulate'])
+# subprocess.Popen(['pip3', 'install', 'secure-smtplib'])
+# subprocess.Popen(['pip3', 'install', 'Tabulate'])
 
 plan_list = [] #empty list to add emergency plans to
 #Dictionary with a list of natural disasters and corresponding 5 or 6-letter codes
@@ -601,8 +602,17 @@ def assign_severity():
 def adminFeatures():       
     b = 0
     while b == 0:
-        print("\nEnter:\n[1] to create a plan\n[2] to view a plan\n[3] to edit a plan\n[4] to view camp details\n[5] to view volunteer details")   
-        option = input("[6] to view reports made by volunteers\n[7] to assign a severity level to a report\n[8] to quit\n")
+        # print("\nEnter:\n[1] to create a plan\n[2] to view a plan\n[3] to edit a plan\n[4] to view camp details\n[5] to view volunteer details")   
+        # option = input("[6] to view reports made by volunteers\n[7] to assign a severity level to a report\n[8] to quit\n")
+        print("[1] Create an Emergency Plan")
+        print("[2] View an Emergency Plan")
+        print("[3] Edit an Emergency Plan")
+        print("[4] View all camp details")
+        print("[5] Overview of all volunteers")
+        print("[6] View Reports made by Volunteers")
+        print("[7] Assign severity level to a report")
+        print("[8] Return to admin home page")
+        option = input("Please select an option: ")
         if option == '1':
             #the plan list is cleared, so that a new plan can be created
             plan_list.clear()
@@ -671,7 +681,8 @@ def adminFeatures():
 
             assign_severity()
         elif option == '8':
-            b = 1
+            admin_home.admin_home()
+            break
         else:
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")
