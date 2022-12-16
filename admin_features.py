@@ -1,3 +1,4 @@
+from datetime import datetime as dt
 import datetime
 import pandas as pd
 import numpy as np
@@ -8,11 +9,13 @@ from tabulate import tabulate
 import sys
 import subprocess
 
+
 #automatically install tabulate
+subprocess.Popen(['pip3', 'install', 'secure-smtplib'])
 subprocess.Popen(['pip3', 'install', 'Tabulate'])
 
 plan_list = [] #empty list to add emergency plans to
-#Dictionry with a list of natural disasters and corresponding 5 or 6-letter codes
+#Dictionary with a list of natural disasters and corresponding 5 or 6-letter codes
 disasters_dictionary = {
     "AVALANCHE": "AVLNCH",
     "BLIZZARD": "BLZZRD",
@@ -390,7 +393,10 @@ def retrieve_data():
     if file_exists == True:
     #the plans are read and stored in a pandas dataframe
         df = pd.read_csv("EmergencyPlans.csv")
+        print("Summary of all Emergency Plans:\n")
+        #if the plan exists, the data is read into a pandas dataframe, converted to a string and printed
         
+        print(tabulate(df, headers = 'keys', tablefmt = 'fancy_grid'))
         
         var = 0
         while var == 0:
@@ -432,7 +438,7 @@ def retrieve_data():
                                         df.loc[plan_index, 'Close Date'] = str(closing_date)
                                         df.to_csv("EmergencyPlans.csv", index = False)
                                         var = 3
-                                        print("The closing date '" + str(closing_date) + "' has been added to plan" + str(plan_index)+"\n")
+                                        print("The closing date '" + str(closing_date) + "' has been added to plan " + str(plan_index)+"\n")
 
                                 except Exception:
                                     print("Not a valid date.\n")
@@ -474,7 +480,17 @@ def retrieve_data():
                             var = 2
                             df.loc[plan_index,'Status']="Closed" 
                             df.to_csv("EmergencyPlans.csv", index = False)
-                            print("The plan is now closed.")
+                            curr_date = dt.today().strftime('%Y-%m-%d')
+                            close = df.loc[plan_index, 'Close Date']
+                            if close == " ":
+                                #if the closing date is blank, today's date is automatically added 
+                                df.loc[plan_index, 'Close Date'] = str(curr_date)
+                                df.to_csv("EmergencyPlans.csv", index = False)
+                                print("The plan is now closed.")
+                                print("The closing date " + str(curr_date) + " has been automatically added, as no closing date was present before.\n")
+                            else:
+
+                                print("The plan is now closed.")
 
                         elif decision == '4':
                             #returns to start of function to enter a different plan index to edit
@@ -504,6 +520,32 @@ def view_report():
     else:
         print("No reports have been made yet.\n")
 
+def add_severity(df, r_index):
+    while True:
+        severity = input("Enter:\n[1] Critical\n[2] Major\n[3] Moderate \n[4] Minor \n[5] Cosmetic\n")
+        if severity == '1':
+            df.loc[r_index,'severity']="Critical" 
+            df.to_csv("report.csv", index = False)
+            return
+        elif severity == '2':
+            df.loc[r_index,'severity']="Major" 
+            df.to_csv("report.csv", index = False)
+            return
+        elif severity == '3':
+            df.loc[r_index,'severity']="Moderate" 
+            df.to_csv("report.csv", index = False)
+            return
+        elif severity == '4':
+            df.loc[r_index,'severity']="Minor" 
+            df.to_csv("report.csv", index = False)
+            return
+        elif severity == '5':
+            df.loc[r_index,'severity']="Cosmetic" 
+            df.to_csv("report.csv", index = False)
+            return
+        else:
+            print("Not a valid input.\n")
+
 def assign_severity():
     report_file_exists = os.path.exists("report.csv")
     if report_file_exists == True:
@@ -515,7 +557,7 @@ def assign_severity():
                 report_index = int(input("\nEnter the number of the report you wish to assign a severity to: ")) 
                 
                 total_lines = sum(1 for line in open("EmergencyPlans.csv"))-1
-                if report_index > (total_lines-1):
+                if report_index > (total_lines):
                     #if the plan index is too big, the loop will not break and the user will have to input another value
                     print("This number is greater than the number of plans.")
                 elif report_index <= -1:
@@ -523,33 +565,25 @@ def assign_severity():
                     print("Negative numbers are not allowed.")
                 elif report_index >= 0:
                     #the loop will only break if the plan index is valid
-                    
-                    
-                    
-                    severity = input("Enter:\n[1] Critical\n[2] Major\n[3] Moderate \n[4] Minor \n[5] Cosmetic\n")
-                    if severity == '1':
-                        rep_df.loc[report_index,'severity']="Critical" 
-                        rep_df.to_csv("report.csv", index = False)
+                    val = pd.isnull(rep_df.loc[report_index,'severity'])
+
+                    if val == True:
+                        add_severity(rep_df, report_index)
                         break
-                    elif severity == '2':
-                        rep_df.loc[report_index,'severity']="Major" 
-                        rep_df.to_csv("report.csv", index = False)
-                        break
-                    elif severity == '3':
-                        rep_df.loc[report_index,'severity']="Moderate" 
-                        rep_df.to_csv("report.csv", index = False)
-                        break
-                    elif severity == '4':
-                        rep_df.loc[report_index,'severity']="Minor" 
-                        rep_df.to_csv("report.csv", index = False)
-                        break
-                    elif severity == '5':
-                        rep_df.loc[report_index,'severity']="Cosmetic" 
-                        rep_df.to_csv("report.csv", index = False)
-                        break
+                        
                     else:
-                        print("Not a valid input.")
-                    
+                        print("This report already has the severity level: ",rep_df.loc[report_index,'severity'])
+                        opt = input("\nEnter:\n[1] to change the severity level\n[2] to quit\n")
+                        if opt == '1':
+                            add_severity(rep_df, report_index)
+                            break
+                        elif opt == '2':
+                            break
+                        
+                        else:
+                            print("Not a valid input.")
+
+
             except ValueError:
                 print("That is not a valid input.\n")
     else:
@@ -560,7 +594,7 @@ def adminFeatures():
     b = 0
     while b == 0:
         print("\nEnter:\n[1] to create a plan\n[2] to view a plan\n[3] to edit a plan\n[4] to view camp details\n[5] to view volunteer details")   
-        option = input("[6]to view reports made by volunteers\n[7] to assign a severity level to a report\n[8] to quit\n")
+        option = input("[6] to view reports made by volunteers\n[7] to assign a severity level to a report\n[8] to quit\n")
         if option == '1':
             #the plan list is cleared, so that a new plan can be created
             plan_list.clear()
@@ -599,43 +633,38 @@ def adminFeatures():
                                                         'Description', 'Area Code', 'No. Camps Available', 'Close Date', 'Status'])
              
                 row.to_csv("EmergencyPlans.csv", mode="a", index = False)
-                b = 1
-                #jumps back to main menu in case user wants to do another task
-                adminFeatures()
+                
             else:
                 row = pd.DataFrame(total_np)
                 
                 row.to_csv("EmergencyPlans.csv", mode="a", index = False, header = False)
-                #b = 1
-                #adminFeatures()
-                
+                          
 
         elif option == '2':
-           # b = 1
-            #goes to view plan function, and then the main menu again
+           
             view_plan()
-            #adminFeatures()
+            
         elif option == '3':
-            #b = 1
-            #goes to the edit plans function, and then the main menu afterwards
+            
             retrieve_data()
-            #adminFeatures()
+            
         elif option == '4':
-            #b = 1
-            #goes to view camps function and main menu afterwards
+            
             view_camps()
-            #adminFeatures()
+            
         elif option == '5':
-            #breaks loop and quits
+            
             view_volunteers()
-            #adminFeatures()
+            
         elif option == '6':
             view_report()
+
         elif option == '7':
+
             assign_severity()
         elif option == '8':
             b = 1
         else:
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")
-#adminFeatures()
+# adminFeatures()

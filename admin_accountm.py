@@ -1,6 +1,8 @@
 import pandas as pd
 import admin_home
 import csv
+from tabulate import tabulate
+
 
 
 def admin_accountm():
@@ -39,8 +41,8 @@ def admin_accountm():
 
 def viewVolunteers():
     df = pd.read_csv("volunteers_db.csv", usecols = ["usernames","status"])
-    print(df)
-    print(df.dtypes)
+    print("\n")
+    print(tabulate(df,headers=["usernames","status"],tablefmt='fancy_grid',showindex=False))
     print("\n")
     while True:
 
@@ -55,7 +57,7 @@ def viewVolunteers():
 def EditVolunteers(inp):
     showdf = pd.read_csv("volunteers_db.csv", usecols = ["usernames","status"])
 
-    print(showdf)
+    print(tabulate(showdf,headers=["usernames","status"],tablefmt='fancy_grid',showindex=False))
     
     userData = pd.read_csv("volunteers_db.csv")
     df = pd.DataFrame(userData).astype('str')
@@ -85,7 +87,7 @@ def EditVolunteers(inp):
 
                 df = pd.read_csv("volunteers_db.csv", usecols = ["usernames","status"])
 
-                print(df)
+                print(tabulate(df,headers=["usernames","status"],tablefmt='fancy_grid',showindex=False))
 
                 print("Would you like to reactivate another account?")
 
@@ -122,7 +124,7 @@ def EditVolunteers(inp):
 
                 df = pd.read_csv("volunteers_db.csv", usecols = ["usernames","status"])
 
-                print(df)
+                print(tabulate(df,headers=["usernames","status"],tablefmt='fancy_grid',showindex=False))
                 
                 print("Would you like to reactivate another account?")
                 while True:
@@ -144,7 +146,7 @@ def EditVolunteers(inp):
 def deleteVolunteers():
     showdf = pd.read_csv("volunteers_db.csv", usecols = ["usernames","status"])
 
-    print(showdf)
+    print(tabulate(showdf,headers=["usernames","status"],tablefmt='fancy_grid',showindex=False))
 
     usernames = []
     with open("volunteers_db.csv") as file:
@@ -173,7 +175,7 @@ def deleteVolunteers():
                     df = pd.read_csv("volunteers_db.csv", usecols = ["usernames","status"])
 
                     print("Account succesfully deleted!")
-                    print(df)
+                    print(tabulate(df,headers=["usernames","status"],tablefmt='fancy_grid',showindex=False))
 
                     print("Would you like to delete another account? ")
 
@@ -198,6 +200,7 @@ def deleteVolunteers():
 
         else:
             print("Please enter a valid username!")
+
 
 
 

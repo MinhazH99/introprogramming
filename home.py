@@ -136,27 +136,38 @@ def ValidateUser(login_input):
         userData = pd.read_csv("volunteers_db.csv")    
         df = pd.DataFrame(userData).astype('str')
     
+    global user
+    # usernames = []
     while True:
-        global user
-        user = input("Please enter your username: ")
-        password = input("Please enter your password: ")
-
-        
-        validateInput = (len(df[(df.usernames == user) & (df.password == password)]) > 0)
-
-        validateStatus = (len(df[(df.usernames == user) & (df.password == password) & (df.status == "Activated")]) > 0)
-
-        if validateInput and validateStatus:
-            return True
-        
-        elif validateInput and validateStatus == False:
-            print("Account deactivated. Please contact admin")
-            print("Returning to home screen")
-            print("-------------------------------------------------------------------------------")
-            home()
-            return False
+        user = input("Please enter your username: ")   
+        if df['usernames'].eq(user).any():
+                break
         else:
-            print('Incorrect username or password')
+            print("Username does not exist. Please re-enter correct username")
+
+    for i in range(6):
+            password = input("Please enter your password: ")
+
+            validateInput = (len(df[(df.usernames == user) & (df.password == password)]) > 0)
+
+            validateStatus = (len(df[(df.usernames == user) & (df.password == password) & (df.status == "Activated")]) > 0)
+
+            if validateInput and validateStatus:
+                return True
+            
+            elif validateInput and validateStatus == False:
+                print("Account deactivated. Please contact admin")
+                print("Returning to home screen")
+                print("-------------------------------------------------------------------------------")
+                home()
+                return False
+            elif i == 5:
+                df.loc[df["usernames"] == user,"status"]='Deactivated'
+                df.to_csv("volunteers_db.csv",index=False)
+                print('Your account has now been deactivated! Please contact admin')
+            else:
+                print(f"Incorrect password. You have {5 - i} attempts left before account is deactivated")
 
 
 home()
+
