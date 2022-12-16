@@ -84,7 +84,7 @@ def check_date():
 def view_plan():
     file_exists = os.path.exists("EmergencyPlans.csv") #checks whether the emergency plans csv file exists
     if file_exists == True:
-        print("Summary of all Emergency Plans:\n")
+        print("\nSummary of all Emergency Plans:\n")
         #if the plan exists, the data is read into a pandas dataframe, converted to a string and printed
         df = pd.read_csv("EmergencyPlans.csv")
         
@@ -101,7 +101,7 @@ def view_camps():
         while var == 1:
             print("-------------------------------------------------------------------------------")
             print("[1] View the camp details for a specific Emergency Plan\n[2] View all the camp details")
-            camp_opt = input("Please select an option: ")
+            camp_opt = input("\nPlease select an option: ")
             if camp_opt == '1':
                 var = 2
                 view_plan()
@@ -120,7 +120,7 @@ def view_camps():
                             var = 3
                             camp_df = pd.read_csv("CampDetails.csv")
                             selected_rows = camp_df[camp_df['Emergency Plan Index'] == plan_index]
-                            print("Refugee camps for selected plan:\n")
+                            print("\nRefugee camps for selected plan:\n")
                             print(tabulate(selected_rows, headers = 'keys', tablefmt = 'fancy_grid'))
                             
                     except ValueError:
@@ -128,7 +128,7 @@ def view_camps():
             
             elif camp_opt == '2':
                 var = 0
-                print("Summary of all refugee camps:\n")
+                print("\nSummary of all refugee camps:\n")
 
                 camp_df = pd.read_csv("CampDetails.csv")
                 #print(camp_df.to_string())
@@ -147,7 +147,7 @@ def view_volunteers():
         while var == 1:
             print("-------------------------------------------------------------------------------")
             print("[1] to view the volunteers for a specific Emergency Plan\n[2] to view all the volunteer details")
-            vol_opt = input("Please select an option: ")
+            vol_opt = input("\nPlease select an option: ")
             if vol_opt == '1':
                 var = 2
                 view_plan()
@@ -182,7 +182,7 @@ def view_volunteers():
                 if vol_df.empty:
                     print("There are currently no volunteers associated with any plan")
                 else:
-                    print("Summary of all volunteers:\n")
+                    print("\nSummary of all volunteers:\n")
                     print(tabulate(vol_df, headers = 'keys', tablefmt = 'fancy_grid'))
 
                     
@@ -230,7 +230,7 @@ def edit_camp(no_camps, code, index, nat_disaster, current_no_camps):
     print("There are currently " + str(current_no_camps)+ " camps for this plan.\n")
     print("-------------------------------------------------------------------------------")
     print("[1] Change the number of camps\n[2] Keep the number of camps the same\n")
-    opt = input("Please select an option: ")
+    opt = input("\nPlease select an option: ")
     var = 0
     while var == 0:
         #This if statement checks if the user wants to change the number of plans
@@ -400,7 +400,7 @@ def retrieve_data():
     if file_exists == True:
     #the plans are read and stored in a pandas dataframe
         df = pd.read_csv("EmergencyPlans.csv")
-        print("Summary of all Emergency Plans:\n")
+        print("\nSummary of all Emergency Plans:\n")
         #if the plan exists, the data is read into a pandas dataframe, converted to a string and printed
         
         print(tabulate(df, headers = 'keys', tablefmt = 'fancy_grid'))
@@ -427,7 +427,7 @@ def retrieve_data():
                         print("-------------------------------------------------------------------------------")
                         print("[1] to add/edit a closing date\n[2] to add/edit the number of camps\n[3] to close the emergency plan")
                         print("[4] to edit a different plan\n[5] to quit\n")
-                        decision = input("Please select an option")
+                        decision = input("\nPlease select an option: ")
                         if decision == '1':
                             #the user is adding a close date
                             #a while loop similar to that in the check date function is used to check whether the date is valid
@@ -448,7 +448,7 @@ def retrieve_data():
                                         
                                         if closing_date <= curr_date:
                                             df.loc[plan_index, 'Status'] = "Closed"
-                                            print("The plan has been closed, as the closing date is before or equal to the current date: ",curr_date)
+                                            print("\nThe plan has been closed, as the closing date is before or equal to the current date: ",curr_date)
 
                                         df.loc[plan_index, 'Close Date'] = str(closing_date)
                                         df.to_csv("EmergencyPlans.csv", index = False)
@@ -531,7 +531,7 @@ def view_report():
         rep_opt = input("[1] View all reports\n[2] View reports without a severity assigned\nPlease select an option: ")
         rep_df = pd.read_csv("report.csv")
         if rep_opt == '1':
-            print("Summary of all Reports:\n")
+            print("\nSummary of all Reports:\n")
             #if reports exists, the data is read into a pandas dataframe, converted to a string and printed
             
             #potentially order by date with oldest first for consistency
@@ -623,13 +623,13 @@ def adminFeatures():
         print("[1] Create an Emergency Plan\n[2] View Emergency Plans\n[3] Edit an Emergency Plan\n[4] View camp details")
         print("[5] Overview of volunteers details\n[6] View Reports made by Volunteers\n[7] Assign severity level to a report")
         print("[8] Return to admin home page")
-        option = input("Please select an option: ")
+        option = input("\nPlease select an option: ")
         if option == '1':
             #the plan list is cleared, so that a new plan can be created
             plan_list.clear()
             total = []
             #asks the user to input various details about the new plan
-            e_type = input("Enter the type of natural disaster (e.g. Flood): ")
+            e_type = input("\nEnter the type of natural disaster (e.g. Flood): ")
             desc = input("Enter a description of the effects of the natural disaster: ")
             geo_area = input("Enter the affected geographical area (e.g. UK): ")
             #jumps to the check date function
@@ -697,4 +697,4 @@ def adminFeatures():
         else:
             #loop is not broken and user is asked for input again
             print("Not a valid input. Please try again.\n ")
-# adminFeatures()
+adminFeatures()
