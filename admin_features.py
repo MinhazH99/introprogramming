@@ -617,30 +617,23 @@ def assign_severity():
 #function for the main menu
 def adminFeatures():       
     b = 0
-    print("-------------------------------------------------------------------------------")
-    print("[1] Create an Emergency Plan")
-    print("[2] View Emergency Plans")
-    print("[3] Edit an Emergency Plan")
-    print("[4] View camp details")
-    print("[5] Overview of volunteers details")
-    print("[6] View Reports made by Volunteers")
-    print("[7] Assign severity level to a report")
-    print("[8] Return to admin home page")
+    
     while b == 0:
-        # print("\nEnter:\n[1] to create a plan\n[2] to view a plan\n[3] to edit a plan\n[4] to view camp details\n[5] to view volunteer details")   
-        # option = input("[6] to view reports made by volunteers\n[7] to assign a severity level to a report\n[8] to quit\n")
-        
+        print("-------------------------------------------------------------------------------")
+        print("[1] Create an Emergency Plan\n[2] View Emergency Plans\n[3] Edit an Emergency Plan\n[4] View camp details")
+        print("[5] Overview of volunteers details\n[6] View Reports made by Volunteers\n[7] Assign severity level to a report")
+        print("[8] Return to admin home page")
         option = input("Please select an option: ")
         if option == '1':
             #the plan list is cleared, so that a new plan can be created
             plan_list.clear()
             total = []
             #asks the user to input various details about the new plan
-            e_type = input("Enter the emergency type: ")
-            desc = input("Enter a description of the emergency: ")
-            geo_area = input("Enter the affected geographical area(s)\nPlease separate areas using commas: ")
+            e_type = input("Enter the type of natural disaster (e.g. Flood): ")
+            desc = input("Enter a description of the effects of the natural disaster: ")
+            geo_area = input("Enter the affected geographical area (e.g. UK): ")
             #jumps to the check date function
-            #check_date()
+            
             b = 0
             disaster = CreatePlan(e_type, desc, geo_area, check_date())
             #appends all the properties to the plan list
