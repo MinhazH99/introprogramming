@@ -99,6 +99,7 @@ def view_camps():
     if camp_file_exists == True:
         var = 1
         while var == 1:
+            print("-------------------------------------------------------------------------------")
             print("[1] View the camp details for a specific Emergency Plan\n[2] View all the camp details")
             camp_opt = input("Please select an option: ")
             if camp_opt == '1':
@@ -144,7 +145,8 @@ def view_volunteers():
     if volunteer_file_exists == True:
         var = 1
         while var == 1:
-            print("\n[1] to view the volunteers for a specific Emergency Plan\n[2] to view all the volunteer details")
+            print("-------------------------------------------------------------------------------")
+            print("[1] to view the volunteers for a specific Emergency Plan\n[2] to view all the volunteer details")
             vol_opt = input("Please select an option: ")
             if vol_opt == '1':
                 var = 2
@@ -226,7 +228,8 @@ def edit_camp(no_camps, code, index, nat_disaster, current_no_camps):
     num_rows = len(selected_rows)
     #This lets the user know how many camps there currently are, if the number of camps is greater than 0
     print("There are currently " + str(current_no_camps)+ " camps for this plan.\n")
-    print("\n[1] Change the number of camps\n[2] Keep the number of camps the same\n")
+    print("-------------------------------------------------------------------------------")
+    print("[1] Change the number of camps\n[2] Keep the number of camps the same\n")
     opt = input("Please select an option: ")
     var = 0
     while var == 0:
@@ -421,7 +424,8 @@ def retrieve_data():
                 
                     while var == 1:
                         #user is presented with options about how they want to edit the plan
-                        print("\n[1] to add/edit a closing date\n[2] to add/edit the number of camps\n[3] to close the emergency plan")
+                        print("-------------------------------------------------------------------------------")
+                        print("[1] to add/edit a closing date\n[2] to add/edit the number of camps\n[3] to close the emergency plan")
                         print("[4] to edit a different plan\n[5] to quit\n")
                         decision = input("Please select an option")
                         if decision == '1':
@@ -523,7 +527,8 @@ def retrieve_data():
 def view_report():
     report_file_exists = os.path.exists("report.csv")
     if report_file_exists == True:
-        rep_opt = input("\n[1] View all reports\n[2] View reports without a severity assigned\nPlease select an option: ")
+        print("-------------------------------------------------------------------------------")
+        rep_opt = input("[1] View all reports\n[2] View reports without a severity assigned\nPlease select an option: ")
         rep_df = pd.read_csv("report.csv")
         if rep_opt == '1':
             print("Summary of all Reports:\n")
@@ -541,6 +546,7 @@ def view_report():
 
 def add_severity(df, r_index):
     while True:
+        print("-------------------------------------------------------------------------------")
         severity = input("[1] Critical\n[2] Major\n[3] Moderate \n[4] Minor \n[5] Cosmetic\nPlease select an option: ")
         if severity == '1':
             df.loc[r_index,'severity']="Critical" 
@@ -611,6 +617,7 @@ def assign_severity():
 #function for the main menu
 def adminFeatures():       
     b = 0
+    print("-------------------------------------------------------------------------------")
     print("[1] Create an Emergency Plan")
     print("[2] View Emergency Plans")
     print("[3] Edit an Emergency Plan")
