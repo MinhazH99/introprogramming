@@ -99,7 +99,8 @@ def view_camps():
     if camp_file_exists == True:
         var = 1
         while var == 1:
-            camp_opt = input("Enter:\n[1] to view the camp details for a specific Emergency Plan\n[2] to view all the camp details\n")
+            print("[1] View the camp details for a specific Emergency Plan\n[2] View all the camp details")
+            camp_opt = input("Please select an option: ")
             if camp_opt == '1':
                 var = 2
                 view_plan()
@@ -143,7 +144,8 @@ def view_volunteers():
     if volunteer_file_exists == True:
         var = 1
         while var == 1:
-            vol_opt = input("Enter:\n[1] to view the volunteers for a specific Emergency Plan\n[2] to view all the volunteer details\n")
+            print("\n[1] to view the volunteers for a specific Emergency Plan\n[2] to view all the volunteer details")
+            vol_opt = input("Please select an option: ")
             if vol_opt == '1':
                 var = 2
                 view_plan()
@@ -224,7 +226,8 @@ def edit_camp(no_camps, code, index, nat_disaster, current_no_camps):
     num_rows = len(selected_rows)
     #This lets the user know how many camps there currently are, if the number of camps is greater than 0
     print("There are currently " + str(current_no_camps)+ " camps for this plan.\n")
-    opt = input("Enter:\n[1] if you would like to change the number of plans\n[2] to quit\n")
+    print("\n[1] Change the number of camps\n[2] Keep the number of camps the same\n")
+    opt = input("Please select an option: ")
     var = 0
     while var == 0:
         #This if statement checks if the user wants to change the number of plans
@@ -352,7 +355,7 @@ def check_area_code(area_name):
     if len(area_name) > 3:
         loop_var = 0
         while loop_var == 0:
-            area_code = input("Please input a 3 letter code for the area: " + str(area_name)+"\n")
+            area_code = input("Please input a 3 letter code for the area '" + str(area_name)+"': ")
             #if the code contains only letters, and has a length of 3, the code is returned
             #otherwise, the program will keep asking for a code until the input is valid
             if area_code.isalpha() and len(area_code) == 3:
@@ -418,8 +421,9 @@ def retrieve_data():
                 
                     while var == 1:
                         #user is presented with options about how they want to edit the plan
-                        print("\nEnter:\n[1] to add/edit a closing date\n[2] to add/edit the number of camps\n[3] to close the emergency plan")
-                        decision = input("[4] to edit a different plan\n[5] to quit\n")
+                        print("\n[1] to add/edit a closing date\n[2] to add/edit the number of camps\n[3] to close the emergency plan")
+                        print("[4] to edit a different plan\n[5] to quit\n")
+                        decision = input("Please select an option")
                         if decision == '1':
                             #the user is adding a close date
                             #a while loop similar to that in the check date function is used to check whether the date is valid
@@ -519,7 +523,7 @@ def retrieve_data():
 def view_report():
     report_file_exists = os.path.exists("report.csv")
     if report_file_exists == True:
-        rep_opt = input("Enter:\n[1] to view all reports\n[2] to view reports without a severity assigned\n")
+        rep_opt = input("\n[1] View all reports\n[2] View reports without a severity assigned\nPlease select an option: ")
         rep_df = pd.read_csv("report.csv")
         if rep_opt == '1':
             print("Summary of all Reports:\n")
@@ -537,7 +541,7 @@ def view_report():
 
 def add_severity(df, r_index):
     while True:
-        severity = input("Enter:\n[1] Critical\n[2] Major\n[3] Moderate \n[4] Minor \n[5] Cosmetic\n")
+        severity = input("[1] Critical\n[2] Major\n[3] Moderate \n[4] Minor \n[5] Cosmetic\nPlease select an option: ")
         if severity == '1':
             df.loc[r_index,'severity']="Critical" 
             df.to_csv("report.csv", index = False)
@@ -607,17 +611,18 @@ def assign_severity():
 #function for the main menu
 def adminFeatures():       
     b = 0
+    print("[1] Create an Emergency Plan")
+    print("[2] View Emergency Plans")
+    print("[3] Edit an Emergency Plan")
+    print("[4] View camp details")
+    print("[5] Overview of volunteers details")
+    print("[6] View Reports made by Volunteers")
+    print("[7] Assign severity level to a report")
+    print("[8] Return to admin home page")
     while b == 0:
         # print("\nEnter:\n[1] to create a plan\n[2] to view a plan\n[3] to edit a plan\n[4] to view camp details\n[5] to view volunteer details")   
         # option = input("[6] to view reports made by volunteers\n[7] to assign a severity level to a report\n[8] to quit\n")
-        print("[1] Create an Emergency Plan")
-        print("[2] View an Emergency Plan")
-        print("[3] Edit an Emergency Plan")
-        print("[4] View all camp details")
-        print("[5] Overview of all volunteers")
-        print("[6] View Reports made by Volunteers")
-        print("[7] Assign severity level to a report")
-        print("[8] Return to admin home page")
+        
         option = input("Please select an option: ")
         if option == '1':
             #the plan list is cleared, so that a new plan can be created
