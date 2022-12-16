@@ -512,11 +512,19 @@ def retrieve_data():
 def view_report():
     report_file_exists = os.path.exists("report.csv")
     if report_file_exists == True:
-        print("Summary of all Reports:\n")
-        #if the plan exists, the data is read into a pandas dataframe, converted to a string and printed
-        df = pd.read_csv("report.csv")
-        
-        print(tabulate(df, headers = 'keys', tablefmt = 'fancy_grid'))
+        rep_opt = input("Enter:\n[1] to view all reports\n[2] to view reports without a severity assigned\n")
+        rep_df = pd.read_csv("report.csv")
+        if rep_opt == '1':
+            print("Summary of all Reports:\n")
+            #if reports exists, the data is read into a pandas dataframe, converted to a string and printed
+            
+            #potentially order by date with oldest first for consistency
+            print(tabulate(rep_df, headers = 'keys', tablefmt = 'fancy_grid'))
+        elif rep_opt == '2':
+            selected_rows = rep_df[rep_df['severity'] == "Not Graded Yet"]
+            print("Unassigned Reports:\n")
+            print(tabulate(selected_rows, headers = 'keys', tablefmt = 'fancy_grid'))
+
     else:
         print("No reports have been made yet.\n")
 
@@ -565,9 +573,9 @@ def assign_severity():
                     print("Negative numbers are not allowed.")
                 elif report_index >= 0:
                     #the loop will only break if the plan index is valid
-                    val = pd.isnull(rep_df.loc[report_index,'severity'])
+                    val = rep_df.loc[report_index,'severity']
 
-                    if val == True:
+                    if val == "Not Graded Yet":
                         add_severity(rep_df, report_index)
                         break
                         
