@@ -1,4 +1,4 @@
 firstname,familyname,usernames,password,phoneno,status,accounttype,emergencyplanindex,campid,email
-test,test,volunteer1,111,115,Activated,Volunteer,1,PAKFLOOD2,yulu.wang.22@gmail.com
+test,test,volunteer1,111,115,Deactivated,Volunteer,1,PAKFLOOD2,yulu.wang.22@gmail.com
 volunteer2,test,volunteer2,111,115,Deactivated,Volunteer,1,PAKFLOOD1,yulu.wang.22@gmail.com
 volunteer3,test,volunteer3,111,116,Deactivated,Volunteer,2,TXSSTORM1,yulu.wang.22@gmail.com

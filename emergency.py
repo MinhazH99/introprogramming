@@ -257,4 +257,4 @@ def show_all_profile():
 
 
 # To test the code
-emergency_profile()
+# emergency_profile()
