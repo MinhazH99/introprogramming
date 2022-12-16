@@ -114,10 +114,10 @@ def volunteerPhoneNo(user):
 
             df.to_csv("volunteers_db.csv",index = False)
 
-            print(df.loc[df["usernames"] == user])
+            #print(df.loc[df["usernames"] == user])
 
-            print(f"Name has succesfully been changed to {change_phoneno}")
-
+            print(f"Your phone number has succesfully been changed to {change_phoneno}")
+            volunteerEditDetails(user)
             break
 
             
