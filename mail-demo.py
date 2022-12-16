@@ -6,9 +6,8 @@ sys_password = "mhtxjymibjyqlixb"
 def get_password():
     # TODO Don't know how to get the volunteer's username, set a dummy data 'volunteer2'. 
     volunteer = 'volunteer2'
-    df = pd.read_csv('volunteers_db.csv')
+    df = pd.read_csv('volunteers_db.csv', index_col = False)
     user_email = df.loc[(df['usernames'] == volunteer)]['email']
-    print(user_email)
     # If the user entered the right email that they registered
     if user_email.empty == False:
         # TODO type(password) is an object, how can I convert it into a string?
@@ -22,8 +21,8 @@ def get_password():
             smtp.login(sys_email, sys_password)
 
             # Set up the email content as follows:
-            subject = "No reply: Your password for e-mergency management system"
-            body = f"Your password is: {password}"
+            subject = "<No reply> Your password for e-mergency management system"
+            body = f"Hi {volunteer},\nYou recently sent a request to view your password.\nYour password is: {password}.\nDon't show this email to anyone else."
             msg = f"Subject:{subject}\n\n{body}"
             smtp.sendmail(sys_email, user_email, msg)
             print(f"Your password is sent to your email: {user_email}, please take a look.")
