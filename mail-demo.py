@@ -1,5 +1,10 @@
 import smtplib
 import pandas as pd
+import subprocess
+
+# implement pip as subprogress:
+subprocess.Popen(['pip3', 'install', 'secure-smtplib'])
+
 
 sys_email = "3.mergency.sys@gmail.com"
 sys_password = "mhtxjymibjyqlixb"
@@ -10,9 +15,10 @@ def get_password():
     user_email = df.loc[(df['usernames'] == volunteer)]['email']
     # If the user entered the right email that they registered
     if user_email.empty == False:
-        # TODO type(password) is an object, how can I convert it into a string?
-        password = df.loc[(df['usernames'] == volunteer)]['password']
-        print(password)
+        user_df = df.loc[(df['usernames'] == volunteer)]
+        password_list = user_df['password'].values
+        password = str(password_list[0])
+
         # Set up the connection with the mail server
         with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
             smtp.ehlo()
