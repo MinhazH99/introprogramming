@@ -6,6 +6,7 @@ import re
 from admin_home import admin_home
 from volunteer_home import volunteer_home
 import mail_demo
+import pyfiglet
 
 class User:
     '''Represents any user'''
@@ -35,6 +36,7 @@ class Admin(User):
 
 
 def home():
+    print(pyfiglet.figlet_format("Welcome to EMS",font = "big"))
     print("Welcome to the E-Mergency Management System (EMS)")
     print("[1] Register as volunter")
     print("[2] Login")

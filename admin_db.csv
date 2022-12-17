@@ -1,2 +1,2 @@
-usernames,password,status,accounttype
-admin,111,Activated,Admin
+usernames,password,status,accounttype,email,token
+admin,111,Activated,Admin,3.mergency.sys@gmail.com
