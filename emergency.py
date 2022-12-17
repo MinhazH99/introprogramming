@@ -5,6 +5,30 @@ import pandas as pd
 from tabulate import tabulate
 from datetime import date
 
+def get_camp_list():
+    '''Returns a list of all camps in CampDetails.csv'''
+    df = pd.read_csv('CampDetails.csv')
+    camp_list = []
+    for ind in df.index:
+        camp_list.append(df.loc[ind]["Camp ID"])
+    return camp_list
+
+def update_refugee_count():
+    '''Function to update the number of volunteers in each camp'''
+    emergency_df = pd.read_csv('emergency_profile.csv')
+    camps_df = pd.read_csv('CampDetails.csv')
+    camp_list = get_camp_list() #store list of all camps
+    refugee_count_list = []
+    for camp in camp_list:
+        try:
+            camp_df = emergency_df[emergency_df['camp_id'] == camp]
+            refugee_count_list.append(int(camp_df.sum()['family_number']))
+        except KeyError:
+            refugee_count_list.append(0) #if the camp does not appear in the emergency_profile database, it has no refugees
+    refugee_count_dict = {camp_list[i]: refugee_count_list[i] for i in range(len(camp_list))} #dictionary of camp IDs and no. refugees at each 
+    for key, value in refugee_count_dict.items():
+        camps_df.loc[camps_df['Camp ID'] == f'{key}', 'No. Refugees'] = f'{str(value)}' #update number of refugees at each camp
+    camps_df.to_csv("CampDetails.csv",index=False) #store the updated counts
 
 def emergency_profile():
     while True:
@@ -123,6 +147,7 @@ def create_profile():
             writer = csv.DictWriter(file, fieldnames=['refugee_name', 'camp_id', 'family_number', 'medical_condition', 'food_requirement', 'space_requirement', 'create_time'])
             for profile in profile_list:
                 writer.writerow(profile)
+                update_refugee_count()
             print("The emergency profile(s) has been created.")
 
 
@@ -184,6 +209,7 @@ def modify_profile():
         df = pd.read_csv('emergency_profile.csv')
         df.loc[df['refugee_name'] == exact_searched_refugee_name] = [refugee_name, camp_id, family_number, medical_condition, food_requirement, space_requirement, modify_time]
         df.to_csv('emergency_profile.csv', index = False)
+        update_refugee_count()
         print("Successfully updated the profile of the refugee.")
     else:
         print("Emergency profile not found. ")
@@ -206,6 +232,7 @@ def delete_profile():
             exact_delete_refugee_name = input("Please ensure deletion by entering the exact refugee name that you want to delete: ")
             df.drop(df.index[df['refugee_name'] == exact_delete_refugee_name], inplace = True)
             df.to_csv('emergency_profile.csv', index = False)
+            update_refugee_count()
             answer = input(f"Deleted {delete_refugee_name}'s emergency profile successfully. Continue to delete other emergency profile? Y/N \n")
             if answer == 'Y' or answer == 'y':
                 continue
@@ -257,4 +284,4 @@ def show_all_profile():
 
 
 # To test the code
-# emergency_profile()
+emergency_profile()
