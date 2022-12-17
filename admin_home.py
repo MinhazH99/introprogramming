@@ -26,3 +26,4 @@ def admin_home():
 
         else:
             print("Please select a valid option")
+            user_input = input("Please select an option: ")
