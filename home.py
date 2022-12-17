@@ -38,6 +38,7 @@ def home():
     print("Welcome to the E-Mergency Management System (EMS)")
     print("[1] Register as volunter")
     print("[2] Login")
+    print("[#] Exit the System")
 
     while True:
         user_input = input("Please select option: ")
@@ -49,6 +50,11 @@ def home():
         elif user_input == '2':
             print("-------------------------------------------------------------------------------")
             login()
+            break
+        
+        elif user_input == '#':
+            print("Succesfully logged out")
+            print("-------------------------------------------------------------------------------")
             break
         else:
             print("Please enter a valid option")

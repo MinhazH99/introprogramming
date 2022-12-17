@@ -2,6 +2,7 @@ import volunteer_editdetails
 import emergency
 import volunteer_change_camp
 import volunteer_selecting_shifts
+import home
 
 def volunteer_home(user):
     print("-------------------------------------------------------------------------------")
@@ -33,6 +34,7 @@ def volunteer_home(user):
 
         elif user_input == '5':
             print("Successfully logged out!")
+            home.home()
             break
         
         else:

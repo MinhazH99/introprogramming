@@ -10,7 +10,7 @@ def admin_accountm():
     print("[2] Deactivate Volunteer Accounts")
     print("[3] Reactivate Volunteer Accounts")
     print("[4] Delete Volunteer Accounts")
-    print("[5] Return to home screen")
+    print("[5] Return to admin home screen")
 
     while True:
         user_input = input("Please select an option: ")

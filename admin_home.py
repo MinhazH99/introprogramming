@@ -1,5 +1,6 @@
 import admin_accountm
 import admin_features
+import home
 
 def admin_home():
     print("-------------------------------------------------------------------------------") 
@@ -20,6 +21,7 @@ def admin_home():
 
         elif user_input == '3':
             print("Successfully logged out!")
+            home.home()
             break
 
         else:
