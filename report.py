@@ -22,8 +22,8 @@ def report(user):
             if volunteer_option == "0":
                 answer = input("Are you sure to exit? Y/N \n")
                 if answer == 'Y' or answer == 'y':
-                    print("Thanks for visiting our website!")
-                    volunteer_home.volunteer_home()
+                    #print("Thanks for visiting our website!")
+                    volunteer_home.volunteer_home(user)
                     break
                 else:
                     continue
@@ -40,7 +40,7 @@ def report(user):
 
 
 def report_menu():
-    print("\n----------------------------------------------------------------------------------------------------------------------------------------")
+    print("-------------------------------------------------------------------------------")
     print("Report")
     print("[1] Create a New Report")
     print("[2] Delete a Report")
@@ -50,7 +50,7 @@ def report_menu():
 
 
 def create_report(user):
-    print("\n----------------------------------------------------------------------------------------------------------------------------------------")
+    print("-------------------------------------------------------------------------------")
     print("Create a New Report")
     volunteer = user
     report_list = []
@@ -134,7 +134,7 @@ def create_report(user):
 def delete_report(user):
     volunteer = user
     while True:
-        print("\n----------------------------------------------------------------------------------------------------------------------------------------")
+        print("-------------------------------------------------------------------------------")
         delete_report_title = str(input("Please enter the title of the report that you want to delete : "))
         df = pd.read_csv('report.csv')
 
@@ -164,7 +164,7 @@ def view_my_report(user):
     volunteer = user
     # Check if report.csv exists, if so, print all reports; if not, print "no result found"
     if os.path.exists("report.csv"):
-        print("\n----------------------------------------------------------------------------------------------------------------------------------------")
+        print("-------------------------------------------------------------------------------")
         print("Summary of your reports:")
         df = pd.read_csv("report.csv", header=0)
         my_report = df.loc[df['volunteer'] == volunteer]
@@ -176,7 +176,7 @@ def view_my_report(user):
 def view_all_report():
     # Check if report.csv exists, if so, print all reports; if not, print "no result found"
     if os.path.exists("report.csv"):
-        print("\n----------------------------------------------------------------------------------------------------------------------------------------")
+        print("-------------------------------------------------------------------------------")
         print("Summary of all reports:")
         df = pd.read_csv("report.csv", header=0)
         df.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
