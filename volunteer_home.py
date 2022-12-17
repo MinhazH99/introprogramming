@@ -2,6 +2,8 @@ import volunteer_editdetails
 import emergency
 import volunteer_change_camp
 import volunteer_selecting_shifts
+import home
+import report
 
 def volunteer_home(user):
     print("-------------------------------------------------------------------------------")
@@ -9,7 +11,8 @@ def volunteer_home(user):
     print("[2] View and edit your assigned camp")
     print("[3] Edit availability")
     print("[4] Create or Edit Emergency Profile for Refugee")
-    print("[5] Logout")
+    print("[5] Report an issue")
+    print("[6] Logout")
 
     while True:
 
@@ -32,6 +35,11 @@ def volunteer_home(user):
             break
 
         elif user_input == '5':
+            report.report(user)
+            break
+        
+        
+        elif user_input == '6':
             print("Successfully logged out!")
             break
         
