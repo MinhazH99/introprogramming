@@ -608,8 +608,6 @@ def assign_severity():
 def adminFeatures():       
     b = 0
     while b == 0:
-        # print("\nEnter:\n[1] to create a plan\n[2] to view a plan\n[3] to edit a plan\n[4] to view camp details\n[5] to view volunteer details")   
-        # option = input("[6] to view reports made by volunteers\n[7] to assign a severity level to a report\n[8] to quit\n")
         print("[1] Create an Emergency Plan")
         print("[2] View an Emergency Plan")
         print("[3] Edit an Emergency Plan")

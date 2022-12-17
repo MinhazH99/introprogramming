@@ -2,6 +2,7 @@ import admin_accountm
 import admin_features
 
 def admin_home():
+    print("-------------------------------------------------------------------------------") 
     print("[1] Volunteer Account Management")
     print("[2] Emergency Plan Management")
     print("[3] Logout")

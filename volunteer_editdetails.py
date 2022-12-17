@@ -7,7 +7,8 @@ def volunteerEditDetails(user):
     print("[1] Change Name")
     print("[2] Change Password")
     print("[3] Change Phone Number")
-    print("[4] Return to Volunter Home Page")
+    print("[4] Change Email Address")
+    print("[5] Return to Volunter Home Page")
     
 
     while True:
@@ -24,7 +25,13 @@ def volunteerEditDetails(user):
             print("-------------------------------------------------------------------------------")
             volunteerPhoneNo(user)
             break
+        
         elif user_input == '4':
+            print("-------------------------------------------------------------------------------")
+            volunteerEmailAdd(user)
+            break
+
+        elif user_input == '5':
             print("-------------------------------------------------------------------------------")
             volunteer_home.volunteer_home(user)
             break
@@ -129,6 +136,42 @@ def volunteerPhoneNo(user):
             print("Please select a valid option")
 
 
+def volunteerEmailAdd(user):
+    
+    while True:
+        change_email = input("Please enter your new email address: ")
+        userData = pd.read_csv("admin_db.csv")    
+        df = pd.DataFrame(userData).astype('str')
+        if df['usernames'].eq(change_email).any():
+            print("Email already exist. Please enter another")
+        else:
+             break
+
+    print(f"To confirm you would like to change your email to {change_email}")
+
+    while True:
+
+        confirm = input("Please select Y/N: ")
+
+        if confirm == 'Y' or confirm == 'y':
+            userData = pd.read_csv("volunteers_db.csv")
+            df = pd.DataFrame(userData).astype('str')
+            df.loc[df["usernames"] == user,"email"] = change_email
+
+            df.to_csv("volunteers_db.csv",index = False)
+
+            print(f"Email has succesfully been changed to {change_email}")
+
+            volunteerEditDetails(user)
+            break
+
+            
+        elif confirm == 'N' or confirm =='n':
+            volunteerEditDetails(user)
+            break
+        
+        else:
+            print("Please select a valid option")
 
 
     

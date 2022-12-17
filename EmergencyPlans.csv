@@ -2,5 +2,6 @@ Emergency Type,Geographical Area,Start Date,Description,Area Code,No. Camps Avai
 Flood,Pakistan,2021-03-04,damage,PAK,4, ,Open
 Storm,Texas,2022-07-07,destroyed buildings,txs,5, ,Open
 Flood,india,2019-10-10,flooding,IND,5, ,Open
-Flood,UK,2019-12-31,Flooding,UK,0, ,Open
+Flood,UK,2019-12-31,Flooding,UK,2, ,Open
 Flood,Bangaldesh,2012-12-12,flooding,BNG,0, ,Open
+Flood,UK,2022-12-15,Flood,UK,0, ,Open
