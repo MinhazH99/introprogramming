@@ -47,6 +47,7 @@ def viewVolunteers():
     print("\n")
     while True:
 
+        # check_empty = 
         askUserInput = input("Please enter # to return to home page: ")
 
         if askUserInput == '#':
@@ -73,8 +74,7 @@ def EditVolunteers(inp):
     
     if inp == '2':
         
-        while True:
-        
+        while True: 
             user_input = input("Please type in username which you would like to deactivate or # to return to home page: ")
             if user_input == '#':
                 admin_accountm()

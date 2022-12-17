@@ -4,12 +4,13 @@ import sys
 import pandas as pd
 from tabulate import tabulate
 from datetime import date
+import volunteer_home
 # Not sure how to get current volunteer's username yet, set a dummy data.
-global volunteer
-volunteer = "volunteer1"
+# global volunteer
+# volunteer = "volunteer1"
 
 
-def report():
+def report(user):
     """
     Extra feature: Volunteer can report issues (harassment, resources, equipment, and other) happening in camps to admin.
     Admin will receive the report and grade the severity of the issue. 
@@ -22,15 +23,16 @@ def report():
                 answer = input("Are you sure to exit? Y/N \n")
                 if answer == 'Y' or answer == 'y':
                     print("Thanks for visiting our website!")
+                    volunteer_home.volunteer_home()
                     break
                 else:
                     continue
             if volunteer_option == "1":
-                create_report()
+                create_report(user)
             elif volunteer_option == "2":
-                delete_report()
+                delete_report(user)
             elif volunteer_option == "3":
-                view_my_report()
+                view_my_report(user)
             elif volunteer_option == "4":
                 view_all_report()
         else:
@@ -47,9 +49,10 @@ def report_menu():
     print("[0] Exit")
 
 
-def create_report():
+def create_report(user):
     print("\n----------------------------------------------------------------------------------------------------------------------------------------")
     print("Create a New Report")
+    volunteer = user
     report_list = []
     # volunteer,title,category,camp_id,message,report_time,severity
     while True:
@@ -66,28 +69,42 @@ def create_report():
                 # While loop for category
                 while True:
                     category_choice = str(input("Which category does the report belong to? [1]Harassment [2]Resources [3]Equipment [4]Other: "))
-                    if not category_choice:
-                        continue 
-                    match category_choice:
-                        case "1":
-                            category = "Harassment"
-                        case "2":
-                            category = "Resources"
-                        case "3":
-                            category = "Equipment"
-                        case "4":
-                            category = "Other"
-                        case _:
-                            print("Wrong input, please enter 1, 2, 3, or 4.")
-                            continue
+
+                    if category_choice == '1':
+                        category = "Harassment"
+                        break
+
+                    elif category_choice == '2':
+                        category = "Resources"
+                        break
+                    
+                    elif category_choice =='3':
+                        category = "Equiment"
+                        break
+
+                    elif category_choice == '4':
+                        category = "Other"
+                        break
+
+                    else:
+                        print("Wrong input. Please enter 1,2,3,or 4")
                     # Title is compolsury, while message can be null. 
+                while True:   
                     title = str(input("Please enter the report title: "))
-                    if not title:
-                        continue
+                    if len(title) != 0:
+                        break
+                    else:
+                        print("Please enter a title")
+                while True:       
                     message = str(input("Please enter the report content: "))
+                    if len(message) != 0:
+                        break
+                    else:
+                        print("Please provide a description of the report")
                     # volunteer,camp_id,category,title,message,report_time,severity
-                    report_date = date.today().strftime("%Y-%m-%d")
-                    break
+                
+                report_date = date.today().strftime("%Y-%m-%d")
+                    
                 report = {'volunteer':volunteer, 'camp_id':camp_id, 'category':category, 'title':title, 'message':message, 'report_time':report_date, 'severity':'Not graded yet'}
                 report_list.append(report)
                 break
@@ -114,7 +131,8 @@ def create_report():
 
                         
       
-def delete_report():
+def delete_report(user):
+    volunteer = user
     while True:
         print("\n----------------------------------------------------------------------------------------------------------------------------------------")
         delete_report_title = str(input("Please enter the title of the report that you want to delete : "))
@@ -142,7 +160,8 @@ def delete_report():
             print("Report not found. ")
             return
 
-def view_my_report():
+def view_my_report(user):
+    volunteer = user
     # Check if report.csv exists, if so, print all reports; if not, print "no result found"
     if os.path.exists("report.csv"):
         print("\n----------------------------------------------------------------------------------------------------------------------------------------")
@@ -164,4 +183,4 @@ def view_all_report():
         print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
     else:
         print("No result found. ")
-report()
+# report()
