@@ -142,11 +142,11 @@ def view_shifts(df, volunteer_shifts_df, username):
 def add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_plan_index):
     '''Function for users to add a new shift'''
     print("You will be asked for the details of the shift you are signing up for. \n")
-        
-    date_input = input('Please enter a date (YYYY-MM-DD): ')
 
     now = date.today()
     thirty_days_time = (date.today() + timedelta(30)) 
+        
+    date_input = input(f'Please enter a date (YYYY-MM-DD) between {now} and {thirty_days_time}: ')
 
     try:
         # Convert the string input to datetime object, it will catch error if you enter a unvalid date like 2020-12-40

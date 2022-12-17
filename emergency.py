@@ -5,6 +5,10 @@ import pandas as pd
 from tabulate import tabulate
 from datetime import date
 
+#to avoid FutureWarning about the coming deprecation of the numeric_only method for Pandas dataframes
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 def get_camp_list():
     '''Returns a list of all camps in CampDetails.csv'''
     df = pd.read_csv('CampDetails.csv')
