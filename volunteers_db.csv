@@ -2,8 +2,6 @@ firstname,familyname,usernames,password,phoneno,status,accounttype,email,token,e
 test,test,volunteer1,111,115,Activated,Volunteer,yulu.wang.22@gmail.com,nan,nan,nan
 volunteer2,test,volunteer2,111,115,Activated,Volunteer,yulu.wang.22@gmail.com,test,3.0,UKFLOOD3_2
 volunteer3,test,volunteer3,111,116,Activated,Volunteer,yulu.wang.22@gmail.com,test,3.0,UKFLOOD3_1
-testm,testh,volunteer4,111,112,Activated,Volunteer,minhazh@hotmail.co.uk,EQlkR2VC,3.0,UKFLOOD3_2
-testmh,testmh,volunteer5,111,112,Activated,Volunteer,minhazh@hotmail.co.uk,test,2.0,INDFLOOD2_5
-testmh,testmh,volunteer6,111,115,Activated,Volunteer,test@gmail.com,nan,nan,nan
-test,test,volunteer7,111,114,Activated,Volunteer,minhaz@hotmail.com
-testmh,testmh,volunteer9,111,07950452222,Activated,Volunteer,test@gmail.co.uk
+testmh,testmh,volunteer5,111,112,Deactivated,Volunteer,minhazh@hotmail.co.uk,test,2.0,INDFLOOD2_5
+testmh,testmh,volunteer6,111,115,Deactivated,Volunteer,test@gmail.com,nan,nan,nan
+testmh,testmh,volunteer7,111,7950452222,Deactivated,Volunteer,t@gmail.com,nan,nan,nan

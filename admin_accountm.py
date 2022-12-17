@@ -33,6 +33,7 @@ def admin_accountm():
 
         elif user_input =='5':
             admin_home.admin_home()
+            break
 
         else:
             print("Please select a valid option")
@@ -75,7 +76,6 @@ def EditVolunteers(inp):
         while True:
         
             user_input = input("Please type in username which you would like to deactivate or # to return to home page: ")
-            print(usernames)
             if user_input == '#':
                 admin_accountm()
        
@@ -114,9 +114,10 @@ def EditVolunteers(inp):
             user_input = input("Please type in username which you would like to reactivate or # to return to home page: ")
 
             if user_input == '#':
-                admin_accountm()
+                admin_accountm() 
 
             if user_input in usernames:
+
                 df.loc[df["usernames"] == user_input,"status"]='Activated'
 
                 print("Account sucessfully activated!")
@@ -158,12 +159,13 @@ def deleteVolunteers():
     while True:
 
         user_input = input("Please type in username of volunteer you would like to delete or # to return to home page: ")
-        if user_input =='#':
+
+        if user_input == '#':
             admin_accountm()
-           
+      
         if user_input in usernames:
             while True:
-                doubleCheck = print(f"Please confirm you would like to delete {user_input} from the database?")
+                print(f"Please confirm you would like to delete {user_input} from the database?")
                 doubleCheck = input("Please enter Y or N: ")
                 
                 if doubleCheck == 'Y' or doubleCheck =='y':
@@ -192,12 +194,16 @@ def deleteVolunteers():
                             print("Please enter Y or N")
                     break
                 
+                
                 elif doubleCheck == 'N' or doubleCheck =='n':
                     print("Returning to home page")
                     admin_accountm()
+                    break
 
                 else:
                     print("Please select a valid option Y or N")
+
+            break
 
         else:
             print("Please enter a valid username!")
