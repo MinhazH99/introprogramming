@@ -185,7 +185,7 @@ def delete_report(user):
 
 def view_my_report(user):
     volunteer = user
-    # Check if report.csv exists, if so, print all reports; if not, print "no result found"
+    # Check if report.csv exists, if so, print the current volunteer's reports; if not, print "no result found"
     if os.path.exists("report.csv"):
         print("-------------------------------------------------------------------------------")
         
@@ -214,4 +214,4 @@ def view_all_report():
             print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
     else:
         print("No reports have been made yet. ")
-report("volunteer2")
+# report("volunteer2")
