@@ -31,7 +31,7 @@ def volunteer_home(user):
             break
             
         elif user_input == '4':
-            emergency.emergency_profile()
+            emergency.emergency_profile(user)
             break
 
         elif user_input == '5':
@@ -41,7 +41,6 @@ def volunteer_home(user):
         
         elif user_input == '6':
             print("Successfully logged out!")
-            home.home()
             break
         
         else:

@@ -4,6 +4,7 @@ import sys
 import pandas as pd
 from tabulate import tabulate
 from datetime import date
+import volunteer_home
 
 #to avoid FutureWarning about the coming deprecation of the numeric_only method for Pandas dataframes
 import warnings
@@ -34,7 +35,7 @@ def update_refugee_count():
         camps_df.loc[camps_df['Camp ID'] == f'{key}', 'No. Refugees'] = f'{str(value)}' #update number of refugees at each camp
     camps_df.to_csv("CampDetails.csv",index=False) #store the updated counts
 
-def emergency_profile():
+def emergency_profile(user):
     while True:
         profile_menu()
         volunteer_option = str(input("Option: "))
@@ -42,7 +43,9 @@ def emergency_profile():
             if volunteer_option == "0":
                 answer = input("Are you sure to exit? Y/N \n")
                 if answer == 'Y' or answer == 'y':
-                    print("Thanks for visiting our website!")
+                    #print("\nThanks for visiting our website!")
+                    volunteer_home.volunteer_home(user)
+                    print("-------------------------------------------------------------------------------")
                     break
                 else:
                     continue
@@ -61,7 +64,7 @@ def emergency_profile():
 
 
 def profile_menu():
-    print("\n----------------------------------------------------------------------------------------------------------------------------------------")
+    print("-------------------------------------------------------------------------------")
     print("Refugee's Emergency Profile Menu")
     print("[1] Create New Emergency Profile")
     print("[2] Edit Existing Emergency Profile")
@@ -72,7 +75,7 @@ def profile_menu():
 
 
 def create_profile():
-    print("\n----------------------------------------------------------------------------------------------------------------------------------------")
+    print("-------------------------------------------------------------------------------")
     print("Create New Emergency Profile")
     profile_list = []
     while True:
@@ -169,11 +172,12 @@ def modify_profile():
         exact_result = df.loc[df['refugee_name'] == exact_searched_refugee_name]
         if exact_result.empty == False:
             while True:
-                print("[1]Refugee Name [2]Camp ID [3]Family Number [4]Medical Condition [5]Food Requirement [6]Space Requirement [0]Finish Edit")
-                user_input = str(input("Please select an option: "))
+                print("-------------------------------------------------------------------------------")
+                print("[1] Refugee Name\n[2] Camp ID \n[3] Family Number \n[4] Medical Condition \n[5] Food Requirement \n[6] Space Requirement \n[0] Finish Edit")
+                user_input = str(input("\nPlease select an option: "))
                 if user_input in ["0", "1", "2", "3", "4", "5", "6"]:
                     if user_input == "0":
-                        print(f"Finished editing {exact_searched_refugee_name}'s profile.")
+                        print(f"Finished editing {exact_searched_refugee_name}'s profile.\n")
                         break
                     if user_input == "1":
                         change = "refugee_name"
@@ -207,7 +211,7 @@ def modify_profile():
                     df = pd.read_csv('emergency_profile.csv')
                     df.loc[df['refugee_name'] == exact_searched_refugee_name, change] = [update_content]
                     df.to_csv('emergency_profile.csv', index = False)
-                    print("Successfully updated the profile. Do you want to keep editing this emergency profile?")
+                    print("Successfully updated the profile. Do you want to keep editing this emergency profile?\n")
                 else:
                     print("Wrong input, please enter a number from 0 to 6.")
                     break
@@ -221,7 +225,7 @@ def modify_profile():
 
 def delete_profile():
     while True:
-        print("\n----------------------------------------------------------------------------------------------------------------------------------------")
+        print("-------------------------------------------------------------------------------")
         delete_refugee_name = str(input("Please enter the name of the refugee that you want to delete : "))
         df = pd.read_csv('emergency_profile.csv')
         # Show every emergency profile of the name that the keyword contains
@@ -245,7 +249,7 @@ def delete_profile():
 
 def search_profile():
     while True:
-        print("\n----------------------------------------------------------------------------------------------------------------------------------------")
+        print("-------------------------------------------------------------------------------")
         keyword = input("Please enter the refugee's name: ")
         # If there's no input, go back to profile main menu
         if not keyword:
@@ -258,7 +262,7 @@ def search_profile():
         if len(contains_keyword) != 0: 
             print("Below is the search result: ")
             # Display the result(s) found in csv file sorting by create_time.
-            contains_keyword['create_time'] = pd.to_datetime(contains_keyword['create_time'])
+            #contains_keyword['create_time'] = pd.to_datetime(contains_keyword['create_time'])
             print(tabulate(contains_keyword.sort_values(by='create_time').fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
             answer = input("Continue to search emergency profile? Y/N \n")
             if answer == 'Y' or answer == 'y':
@@ -273,7 +277,7 @@ def search_profile():
 def show_all_profile():
     # Check if emergency_profile.csv exists, if so, print all profiles; if not, print "no result found"
     if os.path.exists("emergency_profile.csv"):
-        print("\n----------------------------------------------------------------------------------------------------------------------------------------")
+        print("-------------------------------------------------------------------------------")
         print("Summary of all emergency profiles:")
         df = pd.read_csv("emergency_profile.csv")
         # Sort the result by create_time
