@@ -5,14 +5,11 @@ import pandas as pd
 from tabulate import tabulate
 from datetime import date
 import volunteer_home
-# Not sure how to get current volunteer's username yet, set a dummy data.
-# global volunteer
-# volunteer = "volunteer1"
 
 
 def report(user):
     """
-    Extra feature: Volunteer can report issues (harassment, resources, equipment, and other) happening in camps to admin.
+    Extra feature: Volunteer can report issues (harassment, resources, equipment, and other) happening in the camps that they assigned to to admin.
     Admin will receive the report and grade the severity of the issue. 
     """
     while True:
@@ -22,7 +19,6 @@ def report(user):
             if volunteer_option == "0":
                 answer = input("Are you sure to exit? Y/N \n")
                 if answer == 'Y' or answer == 'y':
-                    #print("Thanks for visiting our website!")
                     volunteer_home.volunteer_home(user)
                     break
                 else:
@@ -54,20 +50,20 @@ def create_report(user):
     print("Create a New Report")
     volunteer = user
     report_list = []
-    # volunteer,title,category,camp_id,message,report_time,severity
     while True:
         print("")
         while True:
-            showdf = pd.read_csv('CampDetails.csv',usecols= ["Camp ID"])
+            # Volunteers can only report issues for the camps they assigned in
+            df = pd.read_csv('shifts.csv', header = 0)
+            volunteerdf = df.loc[df['username'] == volunteer, 'campid'].value_counts().index.values
+            showdf = pd.DataFrame(volunteerdf, columns=['Camp ID'])
             print(tabulate(showdf,headers=["Camp ID"],tablefmt='fancy_grid',showindex=False))
             camp_id = str(input("Please enter the camp id that you want to report (See above for list of camps ID's): "))
             # if there's no input, ask again 
             if not camp_id:
                 continue
-            # Validating that camp_id exits in CampDetails.csv:
-            df = pd.read_csv('CampDetails.csv')
-            id_result = df[(df['Camp ID'] == camp_id)]
-            print(id_result)
+            # Validating that camp input belongs to volunteer's assigned camps:
+            id_result = df[(df['campid'] == camp_id) & (df['username'] == volunteer)]
             if len(id_result) != 0:
                 # While loop for category
                 while True:
@@ -91,7 +87,7 @@ def create_report(user):
 
                     else:
                         print("Wrong input. Please enter 1,2,3,or 4")
-                    # Title is compolsury, while message can be null. 
+
                 while True:   
                     title = str(input("Please enter the report title: "))
                     if len(title) != 0:
@@ -104,7 +100,6 @@ def create_report(user):
                         break
                     else:
                         print("Please provide a description of the report")
-                    # volunteer,camp_id,category,title,message,report_time,severity
                 
                 report_date = date.today().strftime("%Y-%m-%d")
                     
@@ -120,7 +115,6 @@ def create_report(user):
         else:
             print("\nHere's the report(s) you've created just now:")
             df = pd.DataFrame(report_list).fillna("None")
-            #df.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
             print(tabulate(df, headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Time", "Severity"], tablefmt='fancy_grid', showindex=False))
             break
 
@@ -162,8 +156,8 @@ def delete_report(user):
                     while var == 0:
                         try:
                             drop_index = int(input("Please enter the index of the report you want to delete: "))
-                    #exact_delete_report_title = input("Please ensure deletion by entering the full title of the report that you want to delete, enter exit to search the report title again: ")
-                    # df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True)
+                            #exact_delete_report_title = input("Please ensure deletion by entering the full title of the report that you want to delete, enter exit to search the report title again: ")
+                            # df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True)
                             if drop_index in contains_keyword.index:
                                 var = 1
                                 df.drop(drop_index, inplace = True)
@@ -220,4 +214,4 @@ def view_all_report():
             print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
     else:
         print("No reports have been made yet. ")
-# report()
+report("volunteer2")

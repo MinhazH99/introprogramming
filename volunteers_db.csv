@@ -1,7 +1,3 @@
 firstname,familyname,usernames,password,phoneno,status,accounttype,email,token,emergencyplanindex,campid
-test,test,volunteer1,111,115,Activated,Volunteer,yulu.wang.22@gmail.com,nan,nan,nan
-volunteer2,test,volunteer2,111,115,Activated,Volunteer,yulu.wang.22@gmail.com,test,3.0,UKFLOOD3_2
-volunteer3,test,volunteer3,111,116,Activated,Volunteer,yulu.wang.22@gmail.com,test,3.0,UKFLOOD3_1
-testmh,testmh,volunteer5,113,112,Activated,Volunteer,minhazh@hotmail.co.uk,lDvP0GZj,2.0,INDFLOOD2_5
-testmh,testmh,volunteer6,111,115,Deactivated,Volunteer,test@gmail.com,nan,nan,nan
-testmh,testmh,volunteer7,111,7950452222,Deactivated,Volunteer,t@gmail.com,nan,nan,nan
+volunteer1,volunteer1,volunteer1,111,7950452222,Activated,Volunteer,v1@gmail.com,nan,nan,nan
+volunter2,volunteer2,volunteer2,111,7950452222,Activated,Volunteer,v2@gmail.com,nan,nan,nan
