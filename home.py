@@ -173,42 +173,64 @@ def ValidateUser(login_input):
     
     global user
     # usernames = []
-    while True:
-        user = input("Please enter your username: ")   
-        if df['usernames'].eq(user).any():
-                break
-        else:
-            print("Username does not exist. Please re-enter correct username")
+    if login_input == '2':
+        while True:
+            user = input("Please enter your username: ")   
+            if df['usernames'].eq(user).any():
+                    break
+            else:
+                print("Username does not exist. Please re-enter correct username")
 
-    for i in range(6):
-            print("Please enter 'R' if you have forgotten your password")
+        for i in range(6):
+                print("Please enter 'R' if you have forgotten your password")
+                password = input("Please enter your password: ")
+
+                validateInput = (len(df[(df.usernames == user) & (df.password == password)]) > 0)
+
+                validateStatus = (len(df[(df.usernames == user) & (df.password == password) & (df.status == "Activated")]) > 0)
+
+                if validateInput and validateStatus:
+                    return True
+                
+                elif validateInput and validateStatus == False:
+                    print("Account deactivated. Please contact admin")
+                    print("Returning to home screen")
+                    print("-------------------------------------------------------------------------------")
+                    home()
+                    return False
+                elif i == 5:
+                    df.loc[df["usernames"] == user,"status"]='Deactivated'
+                    df.to_csv("volunteers_db.csv",index=False)
+                    print('Your account has now been deactivated! Please contact admin')
+                
+                elif password == 'R':
+                    ForgotPassword(user)
+                    home()
+                    break
+
+                else:
+                    print(f"Incorrect password. You have {5 - i} attempts left before account is deactivated")
+
+    elif login_input == '1':
+        while True:
+            user = input("Please enter your username: ")   
+            if df['usernames'].eq(user).any():
+                    break
+            else:
+                print("Username does not exist. Please re-enter correct username")
+            
+        while True:
             password = input("Please enter your password: ")
 
             validateInput = (len(df[(df.usernames == user) & (df.password == password)]) > 0)
 
             validateStatus = (len(df[(df.usernames == user) & (df.password == password) & (df.status == "Activated")]) > 0)
 
-            if validateInput and validateStatus:
+            if validateInput:
                 return True
-            
-            elif validateInput and validateStatus == False:
-                print("Account deactivated. Please contact admin")
-                print("Returning to home screen")
-                print("-------------------------------------------------------------------------------")
-                home()
-                return False
-            elif i == 5:
-                df.loc[df["usernames"] == user,"status"]='Deactivated'
-                df.to_csv("volunteers_db.csv",index=False)
-                print('Your account has now been deactivated! Please contact admin')
-            
-            elif password == 'R':
-                ForgotPassword(user)
-                home()
-                break
 
             else:
-                print(f"Incorrect password. You have {5 - i} attempts left before account is deactivated")
+                print("Incorrect password")
 
 def ForgotPassword(user):
     rnd_strng = string.ascii_letters + string.digits
