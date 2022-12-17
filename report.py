@@ -137,6 +137,7 @@ def create_report(user):
 def delete_report(user):
     volunteer = user
     while True:
+        view_all_report()
         print("-------------------------------------------------------------------------------")
         delete_report_title = str(input("Please enter the title of the report that you want to delete : "))
         df = pd.read_csv('report.csv')
@@ -147,18 +148,20 @@ def delete_report(user):
             # Print out the search result
             print(tabulate(contains_keyword.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Report Time"], tablefmt='fancy_grid', showindex=True))
             
-            exact_delete_report_title = input("Please ensure deletion by entering the full title of the report that you want to delete, enter exit to search the report title again: ")
+            drop_index = int(input("Please enter the index of the report you want to delete: "))
+            #exact_delete_report_title = input("Please ensure deletion by entering the full title of the report that you want to delete, enter exit to search the report title again: ")
             # df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True)
-            df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True)
+            df.drop(drop_index, inplace = True)
             df.to_csv('report.csv', index = False)
-            if df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True) != None:
-                answer = input("Deleted the report successfully. Continue to delete another report? Y/N \n")
-                if answer == 'Y' or answer == 'y':
-                    continue
-                else:
-                    break
+            #if df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True) != None:
+            #if df.drop(drop_index, inplace = True) != None:
+            answer = input("Deleted the report successfully. Continue to delete another report? Y/N \n")
+            if answer == 'Y' or answer == 'y':
+                continue
             else:
-                print("Nothing deleted, going back to search the report title again...")
+                break
+            #else:
+                #print("Nothing deleted, going back to search the report title again...")
         else:
             print("Report not found. ")
             return
