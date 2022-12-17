@@ -4,7 +4,7 @@ import random
 import string
 import re
 import admin_home
-from volunteer_home import volunteer_home
+import volunteer_home
 import mail_demo
 import pyfiglet
 
@@ -137,10 +137,10 @@ def register():
     
 def login_volunteer(inp):
     print("Logged in as volunteer")
-    volunteer_home(user)
+    volunteer_home.volunteer_home(inp)
 def login_admin():
     print("Logged in as admin")
-    admin_home()
+    admin_home.admin_home()
     
 def login():
     print("[1] Login as admin")
