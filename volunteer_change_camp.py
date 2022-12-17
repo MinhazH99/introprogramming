@@ -1,4 +1,5 @@
 import pandas as pd
+import volunteer_home
 
 def get_camp_list():
     '''Returns a list of all camps in CampDetails.csv'''
@@ -39,10 +40,11 @@ def update_volunteer_count():
 
 def camp_functions_menu(user):
     '''Main menu for users to decide whether to choose a camp, view current camp, change camp, or return to main menu.'''
+    print("-------------------------------------------------------------------------------")
     print("Enter [1] to choose a camp for the first time.")
     print("Enter [2] to view the ID of the camp you are currently assigned to.")
     print("Enter [3] to change camps.")
-    print("Enter [4] to exit.") #with the understanding that from the menu, a user can pick a camp
+    print("Enter [4] to return to the main menu.") #with the understanding that from the menu, a user can pick a camp
     user_input = input("Please select an option: ").strip()
     while True: 
         if user_input == '1':
@@ -55,7 +57,8 @@ def camp_functions_menu(user):
             change_camp(user) 
             break
         elif user_input == '4':
-            print("Goodbye") #call main menu function
+            #print("Goodbye") #call main menu function
+            volunteer_home.volunteer_home(user)
             break
         else: #error handling
             print("Invalid choice")
@@ -167,7 +170,7 @@ def change_camp(user):
                         print(camp)
                     print("\n")
                     choice = input("Pick a camp from the above list: ").strip()
-                    while choice not in camp_list:
+                    while choice.upper() not in camp_list: #converts string to upper case
                         print("Invalid choice.")
                         choice = input("Pick a camp from the above list: ").strip()
                     emergency_plan_index = str(int(get_assoc_emergency_plan(choice))) #safeguard against unexplained issue
