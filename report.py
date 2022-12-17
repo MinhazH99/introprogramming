@@ -58,13 +58,16 @@ def create_report(user):
     while True:
         print("")
         while True:
-            camp_id = str(input("Please enter the camp id that you want to report: "))
+            showdf = pd.read_csv('CampDetails.csv',usecols= ["Camp ID"])
+            print(tabulate(showdf,headers=["Camp ID"],tablefmt='fancy_grid',showindex=False))
+            camp_id = str(input("Please enter the camp id that you want to report (See above for list of camps ID's): "))
             # if there's no input, ask again 
             if not camp_id:
                 continue
             # Validating that camp_id exits in CampDetails.csv:
             df = pd.read_csv('CampDetails.csv')
             id_result = df[(df['Camp ID'] == camp_id)]
+            print(id_result)
             if len(id_result) != 0:
                 # While loop for category
                 while True:
