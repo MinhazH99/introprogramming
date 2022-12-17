@@ -193,7 +193,7 @@ def delete_report(user):
 
 def view_my_report(user):
     volunteer = user
-    # Check if report.csv exists, if so, print all reports; if not, print "no result found"
+    # Check if report.csv exists, if so, print the current volunteer's reports; if not, print "no result found"
     if os.path.exists("report.csv"):
         print("-------------------------------------------------------------------------------")
         

@@ -3,7 +3,7 @@ import csv
 import random
 import string
 import re
-from admin_home import admin_home
+import admin_home
 from volunteer_home import volunteer_home
 import mail_demo
 import pyfiglet

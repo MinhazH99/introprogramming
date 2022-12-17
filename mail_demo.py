@@ -5,8 +5,11 @@ import subprocess
 
 
 
-sys_email = "3.mergency.sys@gmail.com"
-sys_password = "mhtxjymibjyqlixb"
+sys_email = "merakiauction@gmail.com"
+sys_password = "aoaqfdndbhnvvfhw"
+
+# sys_email = "3.mergency.sys@gmail.com"
+# sys_password = "mhtxjymibjyqlixb"
 def get_password(user):
     #TODO Don't know how to get the volunteer's username, set a dummy data 'volunteer2'. 
     volunteer = user
