@@ -71,7 +71,7 @@ def create_report(user):
             if len(id_result) != 0:
                 # While loop for category
                 while True:
-                    category_choice = str(input("Which category does the report belong to? [1]Harassment [2]Resources [3]Equipment [4]Other: "))
+                    category_choice = str(input("Which category does the report belong to? \n[1] Harassment \n[2] Resources \n[3] Equipment \n[4] Other: "))
 
                     if category_choice == '1':
                         category = "Harassment"
@@ -120,7 +120,7 @@ def create_report(user):
         else:
             print("\nHere's the report(s) you've created just now:")
             df = pd.DataFrame(report_list).fillna("None")
-            df.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
+            #df.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
             print(tabulate(df, headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Time", "Severity"], tablefmt='fancy_grid', showindex=False))
             break
 
@@ -137,47 +137,74 @@ def create_report(user):
 def delete_report(user):
     volunteer = user
     while True:
-        view_all_report()
-        print("-------------------------------------------------------------------------------")
-        delete_report_title = str(input("Please enter the title of the report that you want to delete : "))
-        df = pd.read_csv('report.csv')
-
-        # Search every report from the volunteer that contains the keyword
-        contains_keyword = df.loc[(df['title'].str.contains(delete_report_title, case=False)) & (df['volunteer'] == volunteer)]
-        if len(contains_keyword) != 0: 
-            # Print out the search result
-            print(tabulate(contains_keyword.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Report Time"], tablefmt='fancy_grid', showindex=True))
+        if os.path.exists("report.csv"):
             
-            drop_index = int(input("Please enter the index of the report you want to delete: "))
-            #exact_delete_report_title = input("Please ensure deletion by entering the full title of the report that you want to delete, enter exit to search the report title again: ")
-            # df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True)
-            df.drop(drop_index, inplace = True)
-            df.to_csv('report.csv', index = False)
-            #if df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True) != None:
-            #if df.drop(drop_index, inplace = True) != None:
-            answer = input("Deleted the report successfully. Continue to delete another report? Y/N \n")
-            if answer == 'Y' or answer == 'y':
-                continue
-            else:
+            df = pd.read_csv("report.csv", header=0)
+            my_report = df.loc[df['volunteer'] == volunteer]
+            #my_report.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
+            if my_report.empty:
+                print("You have not made any reports yet.")
                 break
-            #else:
-                #print("Nothing deleted, going back to search the report title again...")
+            else:
+                print("Summary of your reports:")
+                print(tabulate(my_report.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
+                print("-------------------------------------------------------------------------------")
+                
+                delete_report_title = str(input("Please enter the title of the report that you want to delete: "))
+                df = pd.read_csv('report.csv')
+
+                # Search every report from the volunteer that contains the keyword
+                contains_keyword = df.loc[(df['title'].str.contains(delete_report_title, case=False)) & (df['volunteer'] == volunteer)]
+                if len(contains_keyword) != 0: 
+                    # Print out the search result
+                    print(tabulate(contains_keyword.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Report Time"], tablefmt='fancy_grid', showindex=True))
+                    var = 0
+                    while var == 0:
+                        try:
+                            drop_index = int(input("Please enter the index of the report you want to delete: "))
+                    #exact_delete_report_title = input("Please ensure deletion by entering the full title of the report that you want to delete, enter exit to search the report title again: ")
+                    # df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True)
+                            if drop_index in contains_keyword.index:
+                                var = 1
+                                df.drop(drop_index, inplace = True)
+                                df.to_csv('report.csv', index = False)
+                                #if df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True) != None:
+                                #if df.drop(drop_index, inplace = True) != None:
+                                answer = input("Deleted the report successfully. Continue to delete another report? Y/N \n")
+                                if answer == 'Y' or answer == 'y':
+                                    continue
+                                else:
+                                    return
+                    
+                            else:
+                                print("That is not a valid index.\n")
+                                continue
+                        except ValueError:
+                            print("That is not a valid input.\n")
+                    #else:
+                        #print("Nothing deleted, going back to search the report title again...")
+                else:
+                    print("Report not found. ")
+                    return
         else:
-            print("Report not found. ")
-            return
+            print("No reports have been made yet. ")
 
 def view_my_report(user):
     volunteer = user
     # Check if report.csv exists, if so, print all reports; if not, print "no result found"
     if os.path.exists("report.csv"):
         print("-------------------------------------------------------------------------------")
-        print("Summary of your reports:")
+        
         df = pd.read_csv("report.csv", header=0)
         my_report = df.loc[df['volunteer'] == volunteer]
-        my_report.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
-        print(tabulate(my_report.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
+        #my_report.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
+        if my_report.empty:
+            print("You have not made any reports yet.")
+        else:
+            print("Summary of your reports:")
+            print(tabulate(my_report.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
     else:
-        print("No result found. ")
+        print("No reports have been made yet. ")
 
 def view_all_report():
     # Check if report.csv exists, if so, print all reports; if not, print "no result found"
@@ -185,8 +212,12 @@ def view_all_report():
         print("-------------------------------------------------------------------------------")
         print("Summary of all reports:")
         df = pd.read_csv("report.csv", header=0)
-        df.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
-        print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
+        #df.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
+        if df.empty:
+            print("No reports have been made yet.")
+        else:
+            print("Summary of all reports:")
+            print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
     else:
-        print("No result found. ")
+        print("No reports have been made yet. ")
 # report()
