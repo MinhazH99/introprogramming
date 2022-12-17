@@ -62,6 +62,11 @@ def EditVolunteers(inp):
             user_input = input("Please type in username which you would like to deactivate or # to return to home page: ")
             if user_input == '#':
                 admin_accountm()
+
+            if user_input == 'admin':
+                print("Admin account can not be edited! Returning to home screen")
+                admin_accountm()
+                break
        
             if user_input in usernames:
                 df.loc[df["usernames"] == user_input,"status"]='Deactivated'
@@ -92,7 +97,12 @@ def EditVolunteers(inp):
         while True:
             user_input = input("Please type in username which you would like to reactivate or # to return to home page: ")
             if user_input == '#':
-                admin_accountm() 
+                admin_accountm()
+            if user_input == 'admin':
+                print("Admin account can not be edited! Returning to home screen")
+                admin_accountm()
+                break
+
             if user_input in usernames:
                 df.loc[df["usernames"] == user_input,"status"]='Activated'
                 print("Account sucessfully activated!")
@@ -130,6 +140,12 @@ def deleteVolunteers():
         user_input = input("Please type in username of volunteer you would like to delete or # to return to home page: ")
         if user_input == '#':
             admin_accountm()
+
+        if user_input == 'admin':
+            print("Admin account can not be edited! Returning to home screen")
+            admin_accountm()
+            break
+
       
         if user_input in usernames:
             while True:
