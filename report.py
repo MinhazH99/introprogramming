@@ -55,76 +55,84 @@ def create_report(user):
         while True:
             # Volunteers can only report issues for the camps they assigned in
             df = pd.read_csv('shifts.csv', header = 0)
-            volunteerdf = df.loc[df['username'] == volunteer, 'campid'].value_counts().index.values
+            #volunteerdf = df.loc[df['username'] == volunteer, 'campid'].value_counts().index.values
+            volunteerdf = df.loc[df['username'] == volunteer, 'campid']
             showdf = pd.DataFrame(volunteerdf, columns=['Camp ID'])
-            print(tabulate(showdf,headers=["Camp ID"],tablefmt='fancy_grid',showindex=False))
-            camp_id = str(input("Please enter the camp id that you want to report (See above for list of camps ID's): "))
-            # if there's no input, ask again 
-            if not camp_id:
-                continue
-            # Validating that camp input belongs to volunteer's assigned camps:
-            id_result = df[(df['campid'] == camp_id) & (df['username'] == volunteer)]
-            if len(id_result) != 0:
-                # While loop for category
-                while True:
-                    category_choice = str(input("Which category does the report belong to? \n[1] Harassment \n[2] Resources \n[3] Equipment \n[4] Other: "))
-
-                    if category_choice == '1':
-                        category = "Harassment"
-                        break
-
-                    elif category_choice == '2':
-                        category = "Resources"
-                        break
-                    
-                    elif category_choice =='3':
-                        category = "Equiment"
-                        break
-
-                    elif category_choice == '4':
-                        category = "Other"
-                        break
-
-                    else:
-                        print("Wrong input. Please enter 1,2,3,or 4")
-
-                while True:   
-                    title = str(input("Please enter the report title: "))
-                    if len(title) != 0:
-                        break
-                    else:
-                        print("Please enter a title")
-                while True:       
-                    message = str(input("Please enter the report content: "))
-                    if len(message) != 0:
-                        break
-                    else:
-                        print("Please provide a description of the report")
+            if volunteerdf.empty:
+                print("You are not currently working any shifts, and cannot make a report.\n")
+                return
+            else:
                 
-                report_date = date.today().strftime("%Y-%m-%d")
-                    
-                report = {'volunteer':volunteer, 'camp_id':camp_id, 'category':category, 'title':title, 'message':message, 'report_time':report_date, 'severity':'Not graded yet'}
-                report_list.append(report)
-                break
-            else: 
-                print("The camp ID is invalid, please enter again.")
-                continue
-        answer = input("\nSuccessfully created the report.\nDo you want to create another report? Y/N \n")
-        if answer == 'y' or answer == 'Y':
-            continue
-        else:
-            print("\nHere's the report(s) you've created just now:")
-            df = pd.DataFrame(report_list).fillna("None")
-            print(tabulate(df, headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Time", "Severity"], tablefmt='fancy_grid', showindex=False))
-            break
+                print(tabulate(showdf,headers=["Camp ID"],tablefmt='fancy_grid',showindex=False))
+                camp_id = str(input("Please enter the camp id that you want to report (See above for list of camps ID's): "))
+                # if there's no input, ask again 
+                if not camp_id:
+                    continue
+                # Validating that camp input belongs to volunteer's assigned camps:
+                id_result = df[(df['campid'] == camp_id) & (df['username'] == volunteer)]
+                if len(id_result) != 0:
+                    # While loop for category
+                    while True:
+                        category_choice = str(input("Which category does the report belong to? \n[1] Harassment \n[2] Resources \n[3] Equipment \n[4] Other: "))
 
-    # Put the report info into report.csv file. 
-    if report_list:
-        with open("report.csv", "a", newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=['volunteer', 'camp_id', 'category', 'title', 'message', 'report_time', 'severity'])
-            for report in report_list:
-                writer.writerow(report)
-            print("The report(s) has been created.")
+                        if category_choice == '1':
+                            category = "Harassment"
+                            break
+
+                        elif category_choice == '2':
+                            category = "Resources"
+                            break
+                        
+                        elif category_choice =='3':
+                            category = "Equiment"
+                            break
+
+                        elif category_choice == '4':
+                            category = "Other"
+                            break
+
+                        else:
+                            print("Wrong input. Please enter 1,2,3,or 4")
+
+                    while True:   
+                        title = str(input("Please enter the report title: "))
+                        if len(title) != 0:
+                            break
+                        else:
+                            print("Please enter a title")
+                    while True:       
+                        message = str(input("Please enter the report content: "))
+                        if len(message) != 0:
+                            break
+                        else:
+                            print("Please provide a description of the report")
+                    
+                    report_date = date.today().strftime("%Y-%m-%d")
+                        
+                    report = {'volunteer':volunteer, 'camp_id':camp_id, 'category':category, 'title':title, 'message':message, 'report_time':report_date, 'severity':'Not graded yet'}
+                    report_list.append(report)
+                    answer = input("\nSuccessfully created the report.\nDo you want to create another report? Y/N \n")
+                    if answer == 'y' or answer == 'Y':
+                        continue
+                    else:
+                        print("\nHere's the report(s) you've created just now:")
+                        df = pd.DataFrame(report_list).fillna("None")
+                        print(tabulate(df, headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Time", "Severity"], tablefmt='fancy_grid', showindex=False))
+                        break
+                    #break
+                else: 
+                    print("The camp ID is invalid, please enter again.")
+                    continue
+            
+           
+
+        # Put the report info into report.csv file. 
+        if report_list:
+            with open("report.csv", "a", newline='') as file:
+                writer = csv.DictWriter(file, fieldnames=['volunteer', 'camp_id', 'category', 'title', 'message', 'report_time', 'severity'])
+                for report in report_list:
+                    writer.writerow(report)
+                print("The report(s) has been created.")
 
                         
       
