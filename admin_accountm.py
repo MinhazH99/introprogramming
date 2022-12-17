@@ -37,7 +37,7 @@ def admin_accountm():
 
         else:
             print("Please select a valid option")
-        break
+            user_input = input("Please select an option: ")
 
 
 def viewVolunteers():
@@ -103,11 +103,12 @@ def EditVolunteers(inp):
 
                     else:
                         print("Please enter Y or N")
-
+                        user_input2 = input("Please enter [Y/N]: ")
 
                 break
             else:
                 print("Please enter a valid username!")
+                user_input = input("Please type in username which you would like to deactivate or # to return to home page: ")
 
     elif inp == '3':
         while True:
@@ -139,9 +140,10 @@ def EditVolunteers(inp):
                         break
                     else:
                         print("Please enter Y or N")
-                break
+                        user_input2 = input("Please enter [Y/N]: ")
             else:
                 print("Please enter a valid username")
+                user_input = input("Please type in username which you would like to reactivate or # to return to home page: ")
 
 
 
@@ -192,7 +194,7 @@ def deleteVolunteers():
                             break
                         else:
                             print("Please enter Y or N")
-                    break
+                            user_input2 = input("Please enter [Y/N]: ")
                 
                 
                 elif doubleCheck == 'N' or doubleCheck =='n':
@@ -202,8 +204,7 @@ def deleteVolunteers():
 
                 else:
                     print("Please select a valid option Y or N")
-
-            break
+                    doubleCheck = input("Please enter Y or N: ")
 
         else:
             print("Please enter a valid username!")

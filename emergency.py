@@ -157,68 +157,64 @@ def create_profile():
 
 def modify_profile():
     show_all_profile()
-    searched_refugee_name = input("Please enter the name of the refugee's profile that you want to modify: ")
+    modify_refugee_name = str(input("Please enter the name of the refugee's profile that you want to modify: "))
     df = pd.read_csv('emergency_profile.csv')
-    result = df.loc[df['refugee_name'].str.contains(searched_refugee_name, case=False)]
+    result = df.loc[df['refugee_name'].str.contains(modify_refugee_name, case=False)]
     
     if result.empty == False:
-        print("Here's the summary of the refugee's profile(s): ")
-        print(tabulate(result.fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement"], tablefmt='fancy_grid', showindex=False))
-        
+        print("\nHere's the summary of the refugee's profile(s): ")
+        # Show the user all the emergency profile that contains the input first
+        print(tabulate(result.fillna("None"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
         exact_searched_refugee_name = str(input("Please ensure modification by entering the exact refugee name that you want to modify: "))
-        exact_result = df.loc[df['refugee_name'].str.contains(exact_searched_refugee_name, case=False)]
-        while True:
-            if exact_result.empty == False:
-                while True:
-                    print("")
-                    refugee_name = input("Please change refugee's name: ")
-                    # If they don't enter anything for refugeeName or camp_id the function will end
-                    if not refugee_name:
+        exact_result = df.loc[df['refugee_name'] == exact_searched_refugee_name]
+        if exact_result.empty == False:
+            while True:
+                print("[1]Refugee Name [2]Camp ID [3]Family Number [4]Medical Condition [5]Food Requirement [6]Space Requirement [0]Finish Edit")
+                user_input = str(input("Please select an option: "))
+                if user_input in ["0", "1", "2", "3", "4", "5", "6"]:
+                    if user_input == "0":
+                        print(f"Finished editing {exact_searched_refugee_name}'s profile.")
                         break
-                    # While loop for camp_id validation
-                    while True:
-                        camp_id = str(input("Please change the camp ID they are in: "))
-                        if not camp_id:
-                            break
-                        # Validate that camp_id exits in CampDetails.csv:
+                    if user_input == "1":
+                        change = "refugee_name"
+                        update_content = str(input("Please update refugee name: "))
+                    elif user_input == "2":
+                        change = "camp_id"
+                        content_input = str(input("Please update camp ID: "))
                         df = pd.read_csv('CampDetails.csv')
-                        match_result = df[(df['Camp ID'] == camp_id)]
-                        if len(match_result) != 0:
-                            # While loop for family_number validation
-                            while True:
-                                # Validating that family_number input is a number
-                                try:
-                                    family_number = int(input("Please change the numbers of his/her family in the camp (enter 0 if there's no family member): "))
-                                except: 
-                                    print("The input is not a number, please enter again")
-                                    continue
-                                # Medical condition can be null.
-                                medical_condition = str(input("Please change the Refugee's Medical condition if any: "))
-                                # Food requirement can be null.
-                                food_requirement = str(input("Please change the Refugee's food requirement if any: "))
-                                # Food requirement can be null.
-                                space_requirement = str(input("Please change the Refugee's space requirement if any: "))
-                                modify_time = date.today().strftime("%Y-%m-%d")
-
-                                break
-                            break
-                        else: 
-                            print("The camp ID is invalid, please enter again.")
+                        if not df[(df['Camp ID'] == content_input)].empty:
+                            update_content = content_input
+                        else:
+                            print("Invalid camp ID. Please enter again. ")
                             continue
+                    elif user_input == "3":
+                        change = "family_number"
+                        try:
+                            update_content = int(input("Please update refugee's family number: "))
+                        except:
+                            print("Please enter a number(enter 0 if there's no family member).")
+                    elif user_input == "4":
+                        change = "medical_condition"
+                        update_content = str(input("Please update refugee's medical condition: "))
+                    elif user_input == "5":
+                        change = "food_requirement"
+                        update_content = str(input("Please update refugee's food requirement: "))
+                    elif user_input == "6":
+                        change ="space_requirement"
+                        update_content = str(input("Please update refugee's space requiremen: "))
+                        
+                    # Update the change to emergency_profile.csv
+                    df = pd.read_csv('emergency_profile.csv')
+                    df.loc[df['refugee_name'] == exact_searched_refugee_name, change] = [update_content]
+                    df.to_csv('emergency_profile.csv', index = False)
+                    print("Successfully updated the profile. Do you want to keep editing this emergency profile?")
+                else:
+                    print("Wrong input, please enter a number from 0 to 6.")
                     break
-            else:
-                break
-            break
-        # Update all valid profile info to emergency_profile.csv
-        df = pd.read_csv('emergency_profile.csv')
-        df.loc[df['refugee_name'] == exact_searched_refugee_name] = [refugee_name, camp_id, family_number, medical_condition, food_requirement, space_requirement, modify_time]
-        df.to_csv('emergency_profile.csv', index = False)
-        update_refugee_count()
-        print("Successfully updated the profile of the refugee.")
-    else:
-        print("Emergency profile not found. ")
-
-    answer = str(input("Continue to edit another emergency profile? Y/N \n"))
+        else:
+            print("Refugee name not found.")
+                
+    answer = str(input("Continue to edit emergency profile? Y/N \n"))
     if answer == 'Y' or answer== 'y':
         modify_profile()
         
