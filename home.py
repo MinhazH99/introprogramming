@@ -55,7 +55,7 @@ def home():
             break
         
         elif user_input == '#':
-            print("Succesfully logged out")
+            print("Succesfully exited program")
             print("-------------------------------------------------------------------------------")
             break
         else:
@@ -114,7 +114,7 @@ def register():
 
     while True:
 
-        phone_number = input("Please enter your phone number: ")
+        phone_number = input("Please enter a valid UK  phone number (in the format 07...): ")
         if (len(phone_number) == 11 or len(phone_number) == 10) and phone_number[0] == "0" and phone_number[1] == "7" and phone_number.isdigit():
             confirm_phone_number = input("Please confirm your phone number: ")
             if phone_number == confirm_phone_number:

@@ -1,6 +1,7 @@
 import csv
 import pandas as pd
 import volunteer_home
+import re
 
 def volunteerEditDetails(user):
     print("-------------------------------------------------------------------------------")
@@ -105,8 +106,13 @@ def volunteerPassword(user):
 
 
 def volunteerPhoneNo(user):
+    while True:
+        change_phoneno = input("Please enter your new phone number: ")
+        if (len(change_phoneno) == 11 or len(change_phoneno) == 10) and change_phoneno[0] == "0" and change_phoneno[1] == "7" and change_phoneno.isdigit():
+            break
 
-    change_phoneno = input("Please enter your new phone number: ")
+        else:
+            print("Invalid Phone Numbers. Please input a valid UK phone number")
 
     print(f"To confirm you would like to change your name to {change_phoneno}")
     
@@ -137,15 +143,24 @@ def volunteerPhoneNo(user):
 
 
 def volunteerEmailAdd(user):
+
+    emails = []
     
+    regexs = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     while True:
         change_email = input("Please enter your new email address: ")
-        userData = pd.read_csv("volunteers_db.csv")    
-        df = pd.DataFrame(userData).astype('str')
-        if df['usernames'].eq(change_email).any():
-            print("Email already exist. Please enter another")
+        with open("volunteers_db.csv") as file:
+            reader = csv.reader(file,delimiter=",")
+            next(reader)
+            for row in reader:
+                emails.append(row[7])
+        if (re.fullmatch(regexs,change_email)):
+            if change_email in emails:
+                print("Email already exist. Please enter another")
+            else:
+                break
         else:
-             break
+            print("Email is invalid. Please enter a valid email")
 
     print(f"To confirm you would like to change your email to {change_email}")
 

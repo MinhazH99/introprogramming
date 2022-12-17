@@ -1,6 +1,6 @@
 firstname,familyname,usernames,password,phoneno,status,accounttype,email,token,emergencyplanindex,campid
 admin,acc,admin,111,7950452222,Activated,Volunteer,3.mergency.sys@gmail.com,nan,nan,nan
-volunteer1,volunteer1,volunteer1,111,7950452222,Activated,Volunteer,v1@gmail.com,nan,nan,nan
-volunteer2,volunteer2,volunteer2,111,7950452222,Activated,Volunteer,v2@gmail.com,nan,nan,nan
-volunteer3,volunteer3,volunteer3,111,7950452222,Activated,Volunteer,v3@gmail.com,nan,nan,nan
-volunteer4,volunteer4,volunteer4,111,7950452222,Activated,Volunteer,v4@gmail.com,nan,nan,nan
+volunteer1,volunteer1,volunteer1,111,7950452222,Activated,Volunteer,v1@gmail.com,nan,3.0,UKFLOOD3_2
+volunteer2,volunteer2,volunteer2,111,7950452222,Activated,Volunteer,v2@gmail.com,nan,3.0,UKFLOOD3_1
+volunteer3,volunteer3,volunteer3,111,7950452222,Activated,Volunteer,v3@gmail.com,nan,3.0,UKFLOOD3_1
+volunteer4,volunteer4,volunteer4,111,7950452222,Activated,Volunteer,v8@gmail.com,nan,nan,nan

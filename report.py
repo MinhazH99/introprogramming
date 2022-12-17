@@ -214,4 +214,4 @@ def view_all_report():
             print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
     else:
         print("No reports have been made yet. ")
-report("volunteer2")
+# report("volunteer2")
