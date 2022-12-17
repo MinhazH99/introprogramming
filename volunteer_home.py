@@ -40,7 +40,10 @@ def volunteer_home(user):
         
         
         elif user_input == '6':
+            
             print("Successfully logged out!")
+            print("-------------------------------------------------------------------------------")
+            home.home()
             break
         
         else:
