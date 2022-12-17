@@ -118,10 +118,14 @@ def view_camps():
                         elif plan_index >= 0:
                             #the loop will only break if the plan index is valid
                             var = 3
+                            
                             camp_df = pd.read_csv("CampDetails.csv")
                             selected_rows = camp_df[camp_df['Emergency Plan Index'] == plan_index]
-                            print("\nRefugee camps for selected plan:\n")
-                            print(tabulate(selected_rows, headers = 'keys', tablefmt = 'fancy_grid'))
+                            if len(selected_rows) == 0:
+                                print("There are currently no camps for this plan.")
+                            else:
+                                print("\nRefugee camps for selected plan:\n")
+                                print(tabulate(selected_rows, headers = 'keys', tablefmt = 'fancy_grid'))
                             
                     except ValueError:
                         print("That is not a valid input.\n")
@@ -533,15 +537,18 @@ def view_report():
         rep_opt = input("[1] View all reports\n[2] View reports without a severity assigned\nPlease select an option: ")
         rep_df = pd.read_csv("report.csv")
         if rep_opt == '1':
-            print("\nSummary of all Reports:\n")
+            print("\nSummary of all Reports (ordered by most recent first):\n")
             #if reports exists, the data is read into a pandas dataframe, converted to a string and printed
             
             #potentially order by date with oldest first for consistency
-            print(tabulate(rep_df.sort_values(by='report_date'), headers = 'keys', tablefmt = 'fancy_grid'))
+
+            rep_df.sort_values(by='report_date')
+            print(tabulate(rep_df, headers = 'keys', showindex=False, tablefmt = 'fancy_grid'))
         elif rep_opt == '2':
-            selected_rows = rep_df[rep_df['severity'] == "Not Graded Yet"]
-            print("Unassigned Reports:\n")
-            print(tabulate(selected_rows.sort_values(by='report_date'), headers = 'keys', tablefmt = 'fancy_grid'))
+            selected_rows = rep_df[rep_df['severity'] == "Not Graded Yet"].sort_values(by='report_date')
+            #selected_rows = rep_df[rep_df['severity'] == "Not Graded Yet"]
+            print("Unassigned Reports (ordered by most recent first):\n")
+            print(tabulate(selected_rows, headers = 'keys', showindex=False, tablefmt = 'fancy_grid'))
 
     else:
         print("No reports have been made yet.\n")
@@ -597,7 +604,9 @@ def assign_severity():
                     if val == "Not Graded Yet":
                         add_severity(rep_df, report_index)
                         break
-                        
+                    elif pd.isna(rep_df.loc[report_index,'severity']):
+                        add_severity(rep_df, report_index)
+                        break
                     else:
                         print("This report already has the severity level: ",rep_df.loc[report_index,'severity'])
                         opt = input("\nEnter:\n[1] to change the severity level\n[2] to quit\n")
