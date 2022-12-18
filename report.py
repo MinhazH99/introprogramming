@@ -61,11 +61,11 @@ def create_report(user):
             #volunteerdf = df.loc[df['username'] == volunteer, 'campid'].value_counts().index.values
             volunteerdf = df.loc[df['username'] == volunteer, 'campid']
             showdf = pd.DataFrame(volunteerdf, columns=['Camp ID'])
-            if volunteerdf.empty:
+            if len(volunteerdf) == 0:
                 print("You are not currently working any shifts, and cannot make a report.\n")
                 return
+
             else:
-                
                 print(tabulate(showdf,headers=["Camp ID"],tablefmt='fancy_grid',showindex=False))
                 camp_id = str(input("Please enter the camp id that you want to report (See above for list of camps ID's): "))
                 # if there's no input, ask again 
@@ -153,48 +153,39 @@ def delete_report(user):
                 break
             else:
                 print("Summary of your reports:")
-                print(tabulate(my_report.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
+                print(tabulate(my_report.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=True))
                 print("-------------------------------------------------------------------------------")
                 
-                delete_report_title = str(input("Please enter the title of the report that you want to delete: "))
-                df = pd.read_csv('report.csv')
-
-                # Search every report from the volunteer that contains the keyword
-                contains_keyword = df.loc[(df['title'].str.contains(delete_report_title, case=False)) & (df['volunteer'] == volunteer)]
-                if len(contains_keyword) != 0: 
-                    # Print out the search result
-                    print(tabulate(contains_keyword.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Report Time"], tablefmt='fancy_grid', showindex=True))
-                    var = 0
-                    while var == 0:
-                        try:
-                            drop_index = int(input("Please enter the index of the report you want to delete: "))
-                            #exact_delete_report_title = input("Please ensure deletion by entering the full title of the report that you want to delete, enter exit to search the report title again: ")
-                            # df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True)
-                            if drop_index in contains_keyword.index:
-                                var = 1
-                                df.drop(drop_index, inplace = True)
-                                df.to_csv('report.csv', index = False)
-                                #if df.drop(df.index[df['title'] == exact_delete_report_title], inplace = True) != None:
-                                #if df.drop(drop_index, inplace = True) != None:
-                                answer = input("Deleted the report successfully. Continue to delete another report? Y/N \n")
-                                if answer == 'Y' or answer == 'y':
-                                    continue
-                                else:
-                                    report_func(user)
-                                    break
-                    
+                var = 1
+                while var == 1:
+                    try:
+                        delete_index = int(input("\nEnter the number of the report that you wish to delete: ")) 
+                        
+                        total_lines = len(my_report)
+                        if delete_index > (total_lines-1):
+                            #if the index is too big, the loop will not break and the user will have to input another value
+                            print("This number is greater than the number of reports.")
+                        elif delete_index <= -1:
+                            #If the index is negative, the loop will also not break
+                            print("Negative numbers are not allowed.")
+                        elif delete_index >= 0:
+                            #the loop will only break if the index is valid
+                            var = 2
+                            report_df = pd.read_csv('report.csv')
+                            selected_rows = report_df[report_df.index == delete_index]
+                            if len(selected_rows) == 0:
+                                print("No reports.")
                             else:
-                                print("That is not a valid index.\n")
-                                continue
-                        except ValueError:
-                            print("That is not a valid input.\n")
-                    #else:
-                        #print("Nothing deleted, going back to search the report title again...")
-                else:
-                    print("Report not found. ")
-                    return
+                                report_df.drop(delete_index, inplace = True)
+                                report_df.to_csv('report.csv', index = False)
+                                print("\nSuccessfully deleted the report.\n")
+                    except ValueError:
+                        print("That is not a valid input.\n")
+
         else:
             print("No reports have been made yet. ")
+            report_func(user)
+
 
 def view_my_report(user):
     volunteer = user
@@ -247,4 +238,6 @@ def view_all_report(user):
         print("No reports have been made yet. ")
         print("Returning to home screen")
         report_func(user)
-# report("volunteer2")
+
+
+# report_func("volunteer1")
