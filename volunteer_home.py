@@ -35,7 +35,7 @@ def volunteer_home(user):
             break
 
         elif user_input == '5':
-            report.report(user)
+            report.report_func(user)
             break
         
         

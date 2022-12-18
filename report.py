@@ -7,7 +7,7 @@ from datetime import date
 import volunteer_home
 
 
-def report(user):
+def report_func(user):
     """
     Extra feature: Volunteer can report issues (harassment, resources, equipment, and other) 
     happening in the camps that they assigned to to admin.
@@ -18,14 +18,7 @@ def report(user):
     while True:
         if volunteer_option in ["0", "1", "2", "3", "4"]:
             if volunteer_option == "0":
-                answer = input("Are you sure to exit? Y/N \n")
-                while True:
-                    if answer == 'Y' or answer == 'y':
-                        volunteer_home.volunteer_home(user)
-                        break
-                    else:
-                        print("Wrong input, please enter 'Y' or N''")
-                        answer = input("Are you sure to exit? Y/N \n")
+                volunteer_home.volunteer_home(user)
                 break
             if volunteer_option == "1":
                 create_report(user)
@@ -37,12 +30,12 @@ def report(user):
                 view_my_report(user)
                 break
             elif volunteer_option == "4":
-                view_all_report()
+                view_all_report(user)
                 break
         else:
             print("Wrong input, please enter a number from 0 to 4")
             volunteer_option = str(input("Option: "))
-    report(user)
+    # report(user)
 
 
 def report_menu():
@@ -128,6 +121,7 @@ def create_report(user):
                         print("\nHere's the report(s) you've created just now:")
                         df = pd.DataFrame(report_list).fillna("None")
                         print(tabulate(df, headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Time", "Severity"], tablefmt='fancy_grid', showindex=False))
+                        report_func(user)
                         break
                     #break
                 else: 
@@ -186,7 +180,8 @@ def delete_report(user):
                                 if answer == 'Y' or answer == 'y':
                                     continue
                                 else:
-                                    return
+                                    report_func(user)
+                                    break
                     
                             else:
                                 print("That is not a valid index.\n")
@@ -212,13 +207,24 @@ def view_my_report(user):
         #my_report.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
         if my_report.empty:
             print("You have not made any reports yet.")
+            print("Returning to home screen")
+            report_func(user)
         else:
             print("Summary of your reports:")
             print(tabulate(my_report.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
+            while True:
+                askUserInput = input("Please enter # to return to report menu")
+                if askUserInput == '#':
+                    print("Returning to home screen")
+                    report_func(user)
+                    break
     else:
         print("No reports have been made yet. ")
+        print("Returning to home screen")
+        report_func(user)
 
-def view_all_report():
+
+def view_all_report(user):
     # Check if report.csv exists, if so, print all reports; if not, print "no result found"
     if os.path.exists("report.csv"):
         print("-------------------------------------------------------------------------------")
@@ -227,8 +233,18 @@ def view_all_report():
         #df.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
         if df.empty:
             print("No reports have been made yet.")
+            print("Returning to home screen")
+            report_func(user)
         else:
             print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
+            while True:
+                askUserInput = input("Please enter # to return to report menu")
+                if askUserInput == '#':
+                    print("Returning to home screen")
+                    report_func(user)
+                    break
     else:
         print("No reports have been made yet. ")
-report("volunteer2")
+        print("Returning to home screen")
+        report_func(user)
+# report("volunteer2")
