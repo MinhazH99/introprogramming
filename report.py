@@ -121,7 +121,6 @@ def create_report(user):
                         print("\nHere's the report(s) you've created just now:")
                         df = pd.DataFrame(report_list).fillna("None")
                         print(tabulate(df, headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Time", "Severity"], tablefmt='fancy_grid', showindex=False))
-                        report_func(user)
                         break
                     #break
                 else: 
@@ -137,6 +136,8 @@ def create_report(user):
                 for report in report_list:
                     writer.writerow(report)
                 print("The report(s) has been created.")
+                report_func(user)
+                break
 
                         
       
