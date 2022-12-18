@@ -41,9 +41,18 @@ def volunteerEditDetails(user):
             print("Not a valid option")
 
 def volunteerFirstName(user):
-
-    change_firstname = input("Please enter your new first name: ")
-    change_secondname = input("Pleae enter your new family name: ")
+    while True:
+        change_firstname = input("Please enter your new first name: ")
+        if len(change_firstname.strip()) != 0:
+            break
+        else:
+            print("First name can not be 0 characters!")
+    while True:
+        change_secondname = input("Pleae enter your new family name: ")
+        if len(change_secondname.strip()) != 0:
+            break
+        else:
+            print("Family name can not be 0 characters!")
 
     print(f"To confirm you would like to change your name to {change_firstname} {change_secondname}")
     
@@ -83,7 +92,12 @@ def volunteerPassword(user):
         validate_input = (len(df[(df.usernames == user) & (df.password == old_password)]) > 0)
 
         if validate_input:
-            new_password = input("Please enter your new password: ")
+            while True:
+                new_password = input("Please enter your new password: ")
+                if len(new_password.strip()) != 0:
+                    break
+                else:
+                    print("New password can not be 0 characters!")
             confirm_new_pass = input("Please confirm new password: ")
 
             if new_password == confirm_new_pass:
