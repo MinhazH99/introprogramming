@@ -61,6 +61,7 @@ def create_report(user):
             #volunteerdf = df.loc[df['username'] == volunteer, 'campid'].value_counts().index.values
             volunteerdf = df.loc[df['username'] == volunteer, 'campid']
             showdf = pd.DataFrame(volunteerdf, columns=['Camp ID'])
+            print(showdf)
             if volunteerdf.empty:
                 print("You are not currently working any shifts, and cannot make a report.\n")
                 return
