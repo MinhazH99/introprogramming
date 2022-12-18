@@ -38,7 +38,7 @@ class Admin(User):
 def home():
     print(pyfiglet.figlet_format("Welcome to EMS",font = "big"))
     print("Welcome to the E-Mergency Management System (EMS)")
-    print("[1] Register as volunter")
+    print("[1] Register as volunteer")
     print("[2] Login")
     print("[#] Exit the System")
 

@@ -9,7 +9,7 @@ def volunteerEditDetails(user):
     print("[2] Change Password")
     print("[3] Change Phone Number")
     print("[4] Change Email Address")
-    print("[5] Return to Volunter Home Page")
+    print("[5] Return to Volunteer Home Page")
     
 
     while True:
