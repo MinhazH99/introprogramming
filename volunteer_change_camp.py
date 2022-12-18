@@ -41,10 +41,10 @@ def update_volunteer_count():
 def camp_functions_menu(user):
     '''Main menu for users to decide whether to choose a camp, view current camp, change camp, or return to main menu.'''
     print("-------------------------------------------------------------------------------")
-    print("Enter [1] to choose a camp for the first time.")
-    print("Enter [2] to view the ID of the camp you are currently assigned to.")
-    print("Enter [3] to change camps.")
-    print("Enter [4] to return to the main menu.") #with the understanding that from the menu, a user can pick a camp
+    print("[1] Choose a camp for the first time")
+    print("[2] View the ID of the camp you are currently assigned to")
+    print("[3] Change camps")
+    print("[4] Return to the main menu") #with the understanding that from the menu, a user can pick a camp
     user_input = input("Please select an option: ").strip()
     while True: 
         if user_input == '1':
@@ -128,8 +128,8 @@ def view_camp(user):
         else: 
             while True:
                 print("You are not currently assigned to a camp.")
-                print("Enter [1] to choose a camp.")
-                print("Enter [2] to return to main menu.") 
+                print("[1] Choose a camp")
+                print("[2] Return to main menu") 
                 user_input = input("Please select an option: ").strip()
                 if user_input == '1':
                     choose_camp(user) 
@@ -194,8 +194,8 @@ def change_camp(user):
         elif camp_id == 'nan':
             while True:
                 print("You are not currently assigned to a camp.")
-                print("Enter [1] to choose a camp.")
-                print("Enter [2] to return to main menu.") 
+                print("[1] Choose a camp")
+                print("[2] Return to main menu") 
                 user_input = input("Please select an option: ").strip()
                 if user_input == '1':
                     choose_camp(user) 
