@@ -635,42 +635,6 @@ def assign_severity():
     else:
         print("There are currently no reports to assign a severity to.")
 
-def check_e_type():
-    
-    while True:
-        e_type = input("Enter the type of natural disaster (e.g. Flood): ")
-        if e_type.isspace():
-            print("You cannot enter a blank space as the type of disaster.\n")
-        elif e_type == "":
-            print("You cannot enter nothing as the type of disaster.\n")
-        else:
-            return e_type
-
-print(check_e_type())
-
-def check_desc():
-    
-    while True:
-        desc = input("Enter a description of the effects of the natural disaster: ")
-        if desc.isspace():
-            print("You cannot enter a blank space as the description.\n")
-        elif desc == "":
-            print("You cannot enter nothing as the description.\n")
-        else:
-            return desc
-
-def check_area():
-    
-    while True:
-        area = input("Enter the affected geographical area (e.g. UK): ")
-        if area.isspace() or area == "":
-            print("You cannot enter nothing as the affected area.\n")
-        else:
-            return area
-
-#check_desc()
-#check_area()
-
 #function for the main menu
 def adminFeatures():       
     b = 0
@@ -686,9 +650,29 @@ def adminFeatures():
             plan_list.clear()
             total = []
             #asks the user to input various details about the new plan
-            #e_type = input("\nEnter the type of natural disaster (e.g. Flood): ")
-            desc = input("Enter a description of the effects of the natural disaster: ")
-            geo_area = input("Enter the affected geographical area (e.g. UK): ")
+            #They are not allowwed to enter a blank space as the input
+            while True:
+                e_type = input("Enter the type of natural disaster (e.g. Flood): ")
+                if e_type.isspace() or e_type == "":
+                    print("You cannot enter nothing as the type of disaster.\n")
+                else:
+                    break
+            
+            while True:
+                desc = input("Enter a description of the effects of the natural disaster: ")
+                if desc.isspace() or desc == "":
+                    print("You cannot enter nothing as the description.\n")
+                
+                else:
+                    break
+            
+            while True:
+                geo_area = input("Enter the affected geographical area (e.g. UK): ")
+                if geo_area.isspace() or geo_area == "":
+                    print("You cannot enter a blank space as the affected area.\n")
+                else:
+                    break
+           
             #jumps to the check date function
             
             b = 0
