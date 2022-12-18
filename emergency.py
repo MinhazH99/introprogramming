@@ -39,16 +39,16 @@ def emergency_profile(user):
     while True:
         profile_menu()
         volunteer_option = str(input("Option: "))
-        if volunteer_option in ["0", "1", "2", "3", "4", "5"]:
-            if volunteer_option == "0":
-                answer = input("Are you sure to exit? Y/N \n")
-                if answer == 'Y' or answer == 'y':
+        if volunteer_option in ["1", "2", "3", "4", "5", "6"]:
+            if volunteer_option == "6":
+                # answer = input("Are you sure to exit? Y/N \n")
+                # if answer == 'Y' or answer == 'y':
                     #print("\nThanks for visiting our website!")
-                    volunteer_home.volunteer_home(user)
-                    print("-------------------------------------------------------------------------------")
-                    break
-                else:
-                    continue
+                volunteer_home.volunteer_home(user)
+                print("-------------------------------------------------------------------------------")
+                break
+                # else:
+                #     continue
             if volunteer_option == "1":
                 create_profile()
             elif volunteer_option == "2":
@@ -60,7 +60,7 @@ def emergency_profile(user):
             elif volunteer_option == "5":
                 show_all_profile()
         else:
-            print("Wrong input, please enter a number from 0 to 5")
+            print("Wrong input, please enter a number from 1 to 6")
 
 
 def profile_menu():
@@ -68,10 +68,10 @@ def profile_menu():
     print("Refugee's Emergency Profile Menu")
     print("[1] Create New Emergency Profile")
     print("[2] Edit Emergency Profile")
-    print("[3] Delete Existing Emergency Profile")
+    print("[3] Delete Emergency Profile")
     print("[4] Search Emergency Profile")
     print("[5] Show All Emergency Profiles")
-    print("[0] Exit")
+    print("[6] Return to Volunteer Home Page")
 
 
 def create_profile():
