@@ -12,36 +12,45 @@ def report(user):
     Extra feature: Volunteer can report issues (harassment, resources, equipment, and other) happening in the camps that they assigned to to admin.
     Admin will receive the report and grade the severity of the issue. 
     """
+    report_menu()
+    volunteer_option = str(input("Option: "))
     while True:
-        report_menu()
-        volunteer_option = str(input("Option: "))
         if volunteer_option in ["0", "1", "2", "3", "4"]:
             if volunteer_option == "0":
                 answer = input("Are you sure to exit? Y/N \n")
-                if answer == 'Y' or answer == 'y':
-                    volunteer_home.volunteer_home(user)
-                    break
-                else:
-                    continue
+                while True:
+                    if answer == 'Y' or answer == 'y':
+                        volunteer_home.volunteer_home(user)
+                        break
+                    else:
+                        print("Wrong input, please enter 'Y' or N''")
+                        answer = input("Are you sure to exit? Y/N \n")
+                break
             if volunteer_option == "1":
                 create_report(user)
+                break
             elif volunteer_option == "2":
                 delete_report(user)
+                break
             elif volunteer_option == "3":
                 view_my_report(user)
+                break
             elif volunteer_option == "4":
                 view_all_report()
+                break
         else:
             print("Wrong input, please enter a number from 0 to 4")
+            volunteer_option = str(input("Option: "))
+    report(user)
 
 
 def report_menu():
     print("-------------------------------------------------------------------------------")
-    print("Report")
+    print("Report Menu")
     print("[1] Create a New Report")
     print("[2] Delete a Report")
     print("[3] View My Reports")
-    print("[4] View All Report")
+    print("[4] View All Reports")
     print("[0] Exit")
 
 
@@ -218,7 +227,6 @@ def view_all_report():
         if df.empty:
             print("No reports have been made yet.")
         else:
-            print("Summary of all reports:")
             print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
     else:
         print("No reports have been made yet. ")
