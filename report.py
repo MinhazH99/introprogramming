@@ -247,4 +247,4 @@ def view_all_report(user):
         report_func(user)
 
 
-report_func("volunteer1")
+# report_func("volunteer1")
