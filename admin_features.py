@@ -176,9 +176,9 @@ def view_volunteers():
                             if selected_rows.empty:
                                 print("There are currently no volunteers associated with this plan index.")
                             else:
-
+                                selected_rows = selected_rows[["firstname","familyname","usernames","phoneno","status","accounttype","email","emergencyplanindex","campid"]]
                                 print("Volunteers for selected plan:\n")
-                                print(tabulate(selected_rows, headers = 'keys', tablefmt = 'fancy_grid'))
+                                print(tabulate(selected_rows, headers = ["firstname","familyname","usernames","phoneno","status","accounttype","email","emergencyplanindex","campid"], tablefmt = 'fancy_grid'))
                             
                     except ValueError:
                         print("That is not a valid input.\n")
@@ -190,7 +190,8 @@ def view_volunteers():
                     print("There are currently no volunteers associated with any plan")
                 else:
                     print("\nSummary of all volunteers:\n")
-                    print(tabulate(vol_df, headers = 'keys', tablefmt = 'fancy_grid'))
+                    vol_df = vol_df[["firstname","familyname","usernames","phoneno","status","accounttype","email","emergencyplanindex","campid"]]
+                    print(tabulate(vol_df, headers = ["firstname","familyname","usernames","phoneno","status","accounttype","email","emergencyplanindex","campid"], tablefmt = 'fancy_grid'))
 
                     
             else:
@@ -210,12 +211,13 @@ def search_dict(nat_disaster):
         return dis_code
     else:
         loop = 0
-        print("Disaster not found.")
+        print("\nThe type of emergency you listed is not a commonly listed disaster, and does not have a standard code.")
         while loop == 0:
             #the user needs to input a 5 or 6 letter code, and the loop will not break unless this is satisfied
             dis_code = input("Please input a 5 or 6 letter code for this disaster: ")
-            if dis_code.isalpha() and len(dis_code) == (5 or 6):
-                loop = 1
+            if dis_code.isalpha() and len(dis_code) == 6:
+                disasters_dictionary[nat_disaster.upper()] = dis_code
+                #loop = 1
                 #the code is returned for use in another function
                 return dis_code
             else:
@@ -371,7 +373,7 @@ def check_area_code(area_name):
             if area_code.isalpha() and len(area_code) == 3:
                 loop_var = 1
                 
-                return area_code
+                return area_code.upper()
                 
    
             else:
@@ -379,7 +381,7 @@ def check_area_code(area_name):
         
     else:
         area_code = area_name
-        return area_code
+        return area_code.upper()
 
 #This function opens a new file Camp details if it does not currently exist
 # It is called if the number of camps on a plan the user wants to edit is 0
