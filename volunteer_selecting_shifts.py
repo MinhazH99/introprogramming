@@ -17,11 +17,15 @@ class ConsecutiveShiftError(Exception):
     '''Raises an error when a user tries to sign up for consecutive shifts'''
     pass
 
+
+class PlanClosedError(Exception):
+    '''Raises an error when a user tries to sign up for a shift at a plan that has closed'''
+    pass
+
 #Functions for use within volunteer options
 
 def check_duplicates(df, start_date, end_date):
-    """Checks if a user has already signed up for a given shift. 
-    I think we should band together all the validation functions for each file into one class to demonstrate OOP"""
+    '''Checks if a user has already signed up for a given shift.'''
     if ((df['startdate'] == f'{start_date}') & (df['enddate'] == f'{end_date}')).any():
         return True
     elif ((df['startdate'] == f'{start_date}') & (df['enddate'] == f'{end_date}')).any():
@@ -30,7 +34,7 @@ def check_duplicates(df, start_date, end_date):
         return False
 
 def check_successive_shifts(df, shift_type, start_date, end_date):
-    """Checks if a user has signed up for successsive shifts."""
+    '''Checks if an emergency plan is closed'''
     if shift_type == '1':
         #Case 1: a night shift ends before - its end date is this start date, and its time is 19:00 - 09:00
         if ((df['enddate'] == f'{start_date}') & (df['time'] == '19:00 - 09:00')).any():
@@ -46,6 +50,14 @@ def check_successive_shifts(df, shift_type, start_date, end_date):
         elif ((df['startdate'] == f'{end_date}') & (df['time'] == '09:00 - 19:00')).any():
             return True
     return False
+
+def check_plan_closed(emergency_plan_index):
+    '''Checks if an emergency plan has already been closed'''
+    df = pd.read_csv("EmergencyPlans.csv")
+    if df.loc[emergency_plan_index, 'Status'] == "Closed":
+        return True
+    elif df.loc[emergency_plan_index, 'Status'] == "Open":
+        return False
 
 def too_many_volunteers():
     '''Checks if a camp is already at its staffing limit'''
@@ -191,6 +203,8 @@ def add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_
                     raise DuplicateError
                 if check_successive_shifts(volunteer_shifts_df, shift_type, start_date, end_date):
                     raise ConsecutiveShiftError
+                if check_plan_closed(emergency_plan_index):
+                    raise PlanClosedError
                 else:
                     write_to_file(new_shift)
 
@@ -200,6 +214,8 @@ def add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_
             except ConsecutiveShiftError:
                 print("You cannot sign up for consecutive shifts.\n")
                 add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_plan_index)
+            except PlanClosedError:
+                print("This emergency plan has been closed. Please change camp before adding new shifts.\n")
     except ValueError:
         print(f"Date out of range, please enter date from {now} to {thirty_days_time}.")
         add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_plan_index)
