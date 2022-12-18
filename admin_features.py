@@ -68,12 +68,15 @@ def check_date():
     while True:
         
         try:
-            #global start_date #sets start date to global
+            
             start_date = input("Enter the date on which this occurred in the format yyyy-mm-dd: ")
             datetime.datetime.strptime(start_date, '%Y-%m-%d') #checks whether it is in the correct format, and if it is a valid date
 
-            # a = 1
-            return start_date
+            curr_date = dt.today().strftime('%Y-%m-%d')
+            if start_date > curr_date:
+                print("The start date of the emergency plan cannot be after the current date.\n")
+            else:
+                return start_date
 
             
         except Exception:
@@ -438,31 +441,38 @@ def retrieve_data():
                             #an additional comparison with the start date is carried out, to ensure that the close date is after the start date
                             var = 2
                             while var == 2:
-                                try:
-                                    #reads and stores the starting date from the dataframe
-                                    starting_date = df.loc[plan_index, 'Start Date']
-                                    closing_date = input("Enter the date on which this plan was closed in the format yyyy-mm-dd: ")
-                                    
-                                    datetime.datetime.strptime(closing_date, "%Y-%m-%d")
-                                    if starting_date >= closing_date:
-                                        print("\nThe start date cannot be after or equal to the close date.\n")
-                                    else:
-                                        #if the close date is valid and after the start date, it is added to the emergency plan in the csv file
+                                if df.loc[plan_index, 'Close Date'] == " ":
+                                    try:
+                                        #reads and stores the starting date from the dataframe
+                                        starting_date = df.loc[plan_index, 'Start Date']
+                                        closing_date = input("Enter the date on which this plan was closed in the format yyyy-mm-dd: ")
+                                        
+                                        datetime.datetime.strptime(closing_date, "%Y-%m-%d")
                                         curr_date = dt.today().strftime('%Y-%m-%d')
-                                        
-                                        df.loc[plan_index, 'Close Date'] = str(closing_date)
-                                        df.to_csv("EmergencyPlans.csv", index = False)
-                                        var = 3
-                                        print("The closing date '" + str(closing_date) + "' has been added to plan " + str(plan_index)+"\n")
+                                        if starting_date >= closing_date:
+                                            print("\nThe start date cannot be after or equal to the close date.\n")
+                                        elif closing_date > curr_date:
+                                            print("The closing date cannot be after the current date.\n")
+                                        else:
+                                            #if the close date is valid and after the start date, it is added to the emergency plan in the csv file
 
-                                        if closing_date <= curr_date:
-                                            df.loc[plan_index, 'Status'] = "Closed"
-                                            print("\nThe plan has been automatically closed, as the closing date is before or equal to the current date: ",curr_date)
+                                            df.loc[plan_index, 'Close Date'] = str(closing_date)
+                                            df.to_csv("EmergencyPlans.csv", index = False)
+                                            var = 3
+                                            print("\nThe closing date '" + str(closing_date) + "' has been added to plan " + str(plan_index))
 
-                                        
+                                            if df.loc[plan_index, 'Status'] == "Open":
+                                                df.loc[plan_index, 'Status'] = "Closed"
+                                                df.to_csv("EmergencyPlans.csv", index = False)
+                                                print("\nThe plan has been automatically closed, as the closing date is before or equal to the current date: ",curr_date)
 
-                                except Exception:
-                                    print("Not a valid date.\n")
+                                            
+
+                                    except Exception:
+                                        print("Not a valid date.\n")
+                                else:
+                                    print("This plan already has the closing date: ",df.loc[plan_index, 'Close Date'])
+                                    var = 3
 
                         elif decision == '2':
                             var = 2
@@ -508,7 +518,7 @@ def retrieve_data():
                                 df.loc[plan_index, 'Close Date'] = str(curr_date)
                                 df.to_csv("EmergencyPlans.csv", index = False)
                                 print("The plan is now closed.")
-                                print("The closing date " + str(curr_date) + " has been automatically added, as no closing date was present before.\n")
+                                print("The closing date " + str(curr_date) + " has been automatically added.\n")
                             else:
 
                                 print("The plan is now closed.")
@@ -625,6 +635,42 @@ def assign_severity():
     else:
         print("There are currently no reports to assign a severity to.")
 
+def check_e_type():
+    
+    while True:
+        e_type = input("Enter the type of natural disaster (e.g. Flood): ")
+        if e_type.isspace():
+            print("You cannot enter a blank space as the type of disaster.\n")
+        elif e_type == "":
+            print("You cannot enter nothing as the type of disaster.\n")
+        else:
+            return e_type
+
+print(check_e_type())
+
+def check_desc():
+    
+    while True:
+        desc = input("Enter a description of the effects of the natural disaster: ")
+        if desc.isspace():
+            print("You cannot enter a blank space as the description.\n")
+        elif desc == "":
+            print("You cannot enter nothing as the description.\n")
+        else:
+            return desc
+
+def check_area():
+    
+    while True:
+        area = input("Enter the affected geographical area (e.g. UK): ")
+        if area.isspace() or area == "":
+            print("You cannot enter nothing as the affected area.\n")
+        else:
+            return area
+
+#check_desc()
+#check_area()
+
 #function for the main menu
 def adminFeatures():       
     b = 0
@@ -640,7 +686,7 @@ def adminFeatures():
             plan_list.clear()
             total = []
             #asks the user to input various details about the new plan
-            e_type = input("\nEnter the type of natural disaster (e.g. Flood): ")
+            #e_type = input("\nEnter the type of natural disaster (e.g. Flood): ")
             desc = input("Enter a description of the effects of the natural disaster: ")
             geo_area = input("Enter the affected geographical area (e.g. UK): ")
             #jumps to the check date function
