@@ -63,11 +63,26 @@ def home():
 
 def register():
     
-    first_name = input("Please enter your first name: ")
+    while True:
+        first_name = input("Please enter your first name: ")
+        
+        if len(first_name.strip()) != 0:
+            break
+        else:
+            print("Please enter a first name")
 
-    family_name = input("Please enter your family name: ")
+    while True:
+        family_name = input("Please enter your family name: ")
+        if len(family_name.strip()) != 0:
+            break
+        else:
+            print("Please enter a family name ")
+    
     usernames = []
+    
     emails = []
+
+
    
     regexs = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     while True:
@@ -87,9 +102,15 @@ def register():
         else:
             print("Email is invalid. Please enter a valid email") 
     
+    
     while True:
-
-        user_input = input("Please enter a username: ")
+        while True:
+            user_input = input("Please enter a username: ")
+            if len(user_input.strip()) != 0:
+                break
+            else:
+                print("Username can not be 0 characters!")
+        
         with open("volunteers_db.csv") as file:
             reader = csv.reader(file,delimiter=",")
             next(reader)
@@ -103,8 +124,12 @@ def register():
             print("Username is taken. Please enter another username or login!")
        
     while True:
-
-        password = input("Please enter a password: ")
+        while True:
+            password = input("Please enter a password: ")
+            if len(password.strip()) !=0:
+                break
+            else:
+                print("Password can not be 0 characters!")
         confirm_pass = input("Please confirm password: ")
 
         if password == confirm_pass:
@@ -256,7 +281,12 @@ def ForgotPassword(user):
                 print("Token is incorrect.Please try again!")
 
     while True:
-        new_password = input("Please enter your new password: ")
+        while True:
+            new_password = input("Please enter your new password: ")
+            if len(new_password.strip()) !=0:
+                break
+            else:
+                print("New password can not be 0 characters!")
         confirm_new_pass = input("Please confirm new password: ")
 
         if new_password == confirm_new_pass:
