@@ -654,14 +654,14 @@ def adminFeatures():
             while True:
                 e_type = input("Enter the type of natural disaster (e.g. Flood): ")
                 if e_type.isspace() or e_type == "":
-                    print("You cannot enter nothing as the type of disaster.\n")
+                    print("You cannot enter a blank space as the type of disaster.\n")
                 else:
                     break
             
             while True:
                 desc = input("Enter a description of the effects of the natural disaster: ")
                 if desc.isspace() or desc == "":
-                    print("You cannot enter nothing as the description.\n")
+                    print("You cannot enter a blank space as the description.\n")
                 
                 else:
                     break
