@@ -5,8 +5,8 @@ import subprocess
 
 
 
-sys_email = "merakiauction@gmail.com"
-sys_password = "aoaqfdndbhnvvfhw"
+sys_email = "ems.management.sys@gmail.com"
+sys_password = "ofqdrgiwzemsnmbo"
 
 # sys_email = "3.mergency.sys@gmail.com"
 # sys_password = "mhtxjymibjyqlixb"
