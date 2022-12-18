@@ -263,6 +263,8 @@ def availability_funcs(user):
                 else: #error handling
                     print("Please enter a valid input.")
                     user_input = input("Please select an option: ")
+            
+            break
         
 
         else:
