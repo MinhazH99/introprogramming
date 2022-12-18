@@ -9,7 +9,8 @@ import volunteer_home
 
 def report(user):
     """
-    Extra feature: Volunteer can report issues (harassment, resources, equipment, and other) happening in the camps that they assigned to to admin.
+    Extra feature: Volunteer can report issues (harassment, resources, equipment, and other) 
+    happening in the camps that they assigned to to admin.
     Admin will receive the report and grade the severity of the issue. 
     """
     report_menu()
@@ -230,4 +231,4 @@ def view_all_report():
             print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
     else:
         print("No reports have been made yet. ")
-# report("volunteer2")
+report("volunteer2")

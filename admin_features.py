@@ -432,8 +432,8 @@ def retrieve_data():
                     while var == 1:
                         #user is presented with options about how they want to edit the plan
                         print("-------------------------------------------------------------------------------")
-                        print("[1] to add/edit a closing date\n[2] to add/edit the number of camps\n[3] to close the emergency plan")
-                        print("[4] to edit a different plan\n[5] to quit\n")
+                        print("[1] Add/edit a closing date\n[2] Add/edit the number of camps\n[3] Close the emergency plan")
+                        print("[4] Edit a different plan\n[5] Quit\n")
                         decision = input("\nPlease select an option: ")
                         if decision == '1':
                             #the user is adding a close date
@@ -445,7 +445,7 @@ def retrieve_data():
                                     try:
                                         #reads and stores the starting date from the dataframe
                                         starting_date = df.loc[plan_index, 'Start Date']
-                                        closing_date = input("Enter the date on which this plan was closed in the format yyyy-mm-dd: ")
+                                        closing_date = input("Enter the date on which this plan was closed in the format YYYY-MM-DD: ")
                                         
                                         datetime.datetime.strptime(closing_date, "%Y-%m-%d")
                                         curr_date = dt.today().strftime('%Y-%m-%d')
