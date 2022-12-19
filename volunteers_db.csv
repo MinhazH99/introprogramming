@@ -1,4 +1,4 @@
 firstname,familyname,usernames,password,phoneno,status,accounttype,email,token,emergencyplanindex,campid
-admin,acc,admin,111,7950452222,Activated,Volunteer,3.mergency.sys@gmail.com,,,
-tes,test,volunteer1,111,795045222,Activated,Volunteer,test@gmail.com,,1.0,SYRCVLWAR1_1
-test,h,volunteer2,112,7950452222,Activated,Volunteer,minhazh@hotmail.co.uk,,1,SYRCVLWAR1_4
+admin,acc,admin,111,7950452222,Activated,Volunteer,3.mergency.sys@gmail.com,nan,nan,nan
+tes,test,volunteer1,111,795045222,Activated,Volunteer,test@gmail.com,nan,1.0,SYRCVLWAR1_1
+test,h,volunteer2,112,7950452222,Activated,Volunteer,minhazh@hotmail.co.uk,nan,1.0,SYRCVLWAR1_4
