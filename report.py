@@ -18,9 +18,6 @@ def report_func(user):
         report_menu()
         volunteer_option = str(input("Option: "))
         if volunteer_option in ["1", "2", "3", "4", "5"]:
-            if volunteer_option == "5":
-                volunteer_home.volunteer_home(user)
-                break
             if volunteer_option == "1":
                 create_report(user)
             elif volunteer_option == "2":
@@ -29,6 +26,9 @@ def report_func(user):
                 view_my_report(user)
             elif volunteer_option == "4":
                 view_all_report(user)
+            elif volunteer_option == "5":
+                volunteer_home.volunteer_home(user)
+                break
         else:
             print("Wrong input, please enter a number from 1 to 5")
 
@@ -36,10 +36,10 @@ def report_func(user):
 def report_menu():
     print("-------------------------------------------------------------------------------")
     print("Report Menu")
-    print("[1] Create a New Report")
-    print("[2] Delete My Report")
-    print("[3] View My Reports")
-    print("[4] View All Reports")
+    print("[1] Create a new report")
+    print("[2] Delete my report")
+    print("[3] View my reports")
+    print("[4] View all reports")
     print("[5] Return to Volunteer Home Page")
 
 
@@ -192,6 +192,7 @@ def view_my_report(user):
             print("You have not made any reports yet.")
         else:
             print("Summary of your reports:")
+            my_report.sort_values(by='report_date')
             print(tabulate(my_report.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
 
     else:
@@ -203,14 +204,16 @@ def view_all_report(user):
         print("-------------------------------------------------------------------------------")
         print("Summary of all reports:")
         df = pd.read_csv("report.csv", header=0)
+        
         if df.empty:
             print("No reports have been made yet.")
         else:
-            print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
+            # Display the table by ascending time order
+            print(tabulate(df.sort_values(by='report_date'), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
 
     else:
         print("No reports have been made yet. ")
 
 
 
-# report_func("volunteer3")
+# report_func("volunteer1")

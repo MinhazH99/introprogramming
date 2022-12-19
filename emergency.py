@@ -40,25 +40,25 @@ def emergency_profile(user):
         profile_menu()
         volunteer_option = str(input("Option: "))
         if volunteer_option in ["1", "2", "3", "4", "5", "6"]:
-            if volunteer_option == "6":
-                # answer = input("Are you sure to exit? Y/N \n")
-                # if answer == 'Y' or answer == 'y':
-                    #print("\nThanks for visiting our website!")
+            if volunteer_option == "1":
+                create_profile()
+
+            elif volunteer_option == "2":
+                modify_profile()
+
+            elif volunteer_option == "3":
+                delete_profile()
+
+            elif volunteer_option == "4":
+                search_profile()
+
+            elif volunteer_option == "5":
+                show_all_profile()
+
+            elif volunteer_option == "6":
                 volunteer_home.volunteer_home(user)
                 print("-------------------------------------------------------------------------------")
                 break
-                # else:
-                #     continue
-            if volunteer_option == "1":
-                create_profile()
-            elif volunteer_option == "2":
-                modify_profile()
-            elif volunteer_option == "3":
-                delete_profile()
-            elif volunteer_option == "4":
-                search_profile()
-            elif volunteer_option == "5":
-                show_all_profile()
         else:
             print("Wrong input, please enter a number from 1 to 6")
 
@@ -66,11 +66,11 @@ def emergency_profile(user):
 def profile_menu():
     print("-------------------------------------------------------------------------------")
     print("Refugee's Emergency Profile Menu")
-    print("[1] Create New Emergency Profile")
-    print("[2] Edit Emergency Profile")
-    print("[3] Delete Emergency Profile")
-    print("[4] Search Emergency Profile")
-    print("[5] Show All Emergency Profiles")
+    print("[1] Create new emergency profile")
+    print("[2] Edit emergency profile")
+    print("[3] Delete emergency profile")
+    print("[4] Search emergency profile")
+    print("[5] Show all emergency profiles")
     print("[6] Return to Volunteer Home Page")
 
 
@@ -129,9 +129,12 @@ def create_profile():
                 if len(id_result) != 0:
                     # While loop for family_number validation
                     while True:
-                        # Validating that family_number input is a number
+                        # Validating that family_number input is a positive number
                         try:
                             family_number = int(input("Please enter the numbers of his/her family in the camp (enter 0 if there's no family member): "))
+                            if family_number < 0:
+                                print("Please input a positive number.")
+                                continue
                         except: 
                             print("The input is not a number, please enter again")
                             continue
@@ -195,12 +198,9 @@ def modify_profile():
                 while True:
                     print("-------------------------------------------------------------------------------")
                     print("What do you want to modify?")
-                    print("[1] Refugee Name\n[2] Camp ID \n[3] Family Number \n[4] Medical Condition \n[5] Food Requirement \n[6] Space Requirement \n[0] Finish Edit")
+                    print("[1] Refugee Name\n[2] Camp ID \n[3] Family Number \n[4] Medical Condition \n[5] Food Requirement \n[6] Space Requirement \n[7] Finish Edit")
                     user_input = str(input("\nPlease select an option: "))
-                    if user_input in ["0", "1", "2", "3", "4", "5", "6"]:
-                        if user_input == "0":
-                            print(f"Finished editing {exact_searched_refugee_name}'s profile.\n")
-                            break
+                    if user_input in ["1", "2", "3", "4", "5", "6", "7"]:
 
                         if user_input == "1":
                             while True:
@@ -228,6 +228,9 @@ def modify_profile():
                             while True:
                                 try:
                                     update_content = int(input("Please update refugee's family number: "))
+                                    if update_content < 0:
+                                        print("Please input a positive number.")
+                                        continue
                                     if update_content or update_content == 0:
                                         content_input = update_content
                                         break
@@ -247,6 +250,10 @@ def modify_profile():
                         elif user_input == "6":
                             change ="space_requirement"
                             update_content = str(input("Please update refugee's space requiremen: "))
+                        
+                        elif user_input == "7":
+                            print(f"Finished editing {exact_searched_refugee_name}'s profile.\n")
+                            break
                             
                         # Update the change to emergency_profile.csv
                         df = pd.read_csv('emergency_profile.csv')
