@@ -13,29 +13,24 @@ def report_func(user):
     happening in the camps that they assigned to to admin.
     Admin will receive the report and grade the severity of the issue. 
     """
-    report_menu()
-    volunteer_option = str(input("Option: "))
+
     while True:
-        if volunteer_option in ["0", "1", "2", "3", "4"]:
-            if volunteer_option == "0":
+        report_menu()
+        volunteer_option = str(input("Option: "))
+        if volunteer_option in ["1", "2", "3", "4", "5"]:
+            if volunteer_option == "5":
                 volunteer_home.volunteer_home(user)
                 break
             if volunteer_option == "1":
                 create_report(user)
-                break
             elif volunteer_option == "2":
                 delete_report(user)
-                break
             elif volunteer_option == "3":
                 view_my_report(user)
-                break
             elif volunteer_option == "4":
                 view_all_report(user)
-                break
         else:
-            print("Wrong input, please enter a number from 0 to 4")
-            volunteer_option = str(input("Option: "))
-    # report(user)
+            print("Wrong input, please enter a number from 1 to 5")
 
 
 def report_menu():
@@ -45,7 +40,7 @@ def report_menu():
     print("[2] Delete a Report")
     print("[3] View My Reports")
     print("[4] View All Reports")
-    print("[0] Exit")
+    print("[5] Return to Volunteer Home Page")
 
 
 def create_report(user):
@@ -58,7 +53,6 @@ def create_report(user):
         while True:
             # Volunteers can only report issues for the camps they assigned in
             df = pd.read_csv('shifts.csv', header = 0)
-            #volunteerdf = df.loc[df['username'] == volunteer, 'campid'].value_counts().index.values
             volunteerdf = df.loc[df['username'] == volunteer, 'campid']
             showdf = pd.DataFrame(volunteerdf, columns=['campid'])
             if len(volunteerdf) == 0:
@@ -66,6 +60,7 @@ def create_report(user):
                 return
 
             else:
+                # print(showdf)
                 print(tabulate(showdf,headers=["Camp ID"],tablefmt='fancy_grid',showindex=False))
                 camp_id = str(input("Please enter the camp id that you want to report (See above for list of camps ID's): "))
                 # if there's no input, ask again 
@@ -76,7 +71,7 @@ def create_report(user):
                 if len(id_result) != 0:
                     # While loop for category
                     while True:
-                        category_choice = str(input("Which category does the report belong to? \n[1] Harassment \n[2] Resources \n[3] Equipment \n[4] Other: "))
+                        category_choice = str(input("Which category does the report belong to? \n[1] Harassment \n[2] Resources \n[3] Equipment \n[4] Other: \nnPlease select an option: "))
 
                         if category_choice == '1':
                             category = "Harassment"
@@ -104,7 +99,7 @@ def create_report(user):
                         else:
                             print("Please enter a title")
                     while True:       
-                        message = str(input("Please enter the report content: "))
+                        message = str(input("Please enter the report description: "))
                         if len(message) != 0:
                             break
                         else:
@@ -145,20 +140,21 @@ def delete_report(user):
     volunteer = user
     while True:
         if os.path.exists("report.csv"):
-            
             df = pd.read_csv("report.csv", header=0)
             my_report = df.loc[df['volunteer'] == volunteer]
             #my_report.loc[df['severity'].isnull(), 'severity'] = "Not graded yet"
             if my_report.empty:
-                print("You have not made any reports yet.")
+                print("You have not made any reports yet.\n")
+                print("Returning to home screen")
+                report_func(user)
                 break
             else:
                 print("Summary of your reports:")
                 print(tabulate(my_report.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=True))
                 print("-------------------------------------------------------------------------------")
                 
-                var = 1
-                while var == 1:
+                flag = True
+                while flag:
                     try:
                         delete_index = int(input("\nEnter the number of the report that you wish to delete: ")) 
                         
@@ -166,12 +162,14 @@ def delete_report(user):
                         if delete_index > (total_lines-1):
                             #if the index is too big, the loop will not break and the user will have to input another value
                             print("This number is greater than the number of reports.")
-                        elif delete_index <= -1:
+                        elif delete_index == -1:
+                            report_func(user)
+                        elif delete_index < -1:
                             #If the index is negative, the loop will also not break
                             print("Negative numbers are not allowed.")
                         elif delete_index >= 0:
                             #the loop will only break if the index is valid
-                            var = 2
+                            flag = False
                             report_df = pd.read_csv('report.csv')
                             selected_rows = report_df[report_df.index == delete_index]
                             if len(selected_rows) == 0:
@@ -183,9 +181,10 @@ def delete_report(user):
                     except ValueError:
                         print("That is not a valid input.\n")
 
+            break
+
         else:
-            print("No reports have been made yet. ")
-            report_func(user)
+            print("No reports have been made yet. \n")
 
 
 def view_my_report(user):
@@ -204,17 +203,14 @@ def view_my_report(user):
         else:
             print("Summary of your reports:")
             print(tabulate(my_report.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
-            while True:
-                askUserInput = input("Please enter # to return to report menu")
-                if askUserInput == '#':
-                    print("Returning to home screen")
-                    report_func(user)
-                    break
+            # while True:
+            #     askUserInput = input("Please enter # to return to report menu: ")
+            #     if askUserInput == '#':
+            #         print("Returning to home screen")
+            #         report_func(user)
+            #         break
     else:
         print("No reports have been made yet. ")
-        print("Returning to home screen")
-        report_func(user)
-
 
 def view_all_report(user):
     # Check if report.csv exists, if so, print all reports; if not, print "no result found"
@@ -229,16 +225,16 @@ def view_all_report(user):
             report_func(user)
         else:
             print(tabulate(df.fillna("None"), headers=["Volunteer Name", "Camp ID", "Category", "Title", "Message", "Report Date", "Severity"], tablefmt='fancy_grid', showindex=False))
-            while True:
-                askUserInput = input("Please enter # to return to report menu")
-                if askUserInput == '#':
-                    print("Returning to home screen")
-                    report_func(user)
-                    break
+            # while True:
+            #     askUserInput = input("Please enter # to return to report menu: ")
+            #     if askUserInput == '#':
+            #         print("Returning to home screen")
+            #         report_func(user)
+            #         break
     else:
         print("No reports have been made yet. ")
-        print("Returning to home screen")
-        report_func(user)
+        # print("Returning to home screen")
+        # report_func(user)
 
 
 # report_func("volunteer1")
