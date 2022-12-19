@@ -1,7 +1,7 @@
 refugee_name,camp_id,family_number,medical_condition,food_requirement,space_requirement,create_time
-user1,PAKFLOOD0_1,1,diabetes,gluten free,quiet place,2022-12-13
+user1,PAKFLOOD0_1,1,diabetes type1,gluten free,quiet place,2022-12-13
 user2,TXSSTORM1_3,2,high blood pressure,low carb,accessible toilet,2022-12-13
-user3,INDFLOOD2_2,2,wheelchair,no beef,na,2022-12-15
-user4,TXSSTORM1_5,2,high blood pressure,low protein,na,2022-12-15
-chris,TXSSTORM1_3,0,poor eye sight condition,low fat,na,2022-12-10
-christopher,TXSSTORM1_3,2,na,low sugar,na,2022-10-21
+user3,INDFLOOD2_2,2,,no beef,wheelchair,2022-12-15
+user4,TXSSTORM1_5,2,high blood pressure,low protein,,2022-12-15
+chris,TXSSTORM1_3,0,low sugar,low fat,,2022-12-16
+christopher,TXSSTORM1_3,2,diabetes type1,allergic to peanuts,,2022-12-18

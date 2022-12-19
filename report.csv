@@ -1,6 +1,6 @@
 volunteer,camp_id,category,title,message,report_date,severity
-volunteer1,PAKFLOOD0_3,Equipment,Lack of beds,,2022-12-15,Not graded yet 
-volunteer1,TXSSTORM1_2,Resources,Lack of water,,2022-12-15,Not graded yet 
-volunteer1,TXSSTORM1_2,Other,Lack of sheets,Need 40 sheets,2022-12-15,Not graded yet 
-volunteer1,PAKFLOOD0_2,Resources,not,nd,2022-12-15,Not graded yet
-volunteer1,HATEARTHQ6_18,Harassment,kw,w,2022-12-18,Not graded yet
+volunteer1,PAKFLOOD0_3,Equipment,Lack of beds,10 beds needed,2022-12-01,
+volunteer1,TXSSTORM1_2,Other,Lack of sheets,40 sheets needed,2022-12-05,
+volunteer2,PAKFLOOD0_2,Equipment,Heaters needed,20 portable heaters needed,2022-12-15,
+volunteer2,HATEARTHQ6_18,Harassment,A harassment,A harassment happened at 10th of Dec,2022-12-18,
+volunteer1,HATEARTHQ6_18,Harassment,Lack of food,more food needed,2022-12-19,
