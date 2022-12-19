@@ -578,8 +578,11 @@ def view_report():
         elif rep_opt == '2':
             selected_rows = rep_df[rep_df['severity'] == "Not Graded Yet"].sort_values(by='report_date')
             #selected_rows = rep_df[rep_df['severity'] == "Not Graded Yet"]
-            print("Unassigned Reports (ordered by most recent first):\n")
-            print(tabulate(selected_rows, headers = 'keys', showindex=False, tablefmt = 'fancy_grid'))
+            if len(selected_rows) == 0:
+                print("There are currently no unassigned reports.\n")
+            else:
+                print("Unassigned Reports (ordered by most recent first):\n")
+                print(tabulate(selected_rows, headers = 'keys', showindex=False, tablefmt = 'fancy_grid'))
 
     else:
         print("No reports have been made yet.\n")
