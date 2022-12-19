@@ -281,14 +281,14 @@ def edit_camp(no_camps, code, index, nat_disaster, current_no_camps):
                     
                     num = 1
                     #num is used to generate various new camp IDs.
-                    camp_id = code.upper() + search_dict(nat_disaster) +str(index) + "_" +str(num)
+                    camp_id = code.upper() + search_dict(nat_disaster).strip() +str(index) + "_" +str(num)
                     #Camp ID is generated from concatenated strings
                     if camp_id in camp_df['Camp ID'].unique():
                         #if the camp ID is already in the dataframe
                         # a while loop is used to increment num, until the camp ID is not already taken
                         while camp_id in camp_df['Camp ID'].unique():
                             num += 1
-                            camp_id = code.upper() + search_dict(nat_disaster) +str(index) + "_" +str(num)
+                            camp_id = code.upper() + search_dict(nat_disaster).strip() +str(index) + "_" +str(num)
                         #Once the program breaks out of the while loop, the details are appended to the camp list
                         camp_list.append(camp_id)
                         camp_list.append("0")
@@ -357,7 +357,7 @@ def add_to_camp(no_camps, code, index, nat_disaster):
         camp_total = []
         num_camp_lines = sum(1 for line in open("CampDetails.csv","r"))
         
-        camp_id = code.upper() + search_dict(nat_disaster) +str(index) + "_" +str(camp)
+        camp_id = code.upper() + search_dict(nat_disaster).strip() +str(index) + "_" +str(camp)
         camp_list.append(camp_id)
         camp_list.append("0")
         camp_list.append("0")
