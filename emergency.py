@@ -27,7 +27,7 @@ def update_refugee_count():
     for camp in camp_list:
         try:
             camp_df = emergency_df[emergency_df['camp_id'] == camp]
-            refugee_count_list.append(int(camp_df.sum()['family_number']) + 1)
+            refugee_count_list.append(int(camp_df.sum()['family_number']))
         except KeyError:
             refugee_count_list.append(0) #if the camp does not appear in the emergency_profile database, it has no refugees
     refugee_count_dict = {camp_list[i]: refugee_count_list[i] for i in range(len(camp_list))} #dictionary of camp IDs and no. refugees at each 
@@ -166,8 +166,11 @@ def create_profile():
                 print(tabulate(pd.DataFrame(profile_list).fillna("N/A"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
                 break
     else:
-        
-        print("No profiles have been made yet. ")
+        # If there's no emergency_profile.csv, create one
+        with open("emergency_profile.csv", "w", newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=['refugee_name', 'camp_id', 'family_number', 'medical_condition', 'food_requirement', 'space_requirement', 'create_time'])
+            writer.writeheader()
+        # print("No profiles have been made yet. ")
 
     # Write emergency profile that's just created to emergency_profile.csv
     if profile_list:
