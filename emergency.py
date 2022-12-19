@@ -132,12 +132,12 @@ def create_profile():
                     while True:
                         # Validating that family_number input is a positive number
                         try:
-                            family_number = int(input("Please enter the numbers of his/her family in the camp (Refugee's self is included): "))
+                            family_number = int(input("Please enter the numbers of his/her family in the camp, (Refugee's self is included): "))
                             if family_number < 0:
                                 print("Please input a positive number.")
                                 continue
                             elif family_number == 0:
-                                print("Family number can't be 0, refugee is included.")
+                                print("Family number can't be 0, the refugee is included.")
                                 continue
                         except: 
                             print("The input is not a number, please enter again")
@@ -375,4 +375,4 @@ def show_all_profile():
 
 
 # To test the code
-emergency_profile("volunteer2")
+# emergency_profile("volunteer2")
