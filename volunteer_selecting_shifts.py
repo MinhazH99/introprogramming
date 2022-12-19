@@ -22,6 +22,10 @@ class PlanClosedError(Exception):
     '''Raises an error when a user tries to sign up for a shift at a plan that has closed'''
     pass
 
+class CampDeletedError(Exception):
+    '''Raises an error if a volunteer's camp has been deleted'''
+    pass
+
 #Functions for use within volunteer options
 
 def check_duplicates(df, start_date, end_date):
@@ -59,11 +63,13 @@ def check_plan_closed(emergency_plan_index):
     elif df.loc[emergency_plan_index, 'Status'] == "Open":
         return False
 
-def too_many_volunteers():
-    '''Checks if a camp is already at its staffing limit'''
-    pass
-    #TODO: elif row in file: If count(row[volunteer]) < 5: insert new row. 
-    #Else: return 'no slots available on this date. Please pick another' (max. number of volunteers present at a time)
+def get_camp_list():
+    '''Returns a list of all camps in CampDetails.csv'''
+    df = pd.read_csv('CampDetails.csv')
+    camp_list = []
+    for ind in df.index:
+        camp_list.append(df.loc[ind]["Camp ID"])
+    return camp_list
 
 def write_to_file(new_shift):
     '''Function for writing to new shifts to shifts.csv'''
@@ -153,6 +159,7 @@ def view_shifts(df, volunteer_shifts_df, username):
 
 def add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_plan_index):
     '''Function for users to add a new shift'''
+    
     print("You will be asked for the details of the shift you are signing up for. \n")
 
     now = date.today()
@@ -238,56 +245,67 @@ def availability_funcs(user):
     # print(check_camp_id)
 
     # if check_nan: #doesn't allow new users to use these functions
+
+    camp_list = get_camp_list()
+
     while True:
         
         if check_camp_id == False:
 
             # b = volunteer_info_df['campid'].values
             camp_id = df.loc[(df['usernames'] == user)]['campid'].values[0]
-            # c = volunteer_info_df['emergencyplanindex'].values
-            emergency_plan_index = df.loc[(df['usernames'] == user)]['emergencyplanindex'].values[0]
 
-            custom_date_parser = lambda x: datetime.strptime(x, '%Y-%m-%d')   
-            df = pd.read_csv("shifts.csv", parse_dates = ['startdate', 'enddate'], date_parser = custom_date_parser)
-            volunteer_shifts_df = df[df['username'] == f'{username}'] #dataframe of user's shifts
-            print("-------------------------------------------------------------------------------")
-            print("[1] View current shifts")
-            print("[2] Add new shift")
-            print("[3] Return to home screen")
+            if camp_id in camp_list:
 
-            user_input = input("Please select an option: ")
-            while True:
-                if user_input == '1':
-                    view_shifts(df, volunteer_shifts_df, username)
-                    #print('--------------------------------\n')
-                    availability_funcs(user)
-                    break
-                elif user_input == '2':
-                    shift_type = select_shift_type()
-                    if shift_type == '3':
-                        break
-                    else:
-                        add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_plan_index)
+                # c = volunteer_info_df['emergencyplanindex'].values
+                emergency_plan_index = df.loc[(df['usernames'] == user)]['emergencyplanindex'].values[0]
+
+                custom_date_parser = lambda x: datetime.strptime(x, '%Y-%m-%d')   
+                df = pd.read_csv("shifts.csv", parse_dates = ['startdate', 'enddate'], date_parser = custom_date_parser)
+                volunteer_shifts_df = df[df['username'] == f'{username}'] #dataframe of user's shifts
+                print("-------------------------------------------------------------------------------")
+                print("[1] View current shifts")
+                print("[2] Add new shift")
+                print("[3] Return to home screen")
+
+                user_input = input("Please select an option: ")
+                while True:
+                    if user_input == '1':
+                        view_shifts(df, volunteer_shifts_df, username)
                         #print('--------------------------------\n')
                         availability_funcs(user)
                         break
-                elif user_input == '3':
-                    #return to Home menu
-                    #print("Goodbye")
-                    volunteer_home.volunteer_home(user)
-                    break
-                else: #error handling
-                    print("Please enter a valid input.")
-                    user_input = input("Please select an option: ")
-            
-            break
-        
+                    elif user_input == '2':
+                        try:
+                            shift_type = select_shift_type()
+                            if shift_type == '3':
+                                break
+                            else:
+                                add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_plan_index)
+                                #print('--------------------------------\n')
+                                availability_funcs(user)
+                                break
+                        except:
+                            pass
+                    elif user_input == '3':
+                        #return to Home menu
+                        #print("Goodbye")
+                        volunteer_home.volunteer_home(user)
+                        break
+                    else: #error handling
+                        print("Please enter a valid input.")
+                        user_input = input("Please select an option: ")
+                
+                break
+            else:
+                print("It seems that camp <", camp_id, "> has been deleted. Please change to an existing camp.\n")
+                volunteer_home.volunteer_home(username)
+                break
 
         else:
             print("It seems like you have not yet signed up to a camp. Please do so before trying to view and edit your shifts.")
             volunteer_home.volunteer_home(user)
             break
-
 
 
 # for testing this page in isolation, define a specific user below
