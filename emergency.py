@@ -27,7 +27,7 @@ def update_refugee_count():
     for camp in camp_list:
         try:
             camp_df = emergency_df[emergency_df['camp_id'] == camp]
-            refugee_count_list.append(int(camp_df.sum()['family_number']) + 1)
+            refugee_count_list.append(int(camp_df.sum()['family_number']))
         except KeyError:
             refugee_count_list.append(0) #if the camp does not appear in the emergency_profile database, it has no refugees
     refugee_count_dict = {camp_list[i]: refugee_count_list[i] for i in range(len(camp_list))} #dictionary of camp IDs and no. refugees at each 
@@ -132,12 +132,12 @@ def create_profile():
                     while True:
                         # Validating that family_number input is a positive number
                         try:
-                            family_number = int(input("Please enter the numbers of his/her family in the camp (Refugee's self is included): "))
+                            family_number = int(input("Please enter the numbers of his/her family in the camp, (Refugee's self is included): "))
                             if family_number < 0:
                                 print("Please input a positive number.")
                                 continue
                             elif family_number == 0:
-                                print("Family number can't be 0, refugee is included.")
+                                print("Family number can't be 0, the refugee is included.")
                                 continue
                         except: 
                             print("The input is not a number, please enter again")
@@ -372,4 +372,4 @@ def show_all_profile():
 
 
 # To test the code
-emergency_profile("volunteer2")
+# emergency_profile("volunteer2")
