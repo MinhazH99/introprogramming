@@ -279,6 +279,7 @@ def availability_funcs(user):
                         try:
                             shift_type = select_shift_type()
                             if shift_type == '3':
+                                availability_funcs(user)
                                 break
                             else:
                                 add_new_shift(shift_type, volunteer_shifts_df, username, camp_id, emergency_plan_index)
