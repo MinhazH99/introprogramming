@@ -35,6 +35,7 @@ def update_refugee_count():
         camps_df.loc[camps_df['Camp ID'] == f'{key}', 'No. Refugees'] = f'{str(value)}' #update number of refugees at each camp
     camps_df.to_csv("CampDetails.csv",index=False) #store the updated counts
 
+
 def emergency_profile(user):
     while True:
         profile_menu()
@@ -131,9 +132,12 @@ def create_profile():
                     while True:
                         # Validating that family_number input is a positive number
                         try:
-                            family_number = int(input("Please enter the numbers of his/her family in the camp (enter 0 if there's no family member): "))
+                            family_number = int(input("Please enter the numbers of his/her family in the camp, (Refugee's self is included): "))
                             if family_number < 0:
                                 print("Please input a positive number.")
+                                continue
+                            elif family_number == 0:
+                                print("Family number can't be 0, the refugee is included.")
                                 continue
                         except: 
                             print("The input is not a number, please enter again")
@@ -162,7 +166,11 @@ def create_profile():
                 print(tabulate(pd.DataFrame(profile_list).fillna("N/A"), headers=["Refugee Name", "Camp ID", "Family Number", "Medical Condition", "Food Requirement", "Space Requirement", "Create Time"], tablefmt='fancy_grid', showindex=False))
                 break
     else:
-        print("No profiles have been made yet. ")
+        # If there's no emergency_profile.csv, create one
+        with open("emergency_profile.csv", "w", newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=['refugee_name', 'camp_id', 'family_number', 'medical_condition', 'food_requirement', 'space_requirement', 'create_time'])
+            writer.writeheader()
+        # print("No profiles have been made yet. ")
 
     # Write emergency profile that's just created to emergency_profile.csv
     if profile_list:
@@ -170,7 +178,7 @@ def create_profile():
             writer = csv.DictWriter(file, fieldnames=['refugee_name', 'camp_id', 'family_number', 'medical_condition', 'food_requirement', 'space_requirement', 'create_time'])
             for profile in profile_list:
                 writer.writerow(profile)
-                update_refugee_count()
+        update_refugee_count()
 
 
 def modify_profile():
@@ -231,7 +239,10 @@ def modify_profile():
                                     if update_content < 0:
                                         print("Please input a positive number.")
                                         continue
-                                    if update_content or update_content == 0:
+                                    elif update_content == 0:
+                                        print("Family number can't be 0, refugee is included.")
+                                        continue
+                                    if update_content:
                                         content_input = update_content
                                         break
                                     else:
