@@ -152,7 +152,7 @@ def delete_report(user):
                 while flag:
                     try:
                         delete_index = int(input("\nEnter the number of the report that you wish to delete: ")) 
-                        total_lines = len(my_report)
+                        total_lines = len(df)
                         if delete_index > (total_lines-1):
                             #if the index is too big, the loop will not break and the user will have to input another value
                             print("This number is greater than the number of reports.")

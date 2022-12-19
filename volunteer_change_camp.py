@@ -21,6 +21,7 @@ def get_assoc_emergency_plan(camp):
 
 def check_plan_closed(emergency_plan_index):
     '''Checks if an emergency plan has already been closed'''
+    emergency_plan_index = int(emergency_plan_index)
     df = pd.read_csv("EmergencyPlans.csv")
     if df.loc[emergency_plan_index, 'Status'] == "Closed":
         return True
