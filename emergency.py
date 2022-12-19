@@ -261,7 +261,7 @@ def modify_profile():
         else:
             print("Refugee profile not found.")
                 
-        answer = str(input("Continue to edit emergency profile? Y/N \n"))
+        answer = str(input("Continue to edit another emergency profile? Y/N \n"))
         if answer == 'Y' or answer== 'y':
             modify_profile()
     else: 
