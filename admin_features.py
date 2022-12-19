@@ -204,27 +204,42 @@ def view_volunteers():
         
 #This function takes the natural disaster as a parameter
 def search_dict(nat_disaster):
+
+    dict_file = pd.read_csv("Dictionaries.csv")
+    
+    selected = dict_file[dict_file['Natural Disaster'] == nat_disaster.upper()]
     #This searches the dictionary to check if the natural disaster is present
-    if nat_disaster.upper() in disasters_dictionary:
+    if len(selected) > 0:
         #if the natural disaster is in the dictionary, the corresponding 5/6 letter code is returned
-        dis_code = disasters_dictionary[nat_disaster.upper()]
-        return dis_code
+        dis_code = dict_file.loc[dict_file['Natural Disaster'] == nat_disaster.upper(), 'Disaster Code'].values
+        
+        return dis_code[0]
     else:
         loop = 0
+        dict_list = []
+        dict_total = []
         print("\nThe type of emergency you listed is not a commonly listed disaster, and does not have a standard code.")
         while loop == 0:
-            #the user needs to input a 5 or 6 letter code, and the loop will not break unless this is satisfied
-            dis_code = input("Please input a 5 or 6 letter code for this disaster: ")
+            #the user needs to input a 6 letter code, and the loop will not break unless this is satisfied
+            dis_code = input("Please input a 6 letter code for this disaster: ")
             if dis_code.isalpha() and len(dis_code) == 6:
-                disasters_dictionary[nat_disaster.upper()] = dis_code
-                #loop = 1
-                #the code is returned for use in another function
-                return dis_code
+                #The natural disaster and corresponding area code are written
+                # to a list and stored in the csv file for future use
+                dict_list.append(nat_disaster.upper())
+                dict_list.append(dis_code.upper())
+                
+                dict_total.append(dict_list)
+                dict_np = np.array(dict_total)
+
+                dict_row = pd.DataFrame(dict_total)
+                dict_row.to_csv("Dictionaries.csv", mode="a", index = False, header = False)
+
+                return dis_code.upper()
             else:
                 print("Not a valid input.\n")
 
 #This is a function for editing the number of camps associated with a plan
-#It takes the inputted number of camps, the 5 or 6 letter code, the emergency plan index,
+#It takes the inputted number of camps, the 6 letter code, the emergency plan index,
 #the natural disaster name, and the current number of camps as paramaters
                 
 def edit_camp(no_camps, code, index, nat_disaster, current_no_camps):
@@ -312,10 +327,12 @@ def edit_camp(no_camps, code, index, nat_disaster, current_no_camps):
                 #difference between desired and current number of camps is calculated
                 diff = num_rows - int(no_camps)
                 while loop < diff:
-                    delete_id = input("Please enter the camp ID of the camp you want to delete: ")
+                    print("\nNumber of camps that need to be deleted: " + str(diff-loop))
+                    delete_id = input("\nPlease enter the camp ID of the camp you want to delete: ")
                     #if the camp ID entered is in the selected rows dataframe, the row will be dropped
                     #The csv file is then updated without the enetered Camp ID row
                     if delete_id.upper() in camp_df['Camp ID'].unique():
+                        print("The following camp ID has been successfully deleted: " + str(delete_id.upper()))
                         loop += 1
                         camp_df.drop(camp_df[camp_df['Camp ID'] == delete_id.upper()].index, inplace = True)
                         camp_df.to_csv("CampDetails.csv", mode="w", index = False, columns = ['Camp ID','No. Volunteers', 'No. Refugees', 'Emergency Plan Index'])
@@ -430,111 +447,113 @@ def retrieve_data():
                 elif plan_index >= 0:
                     #the loop will only break if the plan index is valid
                     var = 1
-                
-                    while var == 1:
-                        #user is presented with options about how they want to edit the plan
-                        print("-------------------------------------------------------------------------------")
-                        print("[1] Add/edit a closing date\n[2] Add/edit the number of camps\n[3] Close the emergency plan")
-                        print("[4] Edit a different plan\n[5] Quit\n")
-                        decision = input("\nPlease select an option: ")
-                        if decision == '1':
-                            #the user is adding a close date
-                            #a while loop similar to that in the check date function is used to check whether the date is valid
-                            #an additional comparison with the start date is carried out, to ensure that the close date is after the start date
-                            var = 2
-                            while var == 2:
-                                if df.loc[plan_index, 'Close Date'] == " ":
-                                    try:
-                                        #reads and stores the starting date from the dataframe
-                                        starting_date = df.loc[plan_index, 'Start Date']
-                                        closing_date = input("Enter the date on which this plan was closed in the format YYYY-MM-DD: ")
-                                        
-                                        datetime.datetime.strptime(closing_date, "%Y-%m-%d")
-                                        curr_date = dt.today().strftime('%Y-%m-%d')
-                                        if starting_date >= closing_date:
-                                            print("\nThe start date cannot be after or equal to the close date.\n")
-                                        elif closing_date > curr_date:
-                                            print("The closing date cannot be after the current date.\n")
-                                        else:
-                                            #if the close date is valid and after the start date, it is added to the emergency plan in the csv file
+                    if df.loc[plan_index, 'Status'] == "Closed":
+                        print("You cannot edit the details for a closed plan.\n")
+                    else:
+                        while var == 1:
+                            #user is presented with options about how they want to edit the plan
+                            print("-------------------------------------------------------------------------------")
+                            print("[1] Add/edit a closing date\n[2] Add/edit the number of camps\n[3] Close the emergency plan")
+                            print("[4] Edit a different plan\n[5] Quit\n")
+                            decision = input("\nPlease select an option: ")
+                            if decision == '1':
+                                #the user is adding a close date
+                                #a while loop similar to that in the check date function is used to check whether the date is valid
+                                #an additional comparison with the start date is carried out, to ensure that the close date is after the start date
+                                var = 2
+                                while var == 2:
+                                    if df.loc[plan_index, 'Close Date'] == " ":
+                                        try:
+                                            #reads and stores the starting date from the dataframe
+                                            starting_date = df.loc[plan_index, 'Start Date']
+                                            closing_date = input("Enter the date on which this plan was closed in the format YYYY-MM-DD: ")
+                                            
+                                            datetime.datetime.strptime(closing_date, "%Y-%m-%d")
+                                            curr_date = dt.today().strftime('%Y-%m-%d')
+                                            if starting_date >= closing_date:
+                                                print("\nThe start date cannot be after or equal to the close date.\n")
+                                            elif closing_date > curr_date:
+                                                print("The closing date cannot be after the current date.\n")
+                                            else:
+                                                #if the close date is valid and after the start date, it is added to the emergency plan in the csv file
 
-                                            df.loc[plan_index, 'Close Date'] = str(closing_date)
-                                            df.to_csv("EmergencyPlans.csv", index = False)
-                                            var = 3
-                                            print("\nThe closing date '" + str(closing_date) + "' has been added to plan " + str(plan_index))
-
-                                            if df.loc[plan_index, 'Status'] == "Open":
-                                                df.loc[plan_index, 'Status'] = "Closed"
+                                                df.loc[plan_index, 'Close Date'] = str(closing_date)
                                                 df.to_csv("EmergencyPlans.csv", index = False)
-                                                print("\nThe plan has been automatically closed, as the closing date is before or equal to the current date: ",curr_date)
+                                                var = 3
+                                                print("\nThe closing date '" + str(closing_date) + "' has been added to plan " + str(plan_index))
 
-                                            
+                                                if df.loc[plan_index, 'Status'] == "Open":
+                                                    df.loc[plan_index, 'Status'] = "Closed"
+                                                    df.to_csv("EmergencyPlans.csv", index = False)
+                                                    print("\nThe plan has been automatically closed, as the closing date is before or equal to the current date: ",curr_date)
 
-                                    except Exception:
-                                        print("Not a valid date.\n")
-                                else:
-                                    print("This plan already has the closing date: ",df.loc[plan_index, 'Close Date'])
-                                    var = 3
+                                                
 
-                        elif decision == '2':
-                            var = 2
-                            while var == 2:
-                                try:
-                                    num_camps = input("Enter the number of camps available for this emergency: ")
-                                    #uses while and try except to ensure that the user enters a positive number for the number of camps
-                                    if int(num_camps) <= 0:
-                                        print("That is not a valid number.\n")
+                                        except Exception:
+                                            print("Not a valid date.\n")
                                     else:
-                                        current_camps = df.loc[plan_index,'No. Camps Available']
-                                        #current number of camps is read, and while loop is broken in both cases below
-                                        if current_camps == 0:
-                                            #if the current number of camps is 0, it will execte the add to camps function
-                                            df.loc[plan_index,'No. Camps Available']=str(num_camps) #Adds number of camps to plan
-                                            df.to_csv("EmergencyPlans.csv", index = False)
-                                            var = 3
-                                            camp_details(plan_index)
-                                            
+                                        print("This plan already has the closing date: ",df.loc[plan_index, 'Close Date'])
+                                        var = 3
+
+                            elif decision == '2':
+                                var = 2
+                                while var == 2:
+                                    try:
+                                        num_camps = input("Enter the number of camps available for this emergency: ")
+                                        #uses while and try except to ensure that the user enters a positive number for the number of camps
+                                        if int(num_camps) <= 0:
+                                            print("That is not a valid number.\n")
                                         else:
-                                            #if the number is greater than 0, key data is read from the csv file, and passed as paramaters to the edit camp function
-                                            df = pd.read_csv("EmergencyPlans.csv")
-                                            area = df.loc[plan_index, 'Geographical Area']
-                                            disaster = df.loc[plan_index, 'Emergency Type']
-                                            area_code = df.loc[plan_index, 'Area Code']
+                                            current_camps = df.loc[plan_index,'No. Camps Available']
+                                            #current number of camps is read, and while loop is broken in both cases below
+                                            if current_camps == 0:
+                                                #if the current number of camps is 0, it will execte the add to camps function
+                                                df.loc[plan_index,'No. Camps Available']=str(num_camps) #Adds number of camps to plan
+                                                df.to_csv("EmergencyPlans.csv", index = False)
+                                                var = 3
+                                                camp_details(plan_index)
+                                                
+                                            else:
+                                                #if the number is greater than 0, key data is read from the csv file, and passed as paramaters to the edit camp function
+                                                df = pd.read_csv("EmergencyPlans.csv")
+                                                area = df.loc[plan_index, 'Geographical Area']
+                                                disaster = df.loc[plan_index, 'Emergency Type']
+                                                area_code = df.loc[plan_index, 'Area Code']
 
-                                            edit_camp(num_camps, area_code, plan_index, disaster, current_camps)
-                                            print("The number of refugee camps has been changed for plan " + str(plan_index))
-                                            var = 3
-            
-                                except ValueError:
-                                    print("Not a valid input.\n")
-                                                    
-                        elif decision == '3':
-                            #Changes the status on the desired row to closed and breaks loop
-                            var = 2
-                            df.loc[plan_index,'Status']="Closed" 
-                            df.to_csv("EmergencyPlans.csv", index = False)
-                            curr_date = dt.today().strftime('%Y-%m-%d')
-                            close = df.loc[plan_index, 'Close Date']
-                            if close == " ":
-                                #if the closing date is blank, today's date is automatically added 
-                                df.loc[plan_index, 'Close Date'] = str(curr_date)
+                                                edit_camp(num_camps, area_code, plan_index, disaster, current_camps)
+                                                print("The number of refugee camps has been changed for plan " + str(plan_index))
+                                                var = 3
+                
+                                    except ValueError:
+                                        print("Not a valid input.\n")
+                                                        
+                            elif decision == '3':
+                                #Changes the status on the desired row to closed and breaks loop
+                                var = 2
+                                df.loc[plan_index,'Status']="Closed" 
                                 df.to_csv("EmergencyPlans.csv", index = False)
-                                print("The plan is now closed.")
-                                print("The closing date " + str(curr_date) + " has been automatically added.\n")
+                                curr_date = dt.today().strftime('%Y-%m-%d')
+                                close = df.loc[plan_index, 'Close Date']
+                                if close == " ":
+                                    #if the closing date is blank, today's date is automatically added 
+                                    df.loc[plan_index, 'Close Date'] = str(curr_date)
+                                    df.to_csv("EmergencyPlans.csv", index = False)
+                                    print("The plan is now closed.")
+                                    print("The closing date " + str(curr_date) + " has been automatically added.\n")
+                                else:
+
+                                    print("The plan is now closed.")
+
+                            elif decision == '4':
+                                #returns to start of function to enter a different plan index to edit
+                                var = 0
+                            elif decision == '5':
+                                #breaks out of loop and returns to main menu
+                                var = 2
+                                
                             else:
-
-                                print("The plan is now closed.")
-
-                        elif decision == '4':
-                            #returns to start of function to enter a different plan index to edit
-                            var = 0
-                        elif decision == '5':
-                            #breaks out of loop and returns to main menu
-                            var = 2
-                            
-                        else:
-                            #Program does not accept any other input
-                            print("Not a valid input")
+                                #Program does not accept any other input
+                                print("Not a valid input")
             except ValueError:
                 print("That is not a valid input")
     else:
@@ -559,8 +578,11 @@ def view_report():
         elif rep_opt == '2':
             selected_rows = rep_df[rep_df['severity'] == "Not Graded Yet"].sort_values(by='report_date')
             #selected_rows = rep_df[rep_df['severity'] == "Not Graded Yet"]
-            print("Unassigned Reports (ordered by most recent first):\n")
-            print(tabulate(selected_rows, headers = 'keys', showindex=False, tablefmt = 'fancy_grid'))
+            if len(selected_rows) == 0:
+                print("There are currently no unassigned reports.\n")
+            else:
+                print("Unassigned Reports (ordered by most recent first):\n")
+                print(tabulate(selected_rows, headers = 'keys', showindex=False, tablefmt = 'fancy_grid'))
 
     else:
         print("No reports have been made yet.\n")
@@ -654,7 +676,7 @@ def adminFeatures():
             #asks the user to input various details about the new plan
             #They are not allowwed to enter a blank space as the input
             while True:
-                e_type = input("Enter the type of natural disaster (e.g. Flood): ")
+                e_type = input("Enter the type of natural disaster or emergency (e.g. Flood, Civil War): ")
                 if e_type.isspace() or e_type == "":
                     print("You cannot enter a blank space as the type of disaster.\n")
                 else:

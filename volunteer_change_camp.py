@@ -80,50 +80,54 @@ def choose_camp(user):
     username = user
     a = df[df['usernames'] == f'{username}']
     camp_list = get_camp_list()
-    
-    if len(a) > 0: #i.e., if there are any rows in the dataframe with this username
-        try:
-            b = a['campid'].values
-            camp_id = str(b[0])
-        except:
-            camp_id = 'nan'
-        if camp_id != 'nan':
-            if camp_id not in camp_list: #camp has been deleted in the interim
-                print("It seems that camp <", camp_id, "> has been deleted. Please change to an existing camp.\n")
-                camp_functions_menu(user)
-            else:
-                print("You are already assigned to a camp. Your camp ID is", camp_id, "\n") #print Camp ID without index
-                camp_functions_menu(user)
-        else:
-            print("Below are a list of camps:\n")
-            for camp in camp_list:
-                emergency_plan_index = str(int(get_assoc_emergency_plan(str(camp))))
-                if check_plan_closed(emergency_plan_index):
-                    continue
-                else:
-                    print(camp)
-            print("\n")
-            choice = input("Pick a camp from the above list: ").strip()
-            while choice not in camp_list:
-                print("Invalid choice.")
-                choice = input("Pick a camp from the above list: ").strip()
-                
-            emergency_plan_index = str(int(get_assoc_emergency_plan(choice)))
-        
-            df.loc[(df["usernames"] == username),"campid"]=f'{choice}' 
-            df.loc[(df["usernames"] == username),"emergencyplanindex"]=f'{emergency_plan_index}'
-            print("Camp ID updated")
-            df.to_csv("volunteers_db.csv",index=False)
-            update_volunteer_count()
 
-            camp_functions_menu(user)
-
-            #modify camps_df by row count 
-            #rewrite camps_df
-
-    else:
-        print("Username not found!")
+    if len(camp_list) == 0:
+        print("It seems the administrator has either not created any camps yet, or has deleted all camps. \nPlease contact them or wait for them to do so first.")
         camp_functions_menu(user)
+    else:
+        if len(a) > 0: #i.e., if there are any rows in the dataframe with this username
+            try:
+                b = a['campid'].values
+                camp_id = str(b[0])
+            except:
+                camp_id = 'nan'
+            if camp_id != 'nan':
+                if camp_id not in camp_list: #camp has been deleted in the interim
+                    print("It seems that camp <", camp_id, "> has been deleted. Please change to an existing camp.\n")
+                    camp_functions_menu(user)
+                else:
+                    print("You are already assigned to a camp. Your camp ID is", camp_id, "\n") #print Camp ID without index
+                    camp_functions_menu(user)
+            else:
+                print("Below are a list of camps:\n")
+                for camp in camp_list:
+                    emergency_plan_index = str(int(get_assoc_emergency_plan(str(camp))))
+                    if check_plan_closed(emergency_plan_index):
+                        continue
+                    else:
+                        print(camp)
+                print("\n")
+                choice = input("Pick a camp from the above list: ").strip()
+                while choice not in camp_list:
+                    print("Invalid choice.")
+                    choice = input("Pick a camp from the above list: ").strip()
+                    
+                emergency_plan_index = str(int(get_assoc_emergency_plan(choice)))
+            
+                df.loc[(df["usernames"] == username),"campid"]=f'{choice}' 
+                df.loc[(df["usernames"] == username),"emergencyplanindex"]=f'{emergency_plan_index}'
+                print("Camp ID updated")
+                df.to_csv("volunteers_db.csv",index=False)
+                update_volunteer_count()
+
+                camp_functions_menu(user)
+
+                #modify camps_df by row count 
+                #rewrite camps_df
+
+        else:
+            print("Username not found!")
+            camp_functions_menu(user)
 
 def view_camp(user):
     '''Allows a volunteer to view their curent camp'''
@@ -131,40 +135,45 @@ def view_camp(user):
     username = user
     a = df[df['usernames'] == f'{username}']
     camp_list = get_camp_list()
-    
-    if len(a) > 0: #i.e., if there are any rows in the dataframe with this username
-        # camp_id = a['Camp ID'].to_string(index = False)
-        try:
-            b = a['campid'].values
-            camp_id = str(b[0])
-        except:
-            camp_id = 'nan'
-        if camp_id != 'nan':
-            if camp_id not in camp_list: #camp has been deleted in the interim
-                print("While this is not your first time choosing camps, it seems that camp <",camp_id,"> has been deleted. Please change to an existing camp.\n")
-                camp_functions_menu(user)
-            else:
-                print("Your camp ID is", camp_id, '\n')
-                camp_functions_menu(user)
-            
-        else: 
-            while True:
-                print("You are not currently assigned to a camp.")
-                print("[1] Choose a camp")
-                print("[2] Return to main menu") 
-                user_input = input("Please select an option: ").strip()
-                if user_input == '1':
-                    choose_camp(user) 
-                    break
-                elif user_input == '2':
-                    break
-                else: 
-                    print("Invalid choice.")
-                    user_input = input("Please select an option: ").strip()
-            camp_functions_menu(user)
-    else:
-        print("Username not found!")
+
+    if len(camp_list) == 0:
+        print("It seems the administrator has either not created any camps yet, or has deleted all camps. \nPlease contact them or wait for them to do so first.")
         camp_functions_menu(user)
+    else:
+    
+        if len(a) > 0: #i.e., if there are any rows in the dataframe with this username
+            # camp_id = a['Camp ID'].to_string(index = False)
+            try:
+                b = a['campid'].values
+                camp_id = str(b[0])
+            except:
+                camp_id = 'nan'
+            if camp_id != 'nan':
+                if camp_id not in camp_list: #camp has been deleted in the interim
+                    print("While this is not your first time choosing camps, it seems that camp <",camp_id,"> has been deleted. Please change to an existing camp.\n")
+                    camp_functions_menu(user)
+                else:
+                    print("Your camp ID is", camp_id, '\n')
+                    camp_functions_menu(user)
+                
+            else: 
+                while True:
+                    print("You are not currently assigned to a camp.")
+                    print("[1] Choose a camp")
+                    print("[2] Return to main menu") 
+                    user_input = input("Please select an option: ").strip()
+                    if user_input == '1':
+                        choose_camp(user) 
+                        break
+                    elif user_input == '2':
+                        break
+                    else: 
+                        print("Invalid choice.")
+                        user_input = input("Please select an option: ").strip()
+                camp_functions_menu(user)
+        else:
+            print("Username not found!")
+            camp_functions_menu(user)
 
 
 def change_camp(user):
@@ -174,93 +183,98 @@ def change_camp(user):
     username = user
     a = df.loc[df['usernames'] == f'{username}']
     camp_list = get_camp_list()
+
+    if len(camp_list) == 0:
+        print("It seems the administrator has either not created any camps yet, or has deleted all camps. \nPlease contact them or wait for them to do so first.")
+        camp_functions_menu(user)
+    else:
     
-    if len(a) > 0: #i.e., if there are any rows in the dataframe with this username
-        try:
-            b = a['campid'].values
-            camp_id = str(b[0])
-        except:
-            camp_id = 'nan'
-        
-        if camp_id != 'nan':
-            if camp_id not in camp_list: #camp has been deleted in the interim
-                for camp in camp_list:
-                    emergency_plan_index = int(get_assoc_emergency_plan(str(camp)))
-                    if check_plan_closed(emergency_plan_index):
-                        continue
-                    else:
-                        print(camp)
-                print("\n")
-                choice = input("Pick a camp from the above list: ").strip()
-                while choice.upper() not in camp_list: #converts string to upper case
-                    #need to check camp ID is not associated with a closed emergency plan
-                    print("Invalid choice.")
+        if len(a) > 0: #i.e., if there are any rows in the dataframe with this username
+            try:
+                b = a['campid'].values
+                camp_id = str(b[0])
+            except:
+                camp_id = 'nan'
+            
+            if camp_id != 'nan':
+                if camp_id not in camp_list: #camp has been deleted in the interim
+                    for camp in camp_list:
+                        emergency_plan_index = int(get_assoc_emergency_plan(str(camp)))
+                        if check_plan_closed(emergency_plan_index):
+                            continue
+                        else:
+                            print(camp)
+                    print("\n")
                     choice = input("Pick a camp from the above list: ").strip()
-                emergency_plan_index = int(get_assoc_emergency_plan(choice)) #safeguard against unexplained issue
-                    
-
-                df.loc[(df["usernames"] == username),"campid"]=f'{choice}'
-                df.loc[(df["usernames"] == username),"emergencyplanindex"]=f'{emergency_plan_index}'
-                print("Camp ID updated")
-                df.to_csv("volunteers_db.csv",index=False)
-                update_volunteer_count()
-                camp_functions_menu(user)
-            else:       
-                action = input("Your current camp is " + camp_id + ". Would you still like to change this? (Y/N)").strip()
-
-                while True:
-
-                    if action.lower() == 'y':
-                        for camp in camp_list:
-                            emergency_plan_index = int(get_assoc_emergency_plan(str(camp)))
-                            if check_plan_closed(emergency_plan_index):
-                                continue
-                            else:
-                                print(camp)
-                        print("\n")
+                    while choice.upper() not in camp_list: #converts string to upper case
+                        #need to check camp ID is not associated with a closed emergency plan
+                        print("Invalid choice.")
                         choice = input("Pick a camp from the above list: ").strip()
-                        while choice.upper() not in camp_list: #converts string to upper case
-                            #need to check camp ID is not associated with a closed emergency plan
-                            print("Invalid choice.")
-                            choice = input("Pick a camp from the above list: ").strip()
-                        emergency_plan_index = str(int(get_assoc_emergency_plan(choice))) #safeguard against unexplained issue
+                    emergency_plan_index = int(get_assoc_emergency_plan(choice)) #safeguard against unexplained issue
                         
 
-                        df.loc[(df["usernames"] == username),"campid"]=f'{choice}'
-                        df.loc[(df["usernames"] == username),"emergencyplanindex"]=f'{emergency_plan_index}'
-                        print("Camp ID updated")
-                        df.to_csv("volunteers_db.csv",index=False)
-                        update_volunteer_count()
-                        break
+                    df.loc[(df["usernames"] == username),"campid"]=f'{choice}'
+                    df.loc[(df["usernames"] == username),"emergencyplanindex"]=f'{emergency_plan_index}'
+                    print("Camp ID updated")
+                    df.to_csv("volunteers_db.csv",index=False)
+                    update_volunteer_count()
+                    camp_functions_menu(user)
+                else:       
+                    action = input("Your current camp is " + camp_id + ". Would you still like to change this? (Y/N)").strip()
 
-                    elif action.lower() == 'n':
-                        print("Goodbye") #return to main menu
+                    while True:
+
+                        if action.lower() == 'y':
+                            for camp in camp_list:
+                                emergency_plan_index = int(get_assoc_emergency_plan(str(camp)))
+                                if check_plan_closed(emergency_plan_index):
+                                    continue
+                                else:
+                                    print(camp)
+                            print("\n")
+                            choice = input("Pick a camp from the above list: ").strip()
+                            while choice.upper() not in camp_list: #converts string to upper case
+                                #need to check camp ID is not associated with a closed emergency plan
+                                print("Invalid choice.")
+                                choice = input("Pick a camp from the above list: ").strip()
+                            emergency_plan_index = str(int(get_assoc_emergency_plan(choice))) #safeguard against unexplained issue
+                            
+
+                            df.loc[(df["usernames"] == username),"campid"]=f'{choice}'
+                            df.loc[(df["usernames"] == username),"emergencyplanindex"]=f'{emergency_plan_index}'
+                            print("Camp ID updated")
+                            df.to_csv("volunteers_db.csv",index=False)
+                            update_volunteer_count()
+                            break
+
+                        elif action.lower() == 'n':
+                            print("Goodbye") #return to main menu
+                            break
+                        else: 
+                            print("Invalid choice")
+                            action = input("Your current camp is " + camp_id + ". Would you still like to change this? (Y/N)").strip()
+                    camp_functions_menu(user)
+
+            
+            elif camp_id == 'nan':
+                while True:
+                    print("You are not currently assigned to a camp.")
+                    print("[1] Choose a camp")
+                    print("[2] Return to main menu") 
+                    user_input = input("Please select an option: ").strip()
+                    if user_input == '1':
+                        choose_camp(user) 
+                        break
+                    elif user_input == '2':
                         break
                     else: 
-                        print("Invalid choice")
-                        action = input("Your current camp is " + camp_id + ". Would you still like to change this? (Y/N)").strip()
+                        print("Invalid choice.")
+                        user_input = input("Please select an option: ").strip()
                 camp_functions_menu(user)
-
-        
-        elif camp_id == 'nan':
-            while True:
-                print("You are not currently assigned to a camp.")
-                print("[1] Choose a camp")
-                print("[2] Return to main menu") 
-                user_input = input("Please select an option: ").strip()
-                if user_input == '1':
-                    choose_camp(user) 
-                    break
-                elif user_input == '2':
-                    break
-                else: 
-                    print("Invalid choice.")
-                    user_input = input("Please select an option: ").strip()
-            camp_functions_menu(user)
-            
-    else:
-        print("Username not found!")
-        change_camp(user)
+                
+        else:
+            print("Username not found!")
+            change_camp(user)
 
 
 # camp_functions_menu('volunteer2')

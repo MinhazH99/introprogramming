@@ -227,6 +227,8 @@ def ValidateUser(login_input):
                     df.loc[df["usernames"] == user,"status"]='Deactivated'
                     df.to_csv("volunteers_db.csv",index=False)
                     print('Your account has now been deactivated! Please contact admin')
+                    home()
+                    break
                 
                 elif password == 'R':
                     ForgotPassword(user)

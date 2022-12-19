@@ -1,9 +1,9 @@
-from home import home
 import os
 
 # os.system("pip3 install -r requirements.txt")
 
 def main():
+    from home import home
     home()
 
 
