@@ -106,7 +106,7 @@ def create_report(user):
                     
                     report_date = date.today().strftime("%Y-%m-%d")
                         
-                    report = {'volunteer':volunteer, 'camp_id':camp_id, 'category':category, 'title':title, 'message':message, 'report_time':report_date, 'severity':''}
+                    report = {'volunteer':volunteer, 'camp_id':camp_id, 'category':category, 'title':title, 'message':message, 'report_time':report_date, 'severity':'Not Graded Yet'}
                     report_list.append(report)
                     answer = input("\nSuccessfully created the report.\nDo you want to create another report? Y/N \n")
                     if answer == 'y' or answer == 'Y':
